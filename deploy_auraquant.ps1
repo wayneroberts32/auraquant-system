@@ -120,7 +120,7 @@ Write-Host "   Name: auraquant-backend" -ForegroundColor White
 Write-Host "   Runtime: Python 3" -ForegroundColor White
 Write-Host "   Build Command: pip install -r requirements.txt" -ForegroundColor White
 Write-Host "   Start Command: python start_system.py" -ForegroundColor White
-Write-Host "   Plan: Starter ($7/month)" -ForegroundColor White
+Write-Host '   Plan: Starter ($7/month)' -ForegroundColor White
 Write-Host ""
 Write-Host "3. Add Environment Variables:" -ForegroundColor Yellow
 Write-Host "   MONGODB_URI=<your_mongodb_connection>" -ForegroundColor White
@@ -141,7 +141,7 @@ Open-Browser "https://dash.cloudflare.com"
 Write-Host ""
 Write-Host "2. Create Pages Project with these settings:" -ForegroundColor Yellow
 Write-Host "   Project name: auraquant-frontend" -ForegroundColor White
-Write-Host "   Build command: cd frontend && npm install && npm run build" -ForegroundColor White
+Write-Host '   Build command: cd frontend && npm install && npm run build' -ForegroundColor White
 Write-Host "   Build output: frontend/build" -ForegroundColor White
 Write-Host "   Root directory: /" -ForegroundColor White
 Write-Host ""

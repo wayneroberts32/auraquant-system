@@ -1,0 +1,114 @@
+==============================================================================
+AURAQUANT DEPLOYMENT COMMANDS - RUN THESE IN ORDER
+==============================================================================
+
+STEP 1: ADD YOUR GITHUB REMOTE
+-------------------------------
+Replace YOUR_GITHUB_USERNAME with your actual GitHub username and run:
+
+git remote add origin https://github.com/YOUR_GITHUB_USERNAME/auraquant-system.git
+
+Example: If your username is "johndoe":
+git remote add origin https://github.com/johndoe/auraquant-system.git
+
+
+STEP 2: PUSH TO GITHUB
+----------------------
+Run these commands:
+
+git branch -M main
+git push -u origin main
+
+If it asks for authentication:
+- Username: your GitHub username
+- Password: your GitHub Personal Access Token (NOT your password)
+
+To create a Personal Access Token:
+1. Go to: https://github.com/settings/tokens
+2. Click "Generate new token (classic)"
+3. Name: AuraQuant Deployment
+4. Select scopes: ✓ repo (all checkboxes under repo)
+5. Generate token
+6. Copy the token and use it as the password
+
+
+STEP 3: DEPLOY BACKEND TO RENDER
+---------------------------------
+1. Go to: https://dashboard.render.com
+2. Click "New +" → "Web Service"
+3. Connect your GitHub (if not connected)
+4. Select: auraquant-system repository
+5. Configure:
+   - Name: auraquant-backend
+   - Region: (closest to you)
+   - Branch: main
+   - Root Directory: (leave empty)
+   - Runtime: Python 3
+   - Build Command: pip install -r requirements.txt
+   - Start Command: python start_system.py
+   - Instance Type: Starter ($7/month)
+
+6. Click "Advanced" and add Environment Variables:
+   MONGODB_URI = (your MongoDB connection string)
+   PORT = 10000
+   PYTHON_VERSION = 3.10
+   
+   Plus any API keys from your old bot
+
+7. Click "Create Web Service"
+8. Wait for deployment (5-10 minutes)
+
+
+STEP 4: DEPLOY FRONTEND TO CLOUDFLARE
+--------------------------------------
+1. Go to: https://dash.cloudflare.com
+2. Go to "Workers & Pages" → "Pages"
+3. Click "Create a project"
+4. Click "Connect to Git"
+5. Authorize GitHub and select: auraquant-system
+6. Configure:
+   - Project name: auraquant-frontend
+   - Production branch: main
+   - Framework preset: None
+   - Build command: cd frontend && npm install && npm run build
+   - Build output directory: frontend/build
+   - Root directory: /
+
+7. Add Environment Variables:
+   REACT_APP_API_URL = https://auraquant-backend.onrender.com
+
+8. Click "Save and Deploy"
+9. Wait for build (3-5 minutes)
+
+
+STEP 5: VERIFY DEPLOYMENT
+-------------------------
+Test these URLs in your browser:
+
+Backend Health:
+https://auraquant-backend.onrender.com/health
+
+Swarm Status:
+https://auraquant-backend.onrender.com/api/swarm/status
+
+Frontend:
+https://auraquant-frontend.pages.dev
+
+
+STEP 6: EMERGENCY KILL SWITCH TEST
+-----------------------------------
+Run this PowerShell command to test the kill switch:
+
+$headers = @{ "Content-Type" = "application/json" }
+$body = '{"reason": "Test activation"}'
+Invoke-WebRequest -Method Post -Uri "https://auraquant-backend.onrender.com/api/emergency/killswitch" -Headers $headers -Body $body
+
+
+==============================================================================
+IMPORTANT NOTES:
+- Backend may take 5-10 minutes to be ready on first deploy
+- Frontend build takes 3-5 minutes
+- If backend shows "Service Unavailable", wait and refresh
+- Check Render logs if backend doesn't start
+- Check Cloudflare build logs if frontend fails
+==============================================================================
