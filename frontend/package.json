@@ -1,0 +1,29 @@
+{
+  "name": "auraquant-frontend",
+  "version": "1.0.0",
+  "description": "AuraQuant Trading System Frontend",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 3000",
+    "serve": "npx http-server -p 3000 -c-1",
+    "serve:python": "python -m http.server 3000",
+    "serve:node": "npx http-server -p 3000 -c-1 --cors",
+    "serve:live": "npx live-server --port=3000",
+    "build": "echo 'Frontend ready for deployment'",
+    "test": "node qa-qc-check.js",
+    "qa": "node qa-qc-check.js",
+    "open": "start http://localhost:3000"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1",
+    "live-server": "^1.2.2"
+  },
+  "keywords": [
+    "trading",
+    "auraquant",
+    "frontend",
+    "dashboard"
+  ],
+  "author": "AuraQuant Team",
+  "license": "PROPRIETARY"
+}

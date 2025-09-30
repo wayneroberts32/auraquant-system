@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fees Display - AuraQuant</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/tradingview-custom.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0033 50%, #000510 100%);
+            color: #ffffff;
+        }
+        .logo {
+            width: 50px;
+            height: 50px;
+            animation: rotate 10s linear infinite;
+        }
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .title {
+            font-size: 28px;
+            font-weight: bold;
+            background: linear-gradient(90deg, #00ff88, #00ffff, #ff00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .card {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+        }
+        .card-header {
+            background: rgba(0, 0, 0, 0.8);
+            border-bottom: 2px solid rgba(0, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid p-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="title"><i class="fas fa-receipt"></i> Trading Fees & Costs</h2>
+            <img src="../assets/img/logo-full.png" alt="AuraQuant" class="logo">
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Fee Calculator</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label class="form-label">Broker</label>
+                                <select class="form-control" id="broker-select" onchange="updateFees()">
+                                    <option value="ibkr">Interactive Brokers</option>
+                                    <option value="binance">Binance</option>
+                                    <option value="alpaca">Alpaca</option>
+                                    <option value="plus500">Plus500</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Asset Type</label>
+                                <select class="form-control" id="asset-type" onchange="updateFees()">
+                                    <option value="stocks">Stocks</option>
+                                    <option value="crypto">Crypto</option>
+                                    <option value="options">Options</option>
+                                    <option value="futures">Futures</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Trade Value</label>
+                                <input type="number" class="form-control" id="trade-value" placeholder="10000" onchange="updateFees()">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Total Fees</label>
+                                <h3 id="total-fees" class="text-primary">$0.00</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-university"></i> Broker Fees</h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-sm">
+                            <tbody>
+                                <tr>
+                                    <td>Commission</td>
+                                    <td class="text-end"><span id="commission">$0.00</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Platform Fee</td>
+                                    <td class="text-end"><span id="platform-fee">$0.00</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Data Feed</td>
+                                    <td class="text-end"><span id="data-fee">$0.00</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Custody Fee</td>
+                                    <td class="text-end"><span id="custody-fee">$0.00</span></td>
+                                </tr>
+                                <tr class="fw-bold">
+                                    <td>Total Broker</td>
+                                    <td class="text-end text-primary"><span id="total-broker">$0.00</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-exchange-alt"></i> Exchange Fees</h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-sm">
+                            <tbody>
+                                <tr>
+                                    <td>Exchange Fee</td>
+                                    <td class="text-end"><span id="exchange-fee">$0.00</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Clearing Fee</td>
+                                    <td class="text-end"><span id="clearing-fee">$0.00</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Settlement Fee</td>
+                                    <td class="text-end"><span id="settlement-fee">$0.00</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Network Fee</td>
+                                    <td class="text-end"><span id="network-fee">$0.00</span></td>
+                                </tr>
+                                <tr class="fw-bold">
+                                    <td>Total Exchange</td>
+                                    <td class="text-end text-warning"><span id="total-exchange">$0.00</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-landmark"></i> Regulatory Fees</h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-sm">
+                            <tbody>
+                                <tr>
+                                    <td>SEC Fee</td>
+                                    <td class="text-end"><span id="sec-fee">$0.00</span></td>
+                                </tr>
+                                <tr>
+                                    <td>TAF Fee</td>
+                                    <td class="text-end"><span id="taf-fee">$0.00</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Stamp Duty</td>
+                                    <td class="text-end"><span id="stamp-duty">$0.00</span></td>
+                                </tr>
+                                <tr>
+                                    <td>FTT Tax</td>
+                                    <td class="text-end"><span id="ftt-tax">$0.00</span></td>
+                                </tr>
+                                <tr class="fw-bold">
+                                    <td>Total Regulatory</td>
+                                    <td class="text-end text-danger"><span id="total-regulatory">$0.00</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Fee Comparison</h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Broker</th>
+                                    <th>Stocks</th>
+                                    <th>Options</th>
+                                    <th>Futures</th>
+                                    <th>Crypto</th>
+                                    <th>Min. Deposit</th>
+                                    <th>Monthly Fee</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Interactive Brokers</strong></td>
+                                    <td>$0.005/share</td>
+                                    <td>$0.65/contract</td>
+                                    <td>$0.85/contract</td>
+                                    <td>0.12%</td>
+                                    <td>$0</td>
+                                    <td>$10</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Alpaca</strong></td>
+                                    <td>$0 (Free)</td>
+                                    <td>N/A</td>
+                                    <td>N/A</td>
+                                    <td>0.25%</td>
+                                    <td>$0</td>
+                                    <td>$0</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Binance</strong></td>
+                                    <td>N/A</td>
+                                    <td>N/A</td>
+                                    <td>0.02%</td>
+                                    <td>0.10%</td>
+                                    <td>$10</td>
+                                    <td>$0</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Plus500</strong></td>
+                                    <td>Spread</td>
+                                    <td>Spread</td>
+                                    <td>Spread</td>
+                                    <td>Spread</td>
+                                    <td>$100</td>
+                                    <td>$0</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateFees() {
+            const broker = document.getElementById('broker-select').value;
+            const assetType = document.getElementById('asset-type').value;
+            const tradeValue = parseFloat(document.getElementById('trade-value').value) || 0;
+            
+            // Calculate fees based on broker and asset type
+            let commission = 0;
+            let exchangeFee = 0;
+            let regulatoryFee = 0;
+            
+            if (broker === 'ibkr') {
+                commission = Math.max(1, tradeValue * 0.0005); // 0.05%, min $1
+                exchangeFee = tradeValue * 0.0001;
+                regulatoryFee = tradeValue * 0.00002;
+            } else if (broker === 'binance') {
+                commission = tradeValue * 0.001; // 0.1%
+                exchangeFee = 0;
+                regulatoryFee = 0;
+            } else if (broker === 'alpaca') {
+                commission = 0; // Commission-free
+                exchangeFee = tradeValue * 0.00003;
+                regulatoryFee = tradeValue * 0.00002;
+            }
+            
+            // Update display
+            document.getElementById('commission').textContent = `$${commission.toFixed(2)}`;
+            document.getElementById('exchange-fee').textContent = `$${exchangeFee.toFixed(2)}`;
+            document.getElementById('sec-fee').textContent = `$${regulatoryFee.toFixed(2)}`;
+            
+            const totalFees = commission + exchangeFee + regulatoryFee;
+            document.getElementById('total-fees').textContent = `$${totalFees.toFixed(2)}`;
+            document.getElementById('total-broker').textContent = `$${commission.toFixed(2)}`;
+            document.getElementById('total-exchange').textContent = `$${exchangeFee.toFixed(2)}`;
+            document.getElementById('total-regulatory').textContent = `$${regulatoryFee.toFixed(2)}`;
+        }
+    </script>
+</body>
+</html>

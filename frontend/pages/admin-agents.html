@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AuraQuant - AI Agent Management (Admin)</title>
+    <link rel="icon" type="image/png" href="../assets/img/logo-button.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #131722;
+            color: #d1d4dc;
+            overflow: hidden;
+        }
+        
+        .container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            height: 52px;
+            background: #1e222d;
+            border-bottom: 1px solid #2a2e39;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            justify-content: space-between;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .logo-spin {
+            height: 35px;
+            width: auto;
+            animation: rotate 10s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .page-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #d1d4dc;
+        }
+        
+        .admin-badge {
+            background: #ff4444;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .panel {
+            background: #1e222d;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .panel-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #d1d4dc;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            background: #00ff88;
+            color: #131722;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: opacity 0.2s;
+        }
+        
+        .btn:hover {
+            opacity: 0.9;
+        }
+        
+        .btn-danger {
+            background: #ff4444;
+        }
+        
+        .btn-warning {
+            background: #ffa500;
+        }
+        
+        .btn-secondary {
+            background: #787b86;
+        }
+        
+        .btn-small {
+            padding: 4px 8px;
+            font-size: 12px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: #131722;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #2a2e39;
+        }
+        
+        .stat-label {
+            color: #787b86;
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #00ff88;
+        }
+        
+        .agents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .agent-card {
+            background: #131722;
+            border: 1px solid #2a2e39;
+            border-radius: 8px;
+            padding: 15px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .agent-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 255, 136, 0.1);
+        }
+        
+        .agent-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .agent-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #00ff88;
+        }
+        
+        .agent-type {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            background: #2a2e39;
+        }
+        
+        .agent-status {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        
+        .status-active { background: #00ff88; color: #131722; }
+        .status-paused { background: #ffa500; color: #131722; }
+        .status-stopped { background: #ff4444; }
+        
+        .agent-info {
+            color: #787b86;
+            font-size: 12px;
+            margin: 5px 0;
+        }
+        
+        .agent-metrics {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #2a2e39;
+        }
+        
+        .metric {
+            text-align: center;
+        }
+        
+        .metric-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #d1d4dc;
+        }
+        
+        .metric-label {
+            font-size: 10px;
+            color: #787b86;
+            margin-top: 2px;
+        }
+        
+        .agent-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #1e222d;
+            border-radius: 8px;
+            padding: 30px;
+            min-width: 500px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #787b86;
+            font-size: 14px;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            background: #131722;
+            border: 1px solid #2a2e39;
+            border-radius: 4px;
+            color: #d1d4dc;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #00ff88;
+        }
+        
+        .indicator-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        
+        .indicator-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .indicator-item input[type="checkbox"] {
+            width: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-left">
+                <img src="../assets/img/logo-button.png" alt="AuraQuant" class="logo-spin">
+                <div class="page-title">AI Agent Management</div>
+                <div class="admin-badge">ADMIN ONLY</div>
+            </div>
+            <div>
+                <button class="btn" onclick="showAddAgentModal()">+ Deploy New Agent</button>
+            </div>
+        </div>
+        
+        <div class="content">
+            <!-- Statistics -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Total Agents</div>
+                    <div class="stat-value" id="totalAgents">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Active Agents</div>
+                    <div class="stat-value" id="activeAgents">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Total Trades</div>
+                    <div class="stat-value" id="totalTrades">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Win Rate</div>
+                    <div class="stat-value" id="avgWinRate">0%</div>
+                </div>
+            </div>
+            
+            <!-- Agents Grid -->
+            <div class="panel">
+                <div class="panel-title">
+                    All AI Agents
+                    <button class="btn btn-small" onclick="refreshAgents()">Refresh</button>
+                </div>
+                <div class="agents-grid" id="agentsGrid">
+                    <!-- Agents will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add Agent Modal -->
+    <div id="addAgentModal" class="modal">
+        <div class="modal-content">
+            <h2 style="margin-bottom: 20px;">Deploy New AI Agent</h2>
+            <form id="addAgentForm">
+                <div class="form-group">
+                    <label>Agent Name</label>
+                    <input type="text" name="name" required placeholder="e.g., Momentum Trader Alpha">
+                </div>
+                
+                <div class="form-group">
+                    <label>Agent Type</label>
+                    <select name="type" required>
+                        <option value="trading">Trading Execution</option>
+                        <option value="analysis">Market Analysis</option>
+                        <option value="risk">Risk Management</option>
+                        <option value="research">Research</option>
+                        <option value="arbitrage">Arbitrage Detection</option>
+                        <option value="news">News Sentiment</option>
+                        <option value="pattern">Pattern Recognition</option>
+                        <option value="quantum">Quantum Computing</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Assign to User</label>
+                    <select name="owner" id="userSelect" required>
+                        <option value="">Select User</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Strategy</label>
+                    <select name="strategy">
+                        <option value="momentum">Momentum</option>
+                        <option value="mean_reversion">Mean Reversion</option>
+                        <option value="arbitrage">Arbitrage</option>
+                        <option value="ml_predictive">ML Predictive</option>
+                        <option value="sentiment">Sentiment Based</option>
+                        <option value="custom">Custom</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Risk Level</label>
+                    <select name="riskLevel">
+                        <option value="conservative">Conservative</option>
+                        <option value="medium">Medium</option>
+                        <option value="aggressive">Aggressive</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Max Positions</label>
+                    <input type="number" name="maxPositions" value="5" min="1" max="50">
+                </div>
+                
+                <div class="form-group">
+                    <label>Stop Loss (%)</label>
+                    <input type="number" name="stopLoss" value="2" min="0.1" max="20" step="0.1">
+                </div>
+                
+                <div class="form-group">
+                    <label>Take Profit (%)</label>
+                    <input type="number" name="takeProfit" value="5" min="0.1" max="50" step="0.1">
+                </div>
+                
+                <div class="form-group">
+                    <label>Technical Indicators</label>
+                    <div class="indicator-grid">
+                        <div class="indicator-item">
+                            <input type="checkbox" name="indicators" value="RSI" checked>
+                            <label>RSI</label>
+                        </div>
+                        <div class="indicator-item">
+                            <input type="checkbox" name="indicators" value="MACD" checked>
+                            <label>MACD</label>
+                        </div>
+                        <div class="indicator-item">
+                            <input type="checkbox" name="indicators" value="BB" checked>
+                            <label>Bollinger</label>
+                        </div>
+                        <div class="indicator-item">
+                            <input type="checkbox" name="indicators" value="EMA">
+                            <label>EMA</label>
+                        </div>
+                        <div class="indicator-item">
+                            <input type="checkbox" name="indicators" value="SMA">
+                            <label>SMA</label>
+                        </div>
+                        <div class="indicator-item">
+                            <input type="checkbox" name="indicators" value="ATR">
+                            <label>ATR</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button type="submit" class="btn">Deploy Agent</button>
+                    <button type="button" class="btn btn-secondary" onclick="hideAddAgentModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        // Check admin authentication
+        const token = localStorage.getItem('auraquant_token');
+        const user = JSON.parse(localStorage.getItem('auraquant_user') || '{}');
+        
+        if (!token || user.role !== 'admin') {
+            alert('Admin access required');
+            window.location.href = 'login.html';
+        }
+        
+        // Load agents on page load
+        window.onload = function() {
+            loadAgents();
+            loadStatistics();
+            loadUsers();
+        };
+        
+        async function loadAgents() {
+            try {
+                const response = await fetch('http://localhost:8000/api/agents', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    displayAgents(data.agents);
+                }
+            } catch (error) {
+                console.error('Error loading agents:', error);
+            }
+        }
+        
+        async function loadStatistics() {
+            try {
+                const response = await fetch('http://localhost:8000/api/admin/stats', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('totalAgents').textContent = data.statistics.agents.total;
+                    document.getElementById('activeAgents').textContent = data.statistics.agents.active;
+                    // Calculate aggregate metrics from all agents
+                    // This would come from backend aggregation
+                    document.getElementById('totalTrades').textContent = '0';
+                    document.getElementById('avgWinRate').textContent = '0%';
+                }
+            } catch (error) {
+                console.error('Error loading statistics:', error);
+            }
+        }
+        
+        async function loadUsers() {
+            try {
+                const response = await fetch('http://localhost:8000/api/admin/users', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    const select = document.getElementById('userSelect');
+                    select.innerHTML = '<option value="">Select User</option>';
+                    
+                    data.users.forEach(user => {
+                        const option = document.createElement('option');
+                        option.value = user._id;
+                        option.textContent = `${user.email} (${user.role})`;
+                        select.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading users:', error);
+            }
+        }
+        
+        function displayAgents(agents) {
+            const grid = document.getElementById('agentsGrid');
+            grid.innerHTML = '';
+            
+            if (agents.length === 0) {
+                grid.innerHTML = '<p style="color: #787b86; text-align: center; padding: 40px;">No agents deployed yet</p>';
+                return;
+            }
+            
+            agents.forEach(agent => {
+                const card = document.createElement('div');
+                card.className = 'agent-card';
+                
+                const statusClass = `status-${agent.status}`;
+                const metrics = agent.performance_metrics || {};
+                
+                card.innerHTML = `
+                    <div class="agent-header">
+                        <div class="agent-name">${agent.name}</div>
+                        <div class="agent-status ${statusClass}">${agent.status.toUpperCase()}</div>
+                    </div>
+                    <div class="agent-info">
+                        <div>Type: <span class="agent-type">${agent.type.toUpperCase()}</span></div>
+                        <div>Strategy: ${agent.configuration.strategy}</div>
+                        <div>Owner: ${agent.owner_id}</div>
+                        <div>Created: ${new Date(agent.created_at).toLocaleDateString()}</div>
+                    </div>
+                    <div class="agent-metrics">
+                        <div class="metric">
+                            <div class="metric-value">${metrics.total_trades || 0}</div>
+                            <div class="metric-label">TRADES</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">${metrics.win_rate ? (metrics.win_rate * 100).toFixed(1) : 0}%</div>
+                            <div class="metric-label">WIN RATE</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">${metrics.profit_loss ? metrics.profit_loss.toFixed(2) : 0}</div>
+                            <div class="metric-label">P&L</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">${metrics.sharpe_ratio ? metrics.sharpe_ratio.toFixed(2) : 0}</div>
+                            <div class="metric-label">SHARPE</div>
+                        </div>
+                    </div>
+                    <div class="agent-actions">
+                        ${agent.status === 'active' ? 
+                            `<button class="btn btn-small btn-warning" onclick="controlAgent('${agent._id}', 'pause')">Pause</button>
+                             <button class="btn btn-small btn-danger" onclick="controlAgent('${agent._id}', 'stop')">Stop</button>` :
+                            `<button class="btn btn-small" onclick="controlAgent('${agent._id}', 'start')">Start</button>`
+                        }
+                        <button class="btn btn-small btn-secondary" onclick="configureAgent('${agent._id}')">Configure</button>
+                        <button class="btn btn-small btn-danger" onclick="deleteAgent('${agent._id}')">Delete</button>
+                    </div>
+                `;
+                
+                grid.appendChild(card);
+            });
+        }
+        
+        function showAddAgentModal() {
+            document.getElementById('addAgentModal').style.display = 'block';
+        }
+        
+        function hideAddAgentModal() {
+            document.getElementById('addAgentModal').style.display = 'none';
+        }
+        
+        document.getElementById('addAgentForm').onsubmit = async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            
+            // Get selected indicators
+            const indicators = [];
+            const checkboxes = document.querySelectorAll('input[name="indicators"]:checked');
+            checkboxes.forEach(cb => indicators.push(cb.value));
+            
+            const agentData = {
+                name: formData.get('name'),
+                type: formData.get('type'),
+                owner_id: formData.get('owner'),
+                configuration: {
+                    strategy: formData.get('strategy'),
+                    risk_level: formData.get('riskLevel'),
+                    max_positions: parseInt(formData.get('maxPositions')),
+                    stop_loss: parseFloat(formData.get('stopLoss')) / 100,
+                    take_profit: parseFloat(formData.get('takeProfit')) / 100,
+                    indicators: indicators
+                }
+            };
+            
+            try {
+                // Admin creates agent with specific owner
+                const response = await fetch('http://localhost:8000/api/admin/agents', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(agentData)
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('Agent deployed successfully');
+                    hideAddAgentModal();
+                    loadAgents();
+                    loadStatistics();
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            } catch (error) {
+                console.error('Error creating agent:', error);
+                alert('Failed to deploy agent');
+            }
+        };
+        
+        async function controlAgent(agentId, action) {
+            try {
+                const response = await fetch(`http://localhost:8000/api/agents/${agentId}/control`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ action })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert(`Agent ${action}ed successfully`);
+                    loadAgents();
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            } catch (error) {
+                console.error('Error controlling agent:', error);
+            }
+        }
+        
+        async function deleteAgent(agentId) {
+            if (!confirm('Are you sure you want to delete this agent? This cannot be undone.')) return;
+            
+            try {
+                const response = await fetch(`http://localhost:8000/api/agents/${agentId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('Agent deleted');
+                    loadAgents();
+                    loadStatistics();
+                }
+            } catch (error) {
+                console.error('Error deleting agent:', error);
+            }
+        }
+        
+        function configureAgent(agentId) {
+            // TODO: Open configuration modal
+            alert('Agent configuration coming soon');
+        }
+        
+        function refreshAgents() {
+            loadAgents();
+            loadStatistics();
+        }
+    </script>
+</body>
+</html>

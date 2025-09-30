@@ -1,0 +1,361 @@
+⚡ WARP MASTER FRONTEND UPGRADE PROMPT — AuraQuant Pro Synthetic Intelligence Platform
+
+ADD-ONLY • NO REBUILD • NO RESTYLE • HARD BRANDING LOCK • FULL SYNC TO BACKEND + MONGODB
+
+🎯 Core Mission
+
+Warp, your task is to upgrade the AuraQuant frontend into the world’s most advanced synthetic orchestrator trading platform.
+
+This system must always remain self-learning, self-evolving, self-upgrading, self-repairing, and synthetic intelligent.
+
+It must operate at ultra high speed and low latency.
+
+It must be stand-alone first, pulling all data and trading from our broker API adapters.
+
+It must only fail over to Plus500 and TradingView if and only if the primary APIs become unstable, delayed, or unavailable.
+
+It must remain a professional business-class platform that is stronger and more advanced than TradingView, Plus500, Warrior Trading, or TierOne, while preserving the AuraQuant style and brand.
+
+All functions must operate under a single browser tab, with panels, pages, and workspaces that can be dragged, resized, split, and reorganized without spawning multiple tabs.
+
+All new modules must be add-only. Do not rebuild existing code. Do not restyle any components. Do not delete or rename existing files.
+
+All branding, including the spinning AuraQuant logo and the locked color scheme, must remain exactly preserved.
+
+🔒 Branding Lock
+
+Background color: #131722
+
+Panel color: #1e222d
+
+Accent green: #00ff88
+
+Accent red: #ff4444
+
+Text: #d1d4dc
+
+Secondary gray: #787b86
+
+Logo: frontend/Logo/Logo With AuraQuant.png
+
+Logo must always be displayed as a slow-spinning element.
+
+Under no circumstances can the logo, colors, or layouts be changed. These are hard-locked and form part of the AuraQuant brand.
+
+📂 Repository Paths (Windows structure must be respected)
+D:\New_AuraQuant\New_Synthetic_System_AuraQuant_Backup_2025\
+ ├─ frontend\
+ │   ├─ index.html
+ │   ├─ pages\
+ │   └─ Logo\Logo With AuraQuant.png
+ └─ auraquant-backend\   (Render Brain)
+
+🧩 Data Source Rules
+
+The system must operate primarily as a stand-alone platform using our broker APIs through the Render backend.
+
+All quotes, candles, market depth, accounts, orders, and positions must come from our broker APIs.
+
+Health checks must be performed on all broker connections. If latency rises above 1.5x baseline, if error rates exceed 2%, or if heartbeat signals are delayed more than 3 seconds, the system must mark the connection as DEGRADED.
+
+If a broker connection is lost, the system must enter FAILOVER mode. In FAILOVER, all trading functions are disabled, and the frontend must fall back to TradingView or Plus500 data as a read-only view.
+
+In FAILOVER, display a clear but non-intrusive banner at the top of the screen:
+
+“Primary broker data unstable. Viewing fallback feed. Trading is temporarily disabled.”
+
+Once the broker health checks return to stable, the system must automatically recover back to Primary mode, and the banner must disappear.
+
+In the bottom status bar, display a status dot:
+
+🟢 Green = Primary data
+
+🟠 Amber = Degraded
+
+🔵 Blue = Fallback
+
+🟢 Green again = Recovered
+
+🖥️ Required Screens, Displays, and Pages
+
+Warp, ensure the following screens and pages exist, are repaired, and are fully functional:
+
+1. Main Trading Dashboard (main-trading-dashboard.html)
+
+Must display a candlestick chart.
+
+Below candlesticks, display a Volume bar.
+
+Below volume, display an RSI indicator pane.
+
+Below RSI, display a MACD indicator pane.
+
+Chart must support top interval selectors: 10s, 1m, 3m, 5m, 15m, 1h, 4h, D, W.
+
+Chart must support bottom timeline ranges: 1D, 5D, 1M, 3M, 6M, 1Y, 5Y, All.
+
+Multi-screen splits must be supported: 1, 2, 3, 4, 6, 8, 9, 12, and 16 chart splits in one workspace.
+
+Include a full drawing toolbar: trendlines, shapes, retracements, channels.
+
+Include overlays: Bollinger, EMA, SMA, Ichimoku, etc.
+
+Include a system for alerts: price, indicator triggers, trendline break alerts.
+
+Include hotkey mappings:
+
+Alt+T = draw trendline
+
+Alt+A = create alert
+
+Shift+1..9 = switch timeframes
+
+Ctrl+E = export CSV
+
+Ctrl+S = save layout
+
+Must include a tab strip for multiple symbols. Each tab shows symbol name, current price, and % change. Tabs must be closable, draggable, and persist across sessions.
+
+Must include a floating AuraQuant button in the bottom right. The button must not obscure the time axis. Position: right:20px; bottom:60px.
+
+Display a synced UTC+8 clock in the header or footer.
+
+2. Trading Mode Switch (trading-mode.html)
+
+Must allow switching between Long, Short, and Hybrid trading.
+
+Any mode switch must require the user to re-enter their username and password for verification.
+
+3. Screeners (screeners.html)
+
+Must include screeners for stocks, ETFs, bonds, crypto, and DEX/CEX pairs.
+
+Must support filtering, sorting, and CSV export.
+
+Must support alert creation from screener results.
+
+4. Calendars (calendar.html)
+
+Must include economic calendars, earnings calendars, revenue reports, and dividend events.
+
+For each entry, display Actual, Forecast, and Prior values.
+
+Must allow filtering by region and by importance.
+
+5. News Flow (news.html)
+
+Must include a scrolling list of headlines.
+
+When a headline is clicked, display the full article in a right-hand pane.
+
+Must include filters for provider, sentiment, and region.
+
+Must include share buttons for each article.
+
+6. Heatmaps (heatmaps.html)
+
+Must display a treemap heatmap.
+
+Must allow grouping by sector and industry.
+
+Color must represent % change.
+
+Size must represent market cap.
+
+Must support zoom and pan.
+
+7. Options Builder (options.html)
+
+Must allow building of option strategies.
+
+Must display payoff diagrams.
+
+Must show maximum profit, maximum loss, breakeven points, and Greeks.
+
+8. Markets Overview (markets.html)
+
+Must display global indices (Dow, Nasdaq, S&P, FTSE, DAX, etc.).
+
+Must also show ETFs and commodity indices.
+
+9. Community (community.html)
+
+Must include embedded feeds from Telegram and Discord.
+
+10. Profile (profile.html) and Journal (journal.html)
+
+Profile must store broker connections, risk preferences, communication endpoints, and tax profile.
+
+Journal must allow automatic entries from trades, plus manual notes with tags.
+
+Both must support CSV export.
+
+11. AI Workers (ai-workers-panel.html)
+
+Must allow end-users to author custom strategies and indicators in Python 3.12.
+
+Must allow backtesting of those strategies.
+
+Must allow saving of strategies.
+
+Only admin-approved strategies can be promoted into live use.
+
+12. Help Centre (help-centre.html)
+
+Must act as a self-evolving, auto-updating knowledge base.
+
+Must never alter its style, logo, or colors.
+
+13. Authentication Pages
+
+login.html, signup.html, forgot-password.html.
+
+Signup must enforce 18+ requirement with a checkbox and server-side validation.
+
+Admin must be able to approve or reject user accounts.
+
+📊 Growth Governor (V1 → V∞ Steady-Fast)
+
+Create growth-selector.html.
+
+Embed the Growth Governor panel into the Main Dashboard sidebar.
+
+End-users must see it in view-only mode. They can view the current growth stage, current mode (Steady or Fast), and % progress, but cannot interact with controls.
+
+Admins and the System AI core must have full control. Controls include: Approve Next Stage, Rollback, Switch between Steady and Fast growth, Pause or Resume.
+
+Admin interactions must require login and 2FA.
+
+Growth Governor backend endpoints: /api/growth/status, /api/growth/control, /api/growth/audit.
+
+System AI must be able to auto-advance stages, and the frontend must update immediately.
+
+🛡️ Admin Panel Functions
+
+Must include:
+
+Global status dashboard
+
+Performance monitoring (latency, CPU, memory, WebSocket throughput)
+
+Bot status (workers, queues)
+
+Deployment verification (routes, DB, sockets)
+
+Growth Governor (admin control, end-user view)
+
+User management (add, remove, suspend, approve, manually add family/friends)
+
+AI strategy library approval
+
+Backup center with manual backup button, auto backup toggle (daily or on deploy), last 10 backups listed, and restore option
+
+📡 Communications Integration
+
+Alerts and notifications must support:
+
+Telegram
+
+Discord
+
+Email
+
+SMS
+
+🔗 Backend Wiring (Render Brain + MongoDB Atlas)
+
+Even if the backend is currently down, Warp must wire all frontend routes and sockets so they are ready.
+
+Backend routes to wire:
+
+Growth Governor: /api/growth/status, /api/growth/control, /api/growth/audit
+
+Backup: /api/backup/manual, /api/backup/schedule
+
+Notifications: /api/notify
+
+Trading: /api/orders, /api/positions, /api/history
+
+Screeners: /api/screener/*
+
+News: /api/news/*
+
+Calendars: /api/calendar/*
+
+Heatmaps: /api/heatmap
+
+Strategies: /api/strategies/*
+
+WebSocket channels must include: prices, orders, positions, alerts, health, backtest progress.
+
+Once the backend is live, everything must work instantly without modification.
+
+🧪 QA/QC Requirements
+
+Warp must generate QA/QC outputs in:
+
+frontend/QA/qa-qc-report.json
+
+frontend/QA/qa-qc-summary.md
+
+The QA/QC tests must validate:
+
+Branding: logo exists, spins, colors match spec.
+
+Workspace: drag, split, resize works.
+
+Growth Governor: end-users see only; admins control with approval and rollback.
+
+Failover: simulate degraded → fallback → recovery. Must disable trading in fallback and auto-restore to primary.
+
+Main Dashboard: intervals and ranges work, hotkeys work, floating button correctly placed.
+
+Indicators and overlays render.
+
+Alerts create and trigger.
+
+Screeners filter, export, and alert.
+
+Calendar displays Actual, Forecast, Prior.
+
+News articles load and render.
+
+Heatmap zoom/pan.
+
+Options payoff diagrams correct.
+
+Profiles and Journals save and export.
+
+Backup buttons trigger manual backup, show auto-backup schedule.
+
+Alerts send to Telegram, Discord, Email, SMS.
+
+Admin gating enforced strictly.
+
+🚀 Safety Rails
+
+Never delete, rename, or move files.
+
+Never alter branding, logo, or colors.
+
+Only add, repair, wire, and evolve.
+
+All new modules must be additive.
+
+✅ Deliverables:
+
+Fully updated frontend pages in frontend/pages.
+
+Growth Governor embedded and functional.
+
+Backup buttons live.
+
+All routes wired to backend + MongoDB.
+
+Fallback logic live.
+
+QA/QC outputs passing.
+
+END OF PROMPT
+
+Wayne, this is the expanded long-form prompt. It’s verbose, but it means Warp cannot possibly miss or misinterpret anything.

@@ -1,0 +1,18 @@
+services:
+  # Backend service - AuraQuant Trading System
+  - type: web
+    name: auraquant-backend
+    runtime: python
+    region: oregon
+    plan: starter # Paid starter plan
+    branch: main
+    buildCommand: pip install -r requirements.txt
+    startCommand: python backend/system/system_integration.py
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.10"
+      - key: PORT
+        value: "10000"
+      # MongoDB and other env vars are already configured in Render Dashboard
+    healthCheckPath: /health
+    autoDeploy: true

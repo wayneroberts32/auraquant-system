@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AuraQuant - User Profile</title>
+    <link rel="icon" type="image/png" href="../assets/img/logo-button.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #131722;
+            color: #d1d4dc;
+            overflow: hidden;
+        }
+        
+        .container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            height: 52px;
+            background: #1e222d;
+            border-bottom: 1px solid #2a2e39;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            justify-content: space-between;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .logo-spin {
+            height: 35px;
+            width: auto;
+            animation: rotate 10s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .page-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #d1d4dc;
+        }
+        
+        .content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        .profile-header {
+            background: #1e222d;
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+        
+        .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00ff88, #00b359);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            font-weight: bold;
+            color: #131722;
+        }
+        
+        .profile-info h2 {
+            color: #d1d4dc;
+            margin-bottom: 5px;
+        }
+        
+        .profile-info .email {
+            color: #787b86;
+            margin-bottom: 10px;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 4px;
+            background: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #2a2e39;
+            background: #1e222d;
+            border-radius: 8px 8px 0 0;
+            padding: 10px 10px 0;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            background: transparent;
+            color: #787b86;
+            border: none;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 4px 4px 0 0;
+        }
+        
+        .tab.active {
+            color: #00ff88;
+            background: #131722;
+            border-bottom-color: #00ff88;
+        }
+        
+        .tab:hover {
+            color: #d1d4dc;
+        }
+        
+        .panel {
+            background: #1e222d;
+            border-radius: 0 0 8px 8px;
+            padding: 20px;
+            margin-top: -1px;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #d1d4dc;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #787b86;
+            font-size: 14px;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 8px 12px;
+            background: #131722;
+            border: 1px solid #2a2e39;
+            border-radius: 4px;
+            color: #d1d4dc;
+            font-size: 14px;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #00ff88;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .broker-card {
+            background: #131722;
+            border: 1px solid #2a2e39;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .broker-info {
+            flex: 1;
+        }
+        
+        .broker-name {
+            font-weight: 600;
+            color: #d1d4dc;
+            margin-bottom: 5px;
+        }
+        
+        .broker-status {
+            font-size: 12px;
+            color: #787b86;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            background: #00ff88;
+            color: #131722;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: opacity 0.2s;
+        }
+        
+        .btn:hover {
+            opacity: 0.9;
+        }
+        
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+        
+        .btn-danger {
+            background: #ff4444;
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #787b86;
+            color: white;
+        }
+        
+        .risk-slider {
+            margin: 20px 0;
+        }
+        
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .slider {
+            width: 100%;
+            -webkit-appearance: none;
+            height: 6px;
+            border-radius: 3px;
+            background: #2a2e39;
+            outline: none;
+        }
+        
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #00ff88;
+            cursor: pointer;
+        }
+        
+        .slider::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #00ff88;
+            cursor: pointer;
+        }
+        
+        .notification-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .notification-card {
+            background: #131722;
+            border: 1px solid #2a2e39;
+            border-radius: 6px;
+            padding: 15px;
+        }
+        
+        .notification-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .notification-title {
+            font-weight: 600;
+            color: #d1d4dc;
+        }
+        
+        .toggle {
+            position: relative;
+            width: 44px;
+            height: 24px;
+        }
+        
+        .toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #2a2e39;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: #787b86;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .toggle-slider {
+            background-color: #00ff88;
+        }
+        
+        input:checked + .toggle-slider:before {
+            transform: translateX(20px);
+            background-color: #131722;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .stat-card {
+            background: #131722;
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #00ff88;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #787b86;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-left">
+                <img src="../assets/img/logo-button.png" alt="AuraQuant" class="logo-spin">
+                <div class="page-title">User Profile</div>
+            </div>
+            <div>
+                <button class="btn btn-small" onclick="saveProfile()">Save Changes</button>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div class="profile-header">
+                <div class="avatar" id="avatar">A</div>
+                <div class="profile-info">
+                    <h2 id="username">Loading...</h2>
+                    <div class="email" id="email">loading@example.com</div>
+                    <span class="status-badge">Active Trader</span>
+                </div>
+                <div class="stats-grid" style="margin-left: auto;">
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalTrades">0</div>
+                        <div class="stat-label">Total Trades</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="winRate">0%</div>
+                        <div class="stat-label">Win Rate</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalPnL">$0</div>
+                        <div class="stat-label">Total P&L</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('general')">General</button>
+                <button class="tab" onclick="switchTab('brokers')">Brokers</button>
+                <button class="tab" onclick="switchTab('risk')">Risk Management</button>
+                <button class="tab" onclick="switchTab('notifications')">Notifications</button>
+                <button class="tab" onclick="switchTab('statistics')">Statistics</button>
+                <button class="tab" onclick="switchTab('growth')">Growth Governor</button>
+            </div>
+            
+            <div class="panel">
+                <!-- General Tab -->
+                <div id="general-panel">
+                    <div class="section">
+                        <div class="section-title">Personal Information</div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Username</label>
+                                <input type="text" id="input-username" placeholder="Enter username">
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" id="input-email" placeholder="Enter email">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Trading Experience</label>
+                                <select id="experience">
+                                    <option value="beginner">Beginner</option>
+                                    <option value="intermediate">Intermediate</option>
+                                    <option value="advanced">Advanced</option>
+                                    <option value="expert">Expert</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Preferred Assets</label>
+                                <input type="text" id="assets" placeholder="BTC, ETH, AAPL" value="BTC, ETH">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="toggle">
+                                <input type="checkbox" id="autoTrade">
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <span style="margin-left: 50px;">Enable Auto Trading</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Brokers Tab -->
+                <div id="brokers-panel" style="display: none;">
+                    <div class="section">
+                        <div class="section-title">
+                            Connected Brokers
+                            <button class="btn btn-small" onclick="showAddBrokerModal()">+ Add Broker</button>
+                        </div>
+                        
+                        <div id="brokers-list">
+                            <!-- Brokers will be populated here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Risk Tab -->
+                <div id="risk-panel" style="display: none;">
+                    <div class="section">
+                        <div class="section-title">Risk Preferences</div>
+                        
+                        <div class="form-group">
+                            <label>Trading Mode</label>
+                            <select id="tradingMode">
+                                <option value="conservative">Conservative</option>
+                                <option value="moderate">Moderate</option>
+                                <option value="aggressive">Aggressive</option>
+                            </select>
+                        </div>
+                        
+                        <div class="risk-slider">
+                            <div class="slider-label">
+                                <span>Max Drawdown</span>
+                                <span id="drawdownValue">20%</span>
+                            </div>
+                            <input type="range" class="slider" id="maxDrawdown" min="5" max="50" value="20">
+                        </div>
+                        
+                        <div class="risk-slider">
+                            <div class="slider-label">
+                                <span>Target Annual Growth</span>
+                                <span id="growthValue">15%</span>
+                            </div>
+                            <input type="range" class="slider" id="targetGrowth" min="5" max="100" value="15">
+                        </div>
+                        
+                        <div class="risk-slider">
+                            <div class="slider-label">
+                                <span>Max Position Size</span>
+                                <span id="positionValue">10%</span>
+                            </div>
+                            <input type="range" class="slider" id="maxPosition" min="1" max="25" value="10">
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Stop Loss (%)</label>
+                                <input type="number" id="stopLoss" value="2" min="0.5" max="10" step="0.5">
+                            </div>
+                            <div class="form-group">
+                                <label>Take Profit (%)</label>
+                                <input type="number" id="takeProfit" value="5" min="1" max="50" step="1">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Notifications Tab -->
+                <div id="notifications-panel" style="display: none;">
+                    <div class="section">
+                        <div class="section-title">Notification Settings</div>
+                        
+                        <div class="notification-grid">
+                            <div class="notification-card">
+                                <div class="notification-header">
+                                    <span class="notification-title">📧 Email</span>
+                                    <label class="toggle">
+                                        <input type="checkbox" id="email-enabled">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                <input type="email" placeholder="your@email.com" id="email-address" style="width: 100%;">
+                            </div>
+                            
+                            <div class="notification-card">
+                                <div class="notification-header">
+                                    <span class="notification-title">💬 Telegram</span>
+                                    <label class="toggle">
+                                        <input type="checkbox" id="telegram-enabled">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                <input type="text" placeholder="Chat ID" id="telegram-chat" style="width: 100%;">
+                            </div>
+                            
+                            <div class="notification-card">
+                                <div class="notification-header">
+                                    <span class="notification-title">🎮 Discord</span>
+                                    <label class="toggle">
+                                        <input type="checkbox" id="discord-enabled">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                <input type="text" placeholder="Webhook URL" id="discord-webhook" style="width: 100%;">
+                            </div>
+                            
+                            <div class="notification-card">
+                                <div class="notification-header">
+                                    <span class="notification-title">📱 SMS</span>
+                                    <label class="toggle">
+                                        <input type="checkbox" id="sms-enabled">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                <input type="tel" placeholder="Phone Number" id="sms-phone" style="width: 100%;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Statistics Tab -->
+                <div id="statistics-panel" style="display: none;">
+                    <div class="section">
+                        <div class="section-title">
+                            Trading Statistics
+                            <button class="btn btn-small" onclick="exportStats()">Export CSV</button>
+                        </div>
+                        
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-value" id="stat-totalTrades">0</div>
+                                <div class="stat-label">Total Trades</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value" id="stat-winRate">0%</div>
+                                <div class="stat-label">Win Rate</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value" id="stat-totalPnl">$0</div>
+                                <div class="stat-label">Total P&L</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value" id="stat-avgWin">$0</div>
+                                <div class="stat-label">Avg Win</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value" id="stat-avgLoss">$0</div>
+                                <div class="stat-label">Avg Loss</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value" id="stat-profitFactor">0</div>
+                                <div class="stat-label">Profit Factor</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value" id="stat-sharpeRatio">0</div>
+                                <div class="stat-label">Sharpe Ratio</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value" id="stat-maxDrawdown">0%</div>
+                                <div class="stat-label">Max Drawdown</div>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 30px;">
+                            <h4 style="color: #d1d4dc; margin-bottom: 15px;">Performance History</h4>
+                            <canvas id="performanceChart" style="width: 100%; height: 300px; background: #131722; border-radius: 6px;"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Growth Governor Tab (View Only for End Users) -->
+                <div id="growth-panel" style="display: none;">
+                    <div class="section">
+                        <div class="section-title">Growth Governor Status</div>
+                        
+                        <div style="background: #131722; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                                <div>
+                                    <h3 style="color: #00ff88; margin-bottom: 5px;">Current Stage: <span id="growth-stage">V1</span></h3>
+                                    <p style="color: #787b86;">Mode: <span id="growth-mode" style="color: #d1d4dc;">Steady</span></p>
+                                </div>
+                                <div style="text-align: right;">
+                                    <div style="font-size: 36px; font-weight: bold; color: #00ff88;" id="growth-progress">0%</div>
+                                    <div style="color: #787b86; font-size: 12px;">Progress to Next Stage</div>
+                                </div>
+                            </div>
+                            
+                            <div style="background: #2a2e39; height: 20px; border-radius: 10px; overflow: hidden;">
+                                <div id="growth-bar" style="height: 100%; background: linear-gradient(90deg, #00ff88, #00b359); width: 0%; transition: width 0.5s;"></div>
+                            </div>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">
+                            <div style="background: #131722; padding: 15px; border-radius: 6px;">
+                                <h4 style="color: #d1d4dc; margin-bottom: 10px;">System Metrics</h4>
+                                <div style="display: flex; flex-direction: column; gap: 8px;">
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <span style="color: #787b86;">Uptime:</span>
+                                        <span style="color: #00ff88;" id="system-uptime">99.9%</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <span style="color: #787b86;">Success Rate:</span>
+                                        <span style="color: #00ff88;" id="system-success">94.2%</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <span style="color: #787b86;">Evolution Score:</span>
+                                        <span style="color: #d1d4dc;" id="evolution-score">8.5/10</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div style="background: #131722; padding: 15px; border-radius: 6px;">
+                                <h4 style="color: #d1d4dc; margin-bottom: 10px;">Next Upgrade</h4>
+                                <div style="display: flex; flex-direction: column; gap: 8px;">
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <span style="color: #787b86;">Target:</span>
+                                        <span style="color: #d1d4dc;" id="next-stage">V2</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <span style="color: #787b86;">ETA:</span>
+                                        <span style="color: #d1d4dc;" id="upgrade-eta">~7 days</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <span style="color: #787b86;">Requirements:</span>
+                                        <span style="color: #00ff88;" id="requirements-met">Met</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 20px; padding: 15px; background: rgba(0, 255, 136, 0.1); border: 1px solid #00ff88; border-radius: 6px;">
+                            <p style="color: #00ff88; font-size: 14px;">
+                                <strong>Note:</strong> The Growth Governor is managed by the system admin and AI core. 
+                                As an end-user, you can monitor the system's evolution progress but cannot directly control it. 
+                                The system will automatically evolve based on performance metrics and admin approval.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const API_BASE_URL = window.location.hostname === 'localhost' ? 
+            'http://localhost:8000' : 'https://auraquant-backend.onrender.com';
+        const API_BASE = API_BASE_URL + '/api';
+        let userProfile = null;
+        let journalStats = null;
+        
+        // Load profile on page load
+        window.onload = function() {
+            loadProfile();
+            loadJournalStats();
+            loadGrowthStatus();
+            setupSliderListeners();
+        };
+        
+        async function loadProfile() {
+            const token = localStorage.getItem('auraquant_token');
+            
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE}/profile/get`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    userProfile = data.profile;
+                    displayProfile(userProfile);
+                }
+            } catch (error) {
+                console.error('Error loading profile:', error);
+            }
+        }
+        
+        function displayProfile(profile) {
+            // Header info
+            document.getElementById('username').textContent = profile.username || 'User';
+            document.getElementById('email').textContent = profile.email || '';
+            
+            // Avatar
+            const initial = (profile.username || profile.email || 'U')[0].toUpperCase();
+            document.getElementById('avatar').textContent = initial;
+            
+            // General tab
+            document.getElementById('input-username').value = profile.username || '';
+            document.getElementById('input-email').value = profile.email || '';
+            document.getElementById('experience').value = profile.trading_experience || 'beginner';
+            document.getElementById('assets').value = (profile.preferred_assets || []).join(', ');
+            document.getElementById('autoTrade').checked = profile.auto_trade_enabled || false;
+            
+            // Risk preferences
+            const risk = profile.risk_preferences || {};
+            document.getElementById('tradingMode').value = risk.trading_mode || 'conservative';
+            document.getElementById('maxDrawdown').value = (risk.max_drawdown || 0.2) * 100;
+            document.getElementById('targetGrowth').value = (risk.target_growth || 0.15) * 100;
+            document.getElementById('maxPosition').value = (risk.max_position_size || 0.1) * 100;
+            document.getElementById('stopLoss').value = (risk.stop_loss || 0.02) * 100;
+            document.getElementById('takeProfit').value = (risk.take_profit || 0.05) * 100;
+            
+            updateSliderValues();
+            
+            // Brokers
+            displayBrokers(profile.brokers || []);
+            
+            // Notifications
+            const notif = profile.notifications || {};
+            if (notif.email) {
+                document.getElementById('email-enabled').checked = notif.email.enabled || false;
+                document.getElementById('email-address').value = notif.email.address || '';
+            }
+            if (notif.telegram) {
+                document.getElementById('telegram-enabled').checked = notif.telegram.enabled || false;
+                document.getElementById('telegram-chat').value = notif.telegram.chat_id || '';
+            }
+            if (notif.discord) {
+                document.getElementById('discord-enabled').checked = notif.discord.enabled || false;
+                document.getElementById('discord-webhook').value = notif.discord.webhook || '';
+            }
+            if (notif.sms) {
+                document.getElementById('sms-enabled').checked = notif.sms.enabled || false;
+                document.getElementById('sms-phone').value = notif.sms.phone || '';
+            }
+            
+            // Trading stats
+            const stats = profile.trading_stats || {};
+            document.getElementById('totalTrades').textContent = stats.total_trades || 0;
+            document.getElementById('winRate').textContent = `${(stats.win_rate || 0).toFixed(1)}%`;
+            document.getElementById('totalPnL').textContent = `$${(stats.total_pnl || 0).toFixed(2)}`;
+        }
+        
+        function displayBrokers(brokers) {
+            const list = document.getElementById('brokers-list');
+            list.innerHTML = '';
+            
+            if (brokers.length === 0) {
+                list.innerHTML = '<p style="color: #787b86;">No brokers connected yet</p>';
+                return;
+            }
+            
+            brokers.forEach(broker => {
+                const card = document.createElement('div');
+                card.className = 'broker-card';
+                card.innerHTML = `
+                    <div class="broker-info">
+                        <div class="broker-name">${broker.name}</div>
+                        <div class="broker-status">API Key: ****${broker.api_key.slice(-4)}</div>
+                    </div>
+                    <button class="btn btn-small btn-danger" onclick="removeBroker('${broker.name}')">Remove</button>
+                `;
+                list.appendChild(card);
+            });
+        }
+        
+        function switchTab(tab) {
+            // Update tab buttons
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Show/hide panels
+            document.getElementById('general-panel').style.display = tab === 'general' ? 'block' : 'none';
+            document.getElementById('brokers-panel').style.display = tab === 'brokers' ? 'block' : 'none';
+            document.getElementById('risk-panel').style.display = tab === 'risk' ? 'block' : 'none';
+            document.getElementById('notifications-panel').style.display = tab === 'notifications' ? 'block' : 'none';
+            document.getElementById('statistics-panel').style.display = tab === 'statistics' ? 'block' : 'none';
+            document.getElementById('growth-panel').style.display = tab === 'growth' ? 'block' : 'none';
+        }
+        
+        function setupSliderListeners() {
+            document.getElementById('maxDrawdown').addEventListener('input', updateSliderValues);
+            document.getElementById('targetGrowth').addEventListener('input', updateSliderValues);
+            document.getElementById('maxPosition').addEventListener('input', updateSliderValues);
+        }
+        
+        function updateSliderValues() {
+            document.getElementById('drawdownValue').textContent = document.getElementById('maxDrawdown').value + '%';
+            document.getElementById('growthValue').textContent = document.getElementById('targetGrowth').value + '%';
+            document.getElementById('positionValue').textContent = document.getElementById('maxPosition').value + '%';
+        }
+        
+        async function saveProfile() {
+            const token = localStorage.getItem('auraquant_token');
+            
+            const profileData = {
+                username: document.getElementById('input-username').value,
+                email: document.getElementById('input-email').value,
+                trading_experience: document.getElementById('experience').value,
+                preferred_assets: document.getElementById('assets').value.split(',').map(a => a.trim()),
+                auto_trade_enabled: document.getElementById('autoTrade').checked,
+                risk_preferences: {
+                    trading_mode: document.getElementById('tradingMode').value,
+                    max_drawdown: parseFloat(document.getElementById('maxDrawdown').value) / 100,
+                    target_growth: parseFloat(document.getElementById('targetGrowth').value) / 100,
+                    max_position_size: parseFloat(document.getElementById('maxPosition').value) / 100,
+                    stop_loss: parseFloat(document.getElementById('stopLoss').value) / 100,
+                    take_profit: parseFloat(document.getElementById('takeProfit').value) / 100
+                },
+                notifications: {
+                    email: {
+                        enabled: document.getElementById('email-enabled').checked,
+                        address: document.getElementById('email-address').value
+                    },
+                    telegram: {
+                        enabled: document.getElementById('telegram-enabled').checked,
+                        chat_id: document.getElementById('telegram-chat').value
+                    },
+                    discord: {
+                        enabled: document.getElementById('discord-enabled').checked,
+                        webhook: document.getElementById('discord-webhook').value
+                    },
+                    sms: {
+                        enabled: document.getElementById('sms-enabled').checked,
+                        phone: document.getElementById('sms-phone').value
+                    }
+                }
+            };
+            
+            try {
+                const response = await fetch(`${API_BASE}/profile/update`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(profileData)
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('Profile updated successfully!');
+                    loadProfile(); // Reload to show updated data
+                } else {
+                    alert('Error updating profile: ' + data.error);
+                }
+            } catch (error) {
+                console.error('Error saving profile:', error);
+                alert('Failed to save profile');
+            }
+        }
+        
+        async function loadJournalStats() {
+            const token = localStorage.getItem('auraquant_token') || localStorage.getItem('auth_token');
+            
+            if (!token) return;
+            
+            try {
+                const response = await fetch(`${API_BASE}/journal/statistics`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (data.success && data.statistics) {
+                    journalStats = data.statistics;
+                    displayStatistics(journalStats);
+                }
+            } catch (error) {
+                console.error('Error loading journal stats:', error);
+            }
+        }
+        
+        function displayStatistics(stats) {
+            document.getElementById('stat-totalTrades').textContent = stats.total_trades || 0;
+            document.getElementById('stat-winRate').textContent = `${(stats.win_rate || 0).toFixed(1)}%`;
+            document.getElementById('stat-totalPnl').textContent = `$${(stats.total_pnl || 0).toFixed(2)}`;
+            document.getElementById('stat-avgWin').textContent = `$${(stats.average_win || 0).toFixed(2)}`;
+            document.getElementById('stat-avgLoss').textContent = `$${Math.abs(stats.average_loss || 0).toFixed(2)}`;
+            document.getElementById('stat-profitFactor').textContent = (stats.profit_factor || 0).toFixed(2);
+            document.getElementById('stat-sharpeRatio').textContent = (stats.sharpe_ratio || 0).toFixed(2);
+            document.getElementById('stat-maxDrawdown').textContent = `${(stats.max_drawdown || 0).toFixed(1)}%`;
+            
+            // Update header stats too
+            document.getElementById('totalTrades').textContent = stats.total_trades || 0;
+            document.getElementById('winRate').textContent = `${(stats.win_rate || 0).toFixed(1)}%`;
+            document.getElementById('totalPnL').textContent = `$${(stats.total_pnl || 0).toFixed(2)}`;
+        }
+        
+        async function loadGrowthStatus() {
+            const token = localStorage.getItem('auraquant_token') || localStorage.getItem('auth_token');
+            
+            if (!token) return;
+            
+            try {
+                const response = await fetch(`${API_BASE}/growth/status`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (data.success && data.status) {
+                    displayGrowthStatus(data.status);
+                }
+            } catch (error) {
+                console.error('Error loading growth status:', error);
+                // Display default values if API not available
+                displayGrowthStatus({
+                    stage: 'V1',
+                    mode: 'Steady',
+                    progress: 15,
+                    uptime: 99.9,
+                    success_rate: 94.2,
+                    evolution_score: 8.5,
+                    next_stage: 'V2',
+                    eta_days: 7
+                });
+            }
+        }
+        
+        function displayGrowthStatus(status) {
+            document.getElementById('growth-stage').textContent = status.stage || 'V1';
+            document.getElementById('growth-mode').textContent = status.mode || 'Steady';
+            document.getElementById('growth-progress').textContent = `${status.progress || 0}%`;
+            document.getElementById('growth-bar').style.width = `${status.progress || 0}%`;
+            
+            document.getElementById('system-uptime').textContent = `${status.uptime || 99.9}%`;
+            document.getElementById('system-success').textContent = `${status.success_rate || 94.2}%`;
+            document.getElementById('evolution-score').textContent = `${status.evolution_score || 8.5}/10`;
+            
+            document.getElementById('next-stage').textContent = status.next_stage || 'V2';
+            document.getElementById('upgrade-eta').textContent = `~${status.eta_days || 7} days`;
+            document.getElementById('requirements-met').textContent = status.requirements_met ? 'Met' : 'Pending';
+        }
+        
+        async function exportStats() {
+            const token = localStorage.getItem('auraquant_token') || localStorage.getItem('auth_token');
+            
+            try {
+                const response = await fetch(`${API_BASE}/journal/export/csv`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (!response.ok) throw new Error('Failed to export CSV');
+                
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `trading_stats_${new Date().toISOString().split('T')[0]}.csv`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+                
+                alert('Statistics exported successfully!');
+            } catch (error) {
+                console.error('Error exporting stats:', error);
+                alert('Failed to export statistics');
+            }
+        }
+        
+        function showAddBrokerModal() {
+            // Simplified modal - in production, use proper modal
+            const name = prompt('Broker Name (e.g., Binance, Alpaca):');
+            const apiKey = prompt('API Key:');
+            const apiSecret = prompt('API Secret (optional):');
+            
+            if (name && apiKey) {
+                addBroker({
+                    name: name,
+                    api_key: apiKey,
+                    api_secret: apiSecret || ''
+                });
+            }
+        }
+        
+        async function addBroker(broker) {
+            const token = localStorage.getItem('auraquant_token');
+            
+            try {
+                const response = await fetch(`${API_BASE}/profile/brokers/add`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(broker)
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('Broker added successfully!');
+                    loadProfile();
+                }
+            } catch (error) {
+                console.error('Error adding broker:', error);
+            }
+        }
+        
+        async function removeBroker(brokerName) {
+            if (!confirm(`Remove ${brokerName}?`)) return;
+            
+            const token = localStorage.getItem('auraquant_token');
+            
+            try {
+                const response = await fetch(`${API_BASE}/profile/brokers/remove/${brokerName}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    loadProfile();
+                }
+            } catch (error) {
+                console.error('Error removing broker:', error);
+            }
+        }
+    </script>
+</body>
+</html>

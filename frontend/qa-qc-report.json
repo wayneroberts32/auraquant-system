@@ -1,0 +1,169 @@
+{
+  "timestamp": "2025-09-29T11:58:58.668Z",
+  "checks": [
+    {
+      "check": "Page: main-trading-dashboard.html",
+      "path": "D:\\New AuraQuant\\New_Synthetic_System_AuraQuant\\frontend\\pages\\main-trading-dashboard.html",
+      "status": "PASS",
+      "message": "File exists"
+    },
+    {
+      "check": "Page: login.html",
+      "path": "D:\\New AuraQuant\\New_Synthetic_System_AuraQuant\\frontend\\pages\\login.html",
+      "status": "PASS",
+      "message": "File exists"
+    },
+    {
+      "check": "Page: help-centre.html",
+      "path": "D:\\New AuraQuant\\New_Synthetic_System_AuraQuant\\frontend\\pages\\help-centre.html",
+      "status": "PASS",
+      "message": "File exists"
+    },
+    {
+      "check": "Page: ai-workers-panel.html",
+      "path": "D:\\New AuraQuant\\New_Synthetic_System_AuraQuant\\frontend\\pages\\ai-workers-panel.html",
+      "status": "PASS",
+      "message": "File exists"
+    },
+    {
+      "check": "Page: asx-paper-trading-launcher.html",
+      "path": "D:\\New AuraQuant\\New_Synthetic_System_AuraQuant\\frontend\\pages\\asx-paper-trading-launcher.html",
+      "status": "PASS",
+      "message": "File exists"
+    },
+    {
+      "check": "Page: balance-control.html",
+      "path": "D:\\New AuraQuant\\New_Synthetic_System_AuraQuant\\frontend\\pages\\balance-control.html",
+      "status": "PASS",
+      "message": "File exists"
+    },
+    {
+      "check": "Page: bot-status.html",
+      "path": "D:\\New AuraQuant\\New_Synthetic_System_AuraQuant\\frontend\\pages\\bot-status.html",
+      "status": "PASS",
+      "message": "File exists"
+    },
+    {
+      "check": "Page: deployment-verification.html",
+      "path": "D:\\New AuraQuant\\New_Synthetic_System_AuraQuant\\frontend\\pages\\deployment-verification.html",
+      "status": "PASS",
+      "message": "File exists"
+    },
+    {
+      "check": "Page: market-depth-demo.html",
+      "path": "D:\\New AuraQuant\\New_Synthetic_System_AuraQuant\\frontend\\pages\\market-depth-demo.html",
+      "status": "PASS",
+      "message": "File exists"
+    },
+    {
+      "check": "Page: performance-monitor.html",
+      "path": "D:\\New AuraQuant\\New_Synthetic_System_AuraQuant\\frontend\\pages\\performance-monitor.html",
+      "status": "PASS",
+      "message": "File exists"
+    },
+    {
+      "check": "Page: pnl-dashboard.html",
+      "path": "D:\\New AuraQuant\\New_Synthetic_System_AuraQuant\\frontend\\pages\\pnl-dashboard.html",
+      "status": "PASS",
+      "message": "File exists"
+    },
+    {
+      "check": "Page: unified-dashboard.html",
+      "path": "D:\\New AuraQuant\\New_Synthetic_System_AuraQuant\\frontend\\pages\\unified-dashboard.html",
+      "status": "PASS",
+      "message": "File exists"
+    },
+    {
+      "check": "Page: auraquant.html",
+      "path": "D:\\New AuraQuant\\New_Synthetic_System_AuraQuant\\frontend\\pages\\auraquant.html",
+      "status": "PASS",
+      "message": "File exists"
+    },
+    {
+      "check": "Page: brokers-banks.html",
+      "path": "D:\\New AuraQuant\\New_Synthetic_System_AuraQuant\\frontend\\pages\\brokers-banks.html",
+      "status": "PASS",
+      "message": "File exists"
+    },
+    {
+      "check": "Page: manual-trade.html",
+      "path": "D:\\New AuraQuant\\New_Synthetic_System_AuraQuant\\frontend\\pages\\manual-trade.html",
+      "status": "PASS",
+      "message": "File exists"
+    },
+    {
+      "check": "Page: growth-selector.html",
+      "path": "D:\\New AuraQuant\\New_Synthetic_System_AuraQuant\\frontend\\pages\\growth-selector.html",
+      "status": "PASS",
+      "message": "File exists"
+    },
+    {
+      "check": "Page: tax-calculator.html",
+      "path": "D:\\New AuraQuant\\New_Synthetic_System_AuraQuant\\frontend\\pages\\tax-calculator.html",
+      "status": "PASS",
+      "message": "File exists"
+    },
+    {
+      "check": "Page: fees-display.html",
+      "path": "D:\\New AuraQuant\\New_Synthetic_System_AuraQuant\\frontend\\pages\\fees-display.html",
+      "status": "PASS",
+      "message": "File exists"
+    },
+    {
+      "check": "Page: heatmaps.html",
+      "path": "D:\\New AuraQuant\\New_Synthetic_System_AuraQuant\\frontend\\pages\\heatmaps.html",
+      "status": "PASS",
+      "message": "File exists"
+    },
+    {
+      "check": "Page: libraries.html",
+      "path": "D:\\New AuraQuant\\New_Synthetic_System_AuraQuant\\frontend\\pages\\libraries.html",
+      "status": "PASS",
+      "message": "File exists"
+    },
+    {
+      "check": "JS: workspace-manager.js",
+      "path": "D:\\New AuraQuant\\New_Synthetic_System_AuraQuant\\frontend\\assets\\js\\workspace-manager.js",
+      "status": "PASS",
+      "message": "File exists"
+    },
+    {
+      "check": "JS: menu-registry.js",
+      "path": "D:\\New AuraQuant\\New_Synthetic_System_AuraQuant\\frontend\\assets\\js\\menu-registry.js",
+      "status": "PASS",
+      "message": "File exists"
+    },
+    {
+      "check": "Logo: logo-button.png",
+      "path": "D:\\New AuraQuant\\New_Synthetic_System_AuraQuant\\frontend\\assets\\img\\logo-button.png",
+      "status": "PASS",
+      "message": "File exists"
+    },
+    {
+      "check": "Menu Registry Integration",
+      "status": "WARNING",
+      "message": "menu-registry.js not included in main dashboard"
+    },
+    {
+      "check": "Single-tab Workspace",
+      "status": "PASS"
+    },
+    {
+      "check": "Admin Gating: bot-status.html",
+      "status": "PASS"
+    },
+    {
+      "check": "Admin Gating: deployment-verification.html",
+      "status": "PASS"
+    },
+    {
+      "check": "Admin Gating: performance-monitor.html",
+      "status": "PASS"
+    }
+  ],
+  "passed": 27,
+  "failed": 0,
+  "warnings": 1,
+  "overallStatus": "PASS",
+  "passRate": "96.4"
+}

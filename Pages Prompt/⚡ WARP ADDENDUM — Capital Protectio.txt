@@ -1,0 +1,216 @@
+⚡ WARP ADDENDUM — Capital Protection, Non-Stop Orchestration, Safe Upgrades (ADD-ONLY, NO REBUILD)
+
+Identity lock: AuraQuant is a professional, business-class, synthetic, ultra high-speed, low-latency trading orchestrator. ADD-ONLY. Preserve colors & slow-spinning logo. Do not rebuild, restyle, rename, move, or delete anything.
+
+0) Non-negotiable Goals
+
+Protect user capital at all costs — enforce layered risk controls and safe-deployment routines that minimize loss risk in all failure modes.
+
+Never stop just because the browser closes — the backend (Render Brain) continues operating; sessions auto-resume on reconnect.
+
+Never go to sleep — implement keep-alive/heartbeat and watchdogs; automatically recover services; no self-reset behavior.
+
+Safe update / upgrade / redeploy — before any rollout, pause/stop trading flows, drain safely, cancel/replace open orders, flatten or hold per policy, verify reconciliation, then resume. If checks fail, auto-rollback.
+
+Idempotent, consistent, auditable — every trading action is exactly-once, durable, and fully traceable.
+
+Note: Markets carry risk. The system must not promise impossibilities; instead, implement defense-in-depth so the platform continuously acts to protect funds and reduce risk exposure in all conditions.
+
+1) Runtime Continuity (Browser Independence)
+
+Frontend must treat the browser tab as stateless. If the user closes the tab, all trading logic continues on the backend. On reopen, UI auto-reconnects to active sessions (WS topics: orders/*, positions/*, alerts/*, health/*).
+
+Implement session rehydration: upon reconnect, fetch open orders, positions, P&L, active alerts, and last chart/layout; restore UI state without user loss.
+
+If WS disconnects > N seconds, show non-blocking banner and keep retrying in the background with exponential backoff.
+
+2) No-Sleep / No Self-Reset
+
+Add keep-alive on the backend: heartbeat to self every 2–3 minutes; ping dependencies (MongoDB, broker adapters).
+
+Add a watchdog (process monitor) to auto-restart crashed workers (but never clear state).
+
+Persist engine state to MongoDB using write-ahead logs (WAL) or atomic state docs:
+
+order_events, position_events, engine_state, risk_state, alerts_state.
+
+Explicitly disable any “auto reset” logic. Only admin/system-approved controlled restarts with state resume.
+
+3) Capital Protection — Defense in Depth
+
+Implement these hard risk rails (all ADD-ONLY):
+
+3.1 Order/Position Safety
+
+Idempotent order keys: every order has a unique clientOrderId to prevent duplicates on retries.
+
+Exactly-once handlers for webhooks/callbacks using de-duplication keys + WAL.
+
+Kill-switch: global emergency stop (/api/risk/kill-switch) sets engine to PAUSED, cancels all new order submissions, may optionally flatten risk per policy.
+
+Circuit breaker per symbol/account:
+
+Halt new orders if slippage or reject rate exceeds threshold, or if volatility breach detected.
+
+Max risk per user (configurable): per-trade, per-day, per-symbol, total notional, and max drawdown guard. Breach ⇒ PAUSED for that scope.
+
+Stale price guard: reject orders if last price age > X sec or price gap > Y%.
+
+Broker health gate: if broker marked DEGRADED or DOWN, disable trading; read-only mode.
+
+3.2 Deployment / Upgrade Safety (Pre-flight & Draining)
+
+Pre-flight checklist before any deploy/upgrade:
+
+Set engine to DRAINING (no new orders), notify users (Telegram/Discord/Email/SMS).
+
+Cancel or replace all unfilled orders (per policy: cancel or reduce).
+
+Flatten or hold open positions per configured policy:
+
+Flat policy: close positions market/alg + limits with retry & slippage bounds.
+
+Hold policy: maintain hedges; freeze strategy engines.
+
+Reconciliation: pull broker positions & balances; compare with Mongo; resolve discrepancies.
+
+All-green gates required to continue; else abort and resume previous state.
+
+Blue-green or canary deployment:
+
+Spin up new instance(s), run smoke tests & paper-sim in parallel.
+
+Switch traffic only if health OK + reconciliation OK.
+
+On failure signals → auto-rollback to previous stable.
+
+3.3 Reconciliation & Ledger
+
+Maintain immutable audit logs:
+
+audit_trades, audit_orders, audit_transfers, audit_engine_actions, with timestamps & request/response snapshots (redact secrets).
+
+Job ledger-reconcile runs scheduled:
+
+Compare Mongo vs broker balances, positions, fills; produce diffs; alert admin on mismatch.
+
+Funds “return” behavior clarification:
+
+Implement graceful unwind (cancel/flatten/settle) per policy; show clear user status; do not initiate external cash transfers automatically unless explicit & safe.
+
+4) Failover & Health Model (Stand-Alone First)
+
+Primary: broker adapters via backend.
+
+Health: compute latency, heartbeat gap, error rate; mark PRIMARY / DEGRADED / FALLBACK / RECOVERED.
+
+Fallback (TradingView/Plus500 view-only):
+
+Charts switch to fallback data; trading actions disabled; banner displayed.
+
+Keep probing primary every 10s; auto-restore to PRIMARY when healthy.
+
+Rate-limit guardian: honor 429 and X-RateLimit headers; throttle UI & WS subscriptions.
+
+5) Safe State Machine (Engine Modes)
+
+Engine modes stored in MongoDB and enforced everywhere:
+
+RUNNING → full trading allowed (if Primary healthy).
+
+DEGRADED → reject risky actions; reduce order frequency; prepare to pause.
+
+DRAINING → no new orders; manage outstanding; reconcile.
+
+PAUSED → no orders; positions managed per policy; alerts still run.
+
+FALLBACK → read-only data; no trading.
+
+RECOVERING → verify reconciliation; warm WS; resume if gates pass.
+
+Only admin/system can change modes; all changes logged in audit_engine_actions.
+
+6) UX & Comms (Users Know What’s Happening)
+
+Status bar chips show mode (RUNNING/DEGRADED/FALLBACK/etc.) and data source state (Primary/Degraded/Fallback).
+
+Non-blocking banners for mode changes (with time & reason).
+
+Notifications (Telegram/Discord/Email/SMS) on:
+
+Mode changes (RUNNING→DRAINING/PAUSED/FALLBACK).
+
+Deploy start/finish/rollback.
+
+Reconciliation success/failure.
+
+Risk guard trips (kill-switch, drawdown limit).
+
+Journal auto-entries for significant events (mode changes, deploys, reconciliations).
+
+7) Persistence & Durability (MongoDB Atlas)
+
+Store all critical state:
+
+engine_state, risk_limits, user_risk_profiles, open_orders, positions_snapshot, audit_*, journal_entries.
+
+Use atomic updates and retryable writes. On partial failures, reconcile and retry idempotently.
+
+Backups:
+
+Manual “Backup Now” button in admin.
+
+Auto-backup schedule (daily & pre-deploy).
+
+Record to backup_records with timestamps & checksums.
+
+Provide restore flow (admin confirm; never auto-restore without admin).
+
+8) QA/QC — Capital Protection & Continuity Suite
+
+Add tests (extend qa-qc-check.js) that simulate and must PASS:
+
+Browser close: close tab mid-session → backend keeps running → reopen tab → session restored; orders/positions intact.
+
+Keep-alive: confirm heartbeats logged ≥ every 3 minutes; no “sleep”.
+
+Kill-switch: trigger → all new orders blocked; existing orders handled per policy; audit written; users notified.
+
+Circuit breaker: inject high reject/slippage → new orders halted; alert fired; audit logged.
+
+Fallback: inject API failures → state flips to FALLBACK; trading buttons disabled; banner shown; auto-recovery to PRIMARY on health OK.
+
+Safe deploy (blue-green):
+
+Set DRAINING; cancel/replace open orders; reconcile; switch; resume.
+
+If any gate fails → rollback; resume previous; audit + notify.
+
+Idempotency: replay duplicate webhooks/requests → no double fills; WAL shows dedupe.
+
+Reconciliation job: broker vs Mongo mismatch detected → alert + report; manual resolve pathway exists.
+
+Backups: manual & scheduled backups create records; test restore dry-run path.
+
+Admin gating: only admin can change engine mode; end-users view-only; audit entries created.
+
+Produce:
+
+frontend/QA/qa-qc-report.json
+
+frontend/QA/qa-qc-summary.md
+with explicit PASS/FAIL and pointers to failing selectors/routes if any.
+
+9) Safety & Scope Rules (Repeat)
+
+ADD-ONLY: Do not rebuild, restyle, rename, move, or delete any existing asset.
+
+Branding locked: colors & slow-spinning logo unchanged.
+
+No self-reset logic anywhere.
+
+No trading while FALLBACK or DEGRADED beyond thresholds.
+
+All changes auditable; all risk actions logged.
+
+END OF ADDENDUM

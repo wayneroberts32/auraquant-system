@@ -1,0 +1,442 @@
+/**
+ * AuraQuant Main Stylesheet
+ * Professional trading system UI
+ */
+
+:root {
+    --auraquant-primary: #1e88e5;
+    --auraquant-secondary: #424242;
+    --auraquant-success: #4caf50;
+    --auraquant-danger: #f44336;
+    --auraquant-warning: #ff9800;
+    --auraquant-info: #2196f3;
+    --auraquant-dark: #212121;
+    --auraquant-light: #f5f5f5;
+}
+
+/* Global Styles */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background-color: var(--auraquant-light);
+    color: #333;
+}
+
+/* Sidebar Navigation */
+.sidebar {
+    min-height: calc(100vh - 60px);
+    background-color: var(--auraquant-dark) !important;
+    padding: 0;
+}
+
+.sidebar .nav-link {
+    padding: 10px 20px;
+    color: #b0b0b0 !important;
+    border-left: 3px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.sidebar .nav-link:hover {
+    color: white !important;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-left-color: var(--auraquant-primary);
+}
+
+.sidebar .nav-link.active {
+    color: white !important;
+    background-color: rgba(30, 136, 229, 0.1);
+    border-left-color: var(--auraquant-primary);
+}
+
+.sidebar .nav-link i {
+    width: 20px;
+    margin-right: 10px;
+}
+
+.sidebar-heading {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+/* Top Navigation Bar */
+.navbar {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    z-index: 1000;
+}
+
+.navbar-brand img {
+    filter: brightness(1.2);
+}
+
+/* Ticker Tape */
+.ticker-tape-container {
+    overflow: hidden;
+    white-space: nowrap;
+    position: relative;
+    border-radius: 4px;
+}
+
+.ticker-tape {
+    display: inline-block;
+    animation: scroll-left 30s linear infinite;
+}
+
+@keyframes scroll-left {
+    0% {
+        transform: translateX(100%);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+.ticker-item {
+    display: inline-block;
+    margin-right: 50px;
+    font-size: 14px;
+}
+
+.ticker-symbol {
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.ticker-price {
+    font-family: 'Courier New', monospace;
+}
+
+/* Cards */
+.card {
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+    font-weight: 600;
+}
+
+.card.bg-dark {
+    background-color: var(--auraquant-dark) !important;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Tables */
+.table {
+    font-size: 14px;
+}
+
+.table th {
+    border-top: none;
+    font-weight: 600;
+    color: #666;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+}
+
+/* Forms */
+.form-control, .form-select {
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--auraquant-primary);
+    box-shadow: 0 0 0 0.2rem rgba(30, 136, 229, 0.25);
+}
+
+/* Buttons */
+.btn {
+    border-radius: 4px;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.btn-primary {
+    background-color: var(--auraquant-primary);
+    border-color: var(--auraquant-primary);
+}
+
+.btn-primary:hover {
+    background-color: #1976d2;
+    border-color: #1976d2;
+    transform: translateY(-1px);
+}
+
+/* Status Badges */
+.badge {
+    padding: 5px 10px;
+    font-weight: 500;
+    border-radius: 12px;
+}
+
+/* Market Depth */
+.order-book {
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+}
+
+.order-book .bid-row {
+    background-color: rgba(76, 175, 80, 0.05);
+}
+
+.order-book .ask-row {
+    background-color: rgba(244, 67, 54, 0.05);
+}
+
+.order-book .spread-row {
+    background-color: #f5f5f5;
+    font-weight: bold;
+}
+
+/* Position List */
+.position-row {
+    border-bottom: 1px solid #eee;
+    padding: 10px 0;
+}
+
+.position-row:last-child {
+    border-bottom: none;
+}
+
+/* Heatmap */
+.heatmap-cell {
+    padding: 10px;
+    text-align: center;
+    color: white;
+    font-weight: 500;
+    border-radius: 4px;
+    margin: 2px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.heatmap-cell:hover {
+    transform: scale(1.05);
+}
+
+.heatmap-cell.positive {
+    background: linear-gradient(135deg, #4caf50, #66bb6a);
+}
+
+.heatmap-cell.negative {
+    background: linear-gradient(135deg, #f44336, #ef5350);
+}
+
+.heatmap-cell.neutral {
+    background: linear-gradient(135deg, #757575, #9e9e9e);
+}
+
+/* AI Workers Panel */
+.ai-worker-card {
+    border-left: 4px solid var(--auraquant-info);
+    margin-bottom: 15px;
+}
+
+.ai-worker-card.active {
+    border-left-color: var(--auraquant-success);
+}
+
+.ai-worker-card.inactive {
+    border-left-color: var(--auraquant-danger);
+}
+
+/* Bot Status */
+.bot-status-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 15px;
+}
+
+.bot-card {
+    padding: 15px;
+    border-radius: 8px;
+    background: white;
+    border: 1px solid #e0e0e0;
+}
+
+.bot-card.running {
+    border-color: var(--auraquant-success);
+}
+
+.bot-card.stopped {
+    border-color: var(--auraquant-danger);
+}
+
+.bot-card.paused {
+    border-color: var(--auraquant-warning);
+}
+
+/* Loading Spinner */
+.spinner-border {
+    width: 20px;
+    height: 20px;
+    border-width: 2px;
+}
+
+/* Toast Notifications */
+.toast {
+    min-width: 300px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        top: 56px;
+        bottom: 0;
+        left: -100%;
+        z-index: 999;
+        transition: left 0.3s;
+    }
+    
+    .sidebar.show {
+        left: 0;
+    }
+    
+    main {
+        margin-left: 0 !important;
+    }
+    
+    .ticker-tape {
+        animation-duration: 20s;
+    }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #1a1a1a;
+        color: #e0e0e0;
+    }
+    
+    .card {
+        background-color: #2a2a2a;
+        color: #e0e0e0;
+    }
+    
+    .card-header {
+        background-color: #333;
+        border-bottom-color: #444;
+    }
+    
+    .table {
+        color: #e0e0e0;
+    }
+    
+    .form-control, .form-select {
+        background-color: #333;
+        border-color: #555;
+        color: #e0e0e0;
+    }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Trading Chart Container */
+#trading-chart {
+    background-color: #1a1a1a;
+    border-radius: 4px;
+    position: relative;
+}
+
+/* Order Entry Panel */
+.order-entry {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.order-entry .btn-group-toggle {
+    margin-bottom: 20px;
+}
+
+.order-entry .btn-group-toggle .btn {
+    padding: 10px 30px;
+}
+
+/* Performance Metrics */
+.metric-card {
+    text-align: center;
+    padding: 20px;
+    background: linear-gradient(135deg, var(--auraquant-primary), #42a5f5);
+    color: white;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.metric-card .metric-value {
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.metric-card .metric-label {
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+/* Login Modal */
+#loginModal .modal-content {
+    border: none;
+    border-radius: 12px;
+}
+
+#loginModal .modal-header {
+    border-radius: 12px 12px 0 0;
+}
+
+/* Footer */
+.footer {
+    background-color: var(--auraquant-dark);
+    color: #b0b0b0;
+    padding: 20px 0;
+    margin-top: 50px;
+    text-align: center;
+}
+
+/* Animation Classes */
+.fade-in {
+    animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

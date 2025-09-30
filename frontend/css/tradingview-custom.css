@@ -1,0 +1,67 @@
+/* Custom CSS to hide TradingView branding and watermarks */
+
+/* Primary watermark and copyright removal */
+.tradingview-widget-copyright,
+.tv-watermark,
+.tv-logo-on-black,
+.tv-logo,
+.tv-logo-wrapper,
+.tv-header__link,
+.tv-header__link--logo,
+a[href*="tradingview.com"],
+a[href*="TradingView"],
+div[class*="logo"],
+[class*="tradingview-logo"],
+div[class*="watermark"],
+[class*="copyright"],
+.chart-markup-about,
+.tv-dialog__modal-body iframe[src*="about"],
+.tv-dialog--about {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    width: 0 !important;
+    height: 0 !important;
+    pointer-events: none !important;
+}
+
+/* Hide the entire header section if it only contains the logo */
+.tv-header__left {
+    display: none !important;
+}
+
+/* Additional attempts to hide branding */
+div[title*="TradingView"],
+img[src*="tradingview"],
+svg[class*="logo"],
+.tv-main .tv-content .tv-chart-container .tv-chart-widget .tv-watermark,
+[data-name="legend-source-title"],
+[data-name="legend-source-description"],
+.chart-widget__top .chart-widget__subtitle {
+    display: none !important;
+}
+
+/* Hide delayed data warnings */
+.tv-data-mode,
+.tv-data-mode__label,
+[class*="delayed"],
+[class*="data-mode"],
+.chart-data-window-message {
+    display: none !important;
+}
+
+/* Ensure our styles take precedence */
+#tradingview_chart .tv-logo,
+#tradingview_chart .tv-header__link {
+    display: none !important;
+}
+
+/* Custom background for toolbar */
+.chart-controls-bar {
+    background: #1e222d !important;
+}
+
+/* Match our color scheme */
+.chart-page {
+    background: #131722 !important;
+}

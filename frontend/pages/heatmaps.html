@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market Heatmaps - AuraQuant</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/tradingview-custom.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0033 50%, #000510 100%);
+            color: #ffffff;
+        }
+        .logo {
+            width: 50px;
+            height: 50px;
+            animation: rotate 10s linear infinite;
+        }
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .title {
+            font-size: 28px;
+            font-weight: bold;
+            background: linear-gradient(90deg, #00ff88, #00ffff, #ff00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .card {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+        }
+        .card-header {
+            background: rgba(0, 0, 0, 0.8);
+            border-bottom: 2px solid rgba(0, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid p-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="title"><i class="fas fa-th"></i> Market Heatmaps</h2>
+            <img src="../assets/img/logo-full.png" alt="AuraQuant" class="logo">
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-12">
+                <div class="btn-group" role="group">
+                    <button class="btn btn-outline-primary active" onclick="switchHeatmap('sectors')">Sectors</button>
+                    <button class="btn btn-outline-primary" onclick="switchHeatmap('world')">World Markets</button>
+                    <button class="btn btn-outline-primary" onclick="switchHeatmap('crypto')">Crypto</button>
+                    <button class="btn btn-outline-primary" onclick="switchHeatmap('commodities')">Commodities</button>
+                    <button class="btn btn-outline-primary" onclick="switchHeatmap('forex')">Forex</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div id="heatmap-container">
+                            <!-- Sectors Heatmap -->
+                            <div id="sectors-heatmap" class="heatmap-grid">
+                                <div class="row g-2">
+                                    <div class="col-md-3 col-sm-6">
+                                        <div class="heatmap-cell positive p-4 text-center">
+                                            <h5>Technology</h5>
+                                            <h3>+2.34%</h3>
+                                            <small>$2.8T Market Cap</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6">
+                                        <div class="heatmap-cell negative p-4 text-center">
+                                            <h5>Healthcare</h5>
+                                            <h3>-1.12%</h3>
+                                            <small>$1.9T Market Cap</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6">
+                                        <div class="heatmap-cell positive p-4 text-center">
+                                            <h5>Finance</h5>
+                                            <h3>+0.87%</h3>
+                                            <small>$2.1T Market Cap</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6">
+                                        <div class="heatmap-cell neutral p-4 text-center">
+                                            <h5>Energy</h5>
+                                            <h3>+0.05%</h3>
+                                            <small>$1.2T Market Cap</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6">
+                                        <div class="heatmap-cell negative p-4 text-center">
+                                            <h5>Consumer</h5>
+                                            <h3>-0.45%</h3>
+                                            <small>$1.5T Market Cap</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6">
+                                        <div class="heatmap-cell positive p-4 text-center">
+                                            <h5>Industrial</h5>
+                                            <h3>+1.23%</h3>
+                                            <small>$980B Market Cap</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6">
+                                        <div class="heatmap-cell negative p-4 text-center">
+                                            <h5>Materials</h5>
+                                            <h3>-2.11%</h3>
+                                            <small>$650B Market Cap</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6">
+                                        <div class="heatmap-cell positive p-4 text-center">
+                                            <h5>Real Estate</h5>
+                                            <h3>+0.34%</h3>
+                                            <small>$450B Market Cap</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- World Markets Heatmap (hidden by default) -->
+                            <div id="world-heatmap" class="heatmap-grid" style="display: none;">
+                                <div class="row g-2">
+                                    <div class="col-md-3 col-sm-6">
+                                        <div class="heatmap-cell positive p-4 text-center">
+                                            <h5>🇺🇸 USA</h5>
+                                            <h3>+1.45%</h3>
+                                            <small>S&P 500</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6">
+                                        <div class="heatmap-cell negative p-4 text-center">
+                                            <h5>🇬🇧 UK</h5>
+                                            <h3>-0.78%</h3>
+                                            <small>FTSE 100</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6">
+                                        <div class="heatmap-cell positive p-4 text-center">
+                                            <h5>🇩🇪 Germany</h5>
+                                            <h3>+0.92%</h3>
+                                            <small>DAX</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6">
+                                        <div class="heatmap-cell positive p-4 text-center">
+                                            <h5>🇯🇵 Japan</h5>
+                                            <h3>+2.13%</h3>
+                                            <small>Nikkei 225</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6">
+                                        <div class="heatmap-cell negative p-4 text-center">
+                                            <h5>🇨🇳 China</h5>
+                                            <h3>-1.45%</h3>
+                                            <small>Shanghai</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6">
+                                        <div class="heatmap-cell positive p-4 text-center">
+                                            <h5>🇦🇺 Australia</h5>
+                                            <h3>+0.67%</h3>
+                                            <small>ASX 200</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6">
+                                        <div class="heatmap-cell neutral p-4 text-center">
+                                            <h5>🇮🇳 India</h5>
+                                            <h3>+0.12%</h3>
+                                            <small>NIFTY 50</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6">
+                                        <div class="heatmap-cell negative p-4 text-center">
+                                            <h5>🇧🇷 Brazil</h5>
+                                            <h3>-0.89%</h3>
+                                            <small>Bovespa</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Crypto Heatmap (hidden by default) -->
+                            <div id="crypto-heatmap" class="heatmap-grid" style="display: none;">
+                                <div class="row g-2">
+                                    <div class="col-md-3 col-sm-6">
+                                        <div class="heatmap-cell positive p-4 text-center">
+                                            <h5>BTC</h5>
+                                            <h3>+3.45%</h3>
+                                            <small>$42,350</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6">
+                                        <div class="heatmap-cell negative p-4 text-center">
+                                            <h5>ETH</h5>
+                                            <h3>-2.12%</h3>
+                                            <small>$2,245</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6">
+                                        <div class="heatmap-cell positive p-4 text-center">
+                                            <h5>BNB</h5>
+                                            <h3>+1.78%</h3>
+                                            <small>$312</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6">
+                                        <div class="heatmap-cell positive p-4 text-center">
+                                            <h5>SOL</h5>
+                                            <h3>+5.67%</h3>
+                                            <small>$95.40</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Market Overview</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-md-3">
+                                <small class="text-muted">Gainers</small>
+                                <h4 class="text-success">245</h4>
+                            </div>
+                            <div class="col-md-3">
+                                <small class="text-muted">Losers</small>
+                                <h4 class="text-danger">189</h4>
+                            </div>
+                            <div class="col-md-3">
+                                <small class="text-muted">Unchanged</small>
+                                <h4 class="text-secondary">56</h4>
+                            </div>
+                            <div class="col-md-3">
+                                <small class="text-muted">Market Sentiment</small>
+                                <h4 class="text-primary">Bullish</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchHeatmap(type) {
+            // Hide all heatmaps
+            document.querySelectorAll('.heatmap-grid').forEach(grid => {
+                grid.style.display = 'none';
+            });
+            
+            // Show selected heatmap
+            const selectedHeatmap = document.getElementById(`${type}-heatmap`);
+            if (selectedHeatmap) {
+                selectedHeatmap.style.display = 'block';
+            }
+            
+            // Update button states
+            document.querySelectorAll('.btn-group button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        // Auto-refresh every 30 seconds
+        setInterval(() => {
+            console.log('Refreshing heatmap data...');
+            // Will fetch from backend
+        }, 30000);
+    </script>
+</body>
+</html>

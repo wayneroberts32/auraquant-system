@@ -1,0 +1,1461 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AuraQuant - Professional Trading Platform</title>
+    
+    <!-- TradingView Widget -->
+    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+    
+    <!-- Workspace Manager for Single-Tab Navigation -->
+    <script src="../assets/js/workspace-manager.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: #131722;
+            color: #d1d4dc;
+            overflow-x: hidden;
+            overflow-y: auto;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header Bar - AuraQuant Professional Style */
+        .header-bar {
+            height: 52px;
+            background: #1e222d;
+            border-bottom: 1px solid #2a2e39;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            justify-content: space-between;
+            position: relative;
+            z-index: 1000;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .main-logo {
+            height: 35px;
+            width: auto;
+            animation: rotate 10s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Symbol Search Bar */
+        .symbol-selector {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #2a2e39;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            min-width: 200px;
+        }
+
+        .symbol-selector:hover {
+            background: #363a45;
+        }
+
+        .symbol-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .symbol-change {
+            font-size: 12px;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+
+        .symbol-change.positive {
+            color: #00ff88;
+            background: rgba(0, 255, 136, 0.1);
+        }
+
+        .symbol-change.negative {
+            color: #ff4444;
+            background: rgba(255, 68, 68, 0.1);
+        }
+
+        /* Timeframe Selector */
+        .timeframe-selector {
+            display: flex;
+            gap: 2px;
+            background: #2a2e39;
+            padding: 3px;
+            border-radius: 4px;
+        }
+
+        .tf-btn {
+            padding: 5px 10px;
+            background: transparent;
+            border: none;
+            color: #787b86;
+            cursor: pointer;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .tf-btn:hover {
+            background: #363a45;
+            color: #d1d4dc;
+        }
+
+        .tf-btn.active {
+            background: #00ff88;
+            color: #131722;
+        }
+
+        /* Chart Type Selector */
+        .chart-type-selector {
+            display: flex;
+            gap: 5px;
+        }
+
+        .chart-type-btn {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: none;
+            color: #787b86;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+
+        .chart-type-btn:hover {
+            background: #2a2e39;
+            color: #d1d4dc;
+        }
+
+        .chart-type-btn.active {
+            color: #00ff88;
+            background: #2a2e39;
+        }
+
+        /* Header Right */
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .account-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .balance-display {
+            font-size: 13px;
+            color: #787b86;
+        }
+
+        .balance-amount {
+            color: #d1d4dc;
+            font-weight: 600;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 12px;
+            background: #2a2e39;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .user-menu:hover {
+            background: #363a45;
+        }
+
+        /* Tab Bar */
+        .tab-bar {
+            height: 36px;
+            background: #1e222d;
+            border-bottom: 1px solid #2a2e39;
+            display: flex;
+            align-items: flex-end;
+            padding: 0 10px;
+            gap: 2px;
+        }
+
+        .tab {
+            padding: 8px 16px;
+            background: #2a2e39;
+            border-radius: 4px 4px 0 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            position: relative;
+            transition: all 0.2s;
+        }
+
+        .tab:hover {
+            background: #363a45;
+        }
+
+        .tab.active {
+            background: #131722;
+            color: #d1d4dc;
+        }
+
+        .tab.active::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #00ff88;
+        }
+
+        .tab-close {
+            margin-left: 8px;
+            font-size: 14px;
+            color: #787b86;
+            cursor: pointer;
+        }
+
+        .tab-close:hover {
+            color: #ff4444;
+        }
+
+        .add-tab {
+            padding: 8px 12px;
+            background: transparent;
+            color: #787b86;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .add-tab:hover {
+            color: #00ff88;
+        }
+
+        /* Main Layout */
+        .main-layout {
+            display: flex;
+            flex: 1;
+            height: calc(100vh - 112px); /* Account for header (52px) + tab bar (36px) + status bar (24px) */
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        /* Left Sidebar */
+        .left-sidebar {
+            width: 48px;
+            background: #1e222d;
+            border-right: 1px solid #2a2e39;
+            display: flex;
+            flex-direction: column;
+            padding-top: 8px;
+            position: relative;
+        }
+        
+        /* Expandable Menu */
+        .expanded-menu {
+            position: absolute;
+            left: 48px;
+            top: 0;
+            width: 250px;
+            background: #1e222d;
+            border: 1px solid #2a2e39;
+            border-left: none;
+            display: none;
+            z-index: 1000;
+            max-height: calc(100vh - 112px);
+            overflow-y: auto;
+        }
+        
+        .sidebar-btn:hover + .expanded-menu,
+        .expanded-menu:hover {
+            display: block;
+        }
+        
+        .menu-section {
+            padding: 15px;
+            border-bottom: 1px solid #2a2e39;
+        }
+        
+        .menu-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: #787b86;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .menu-item {
+            display: block;
+            padding: 8px 10px;
+            color: #d1d4dc;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .menu-item:hover {
+            background: #2a2e39;
+            color: #00ff88;
+        }
+        
+        .menu-item.admin {
+            position: relative;
+        }
+        
+        .menu-item.admin::after {
+            content: 'ADMIN';
+            position: absolute;
+            right: 10px;
+            font-size: 9px;
+            color: #ffcc00;
+            background: rgba(255, 204, 0, 0.1);
+            padding: 2px 4px;
+            border-radius: 2px;
+        }
+
+        .sidebar-btn {
+            width: 48px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #787b86;
+            position: relative;
+            transition: all 0.2s;
+        }
+
+        .sidebar-btn:hover {
+            background: #2a2e39;
+            color: #d1d4dc;
+        }
+
+        .sidebar-btn.active {
+            color: #00ff88;
+        }
+
+        .sidebar-btn.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 8px;
+            bottom: 8px;
+            width: 3px;
+            background: #00ff88;
+        }
+
+        .sidebar-tooltip {
+            position: absolute;
+            left: 52px;
+            background: #363a45;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: nowrap;
+            display: none;
+            z-index: 1000;
+        }
+
+        .sidebar-btn:hover .sidebar-tooltip {
+            display: block;
+        }
+
+        /* Chart Container */
+        .chart-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Chart Tools Bar */
+        .chart-tools {
+            height: 40px;
+            background: #1e222d;
+            border-bottom: 1px solid #2a2e39;
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+            gap: 15px;
+        }
+
+        .drawing-tools {
+            display: flex;
+            gap: 2px;
+        }
+
+        .tool-btn {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: none;
+            color: #787b86;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+
+        .tool-btn:hover {
+            background: #2a2e39;
+            color: #d1d4dc;
+        }
+
+        .tool-btn.active {
+            background: #2a2e39;
+            color: #00ff88;
+        }
+
+        .tool-separator {
+            width: 1px;
+            height: 24px;
+            background: #2a2e39;
+        }
+
+        /* Main Chart */
+        .chart-main {
+            flex: 1;
+            position: relative;
+            background: #131722;
+            overflow: hidden;
+        }
+
+        #tradingview_chart {
+            width: 100%;
+            height: calc(100% - 5px);
+            position: relative;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        
+        /* Hide TradingView branding */
+        .tv-header__link {
+            display: none !important;
+        }
+        
+        .tv-header__link--logo {
+            display: none !important;
+        }
+        
+        iframe[id^="tradingview"] {
+            position: absolute !important;
+            width: 100% !important;
+            height: 100% !important;
+            border: none;
+        }
+        
+        /* Ensure TradingView container has scrolling */
+        #tradingview_chart iframe {
+            min-height: 800px;
+        }
+        
+        /* AuraQuant branding overlay */
+        .auraquant-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 150px;
+            height: 40px;
+            background: #1e222d;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding-left: 10px;
+            pointer-events: none;
+        }
+        
+        .auraquant-overlay img {
+            height: 30px;
+            width: auto;
+        }
+
+        /* News Button (Floating on Chart) */
+        .news-button {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #1e222d, #2a2e39);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s;
+            z-index: 1000;
+            border: 2px solid rgba(0, 255, 136, 0.3);
+        }
+
+        .news-button:hover {
+            transform: scale(1.1) translateY(-2px);
+            background: linear-gradient(135deg, #2a2e39, #363a45);
+            box-shadow: 0 6px 25px rgba(0, 255, 136, 0.4);
+            border-color: rgba(0, 255, 136, 0.5);
+        }
+
+        .news-button img {
+            width: 40px;
+            height: 40px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.9; }
+        }
+
+        /* Right Panel */
+        .right-panel {
+            width: 320px;
+            min-width: 200px;
+            max-width: 600px;
+            background: #1e222d;
+            border-left: 1px solid #2a2e39;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            transition: width 0.3s ease;
+        }
+        
+        /* Resize Handle */
+        .resize-handle {
+            position: absolute;
+            left: -3px;
+            top: 0;
+            width: 6px;
+            height: 100%;
+            background: transparent;
+            cursor: ew-resize;
+            z-index: 10;
+        }
+        
+        .resize-handle:hover {
+            background: rgba(0, 255, 136, 0.3);
+        }
+        
+        .resize-handle.dragging {
+            background: rgba(0, 255, 136, 0.5);
+        }
+        
+        /* Hide/Show Button */
+        .panel-toggle {
+            position: absolute;
+            left: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 40px;
+            background: #1e222d;
+            border: 1px solid #2a2e39;
+            border-right: none;
+            border-radius: 4px 0 0 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 11;
+        }
+        
+        .panel-toggle:hover {
+            background: #2a2e39;
+        }
+        
+        .panel-toggle.collapsed {
+            left: 0;
+            border-right: 1px solid #2a2e39;
+            border-left: none;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .right-panel.collapsed {
+            width: 0;
+            min-width: 0;
+            overflow: hidden;
+            border-left: none;
+        }
+
+        .panel-tabs {
+            height: 40px;
+            border-bottom: 1px solid #2a2e39;
+            display: flex;
+            align-items: center;
+        }
+
+        .panel-tab {
+            flex: 1;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: none;
+            color: #787b86;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            position: relative;
+        }
+
+        .panel-tab:hover {
+            color: #d1d4dc;
+        }
+
+        .panel-tab.active {
+            color: #d1d4dc;
+        }
+
+        .panel-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 10px;
+            right: 10px;
+            height: 2px;
+            background: #00ff88;
+        }
+
+        /* Panel Content */
+        .panel-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+        }
+
+        /* Watchlist */
+        .watchlist-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: #131722;
+            border-radius: 4px;
+            margin-bottom: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .watchlist-item:hover {
+            background: #2a2e39;
+        }
+
+        .watchlist-symbol {
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .watchlist-price {
+            text-align: right;
+        }
+
+        .watchlist-change {
+            font-size: 12px;
+            padding: 2px 6px;
+            border-radius: 3px;
+            margin-top: 2px;
+        }
+
+        /* News Popup */
+        .news-popup {
+            position: absolute;
+            bottom: 70px;
+            right: 20px;
+            width: 400px;
+            max-height: 500px;
+            background: #1e222d;
+            border: 1px solid #2a2e39;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 1000;
+        }
+
+        .news-popup.show {
+            display: block;
+        }
+
+        .news-header {
+            padding: 12px 16px;
+            border-bottom: 1px solid #2a2e39;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .news-title {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .news-close {
+            cursor: pointer;
+            color: #787b86;
+            font-size: 18px;
+        }
+
+        .news-close:hover {
+            color: #d1d4dc;
+        }
+
+        .news-content {
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 12px;
+        }
+
+        .news-item {
+            padding: 12px;
+            border-bottom: 1px solid #2a2e39;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .news-item:hover {
+            background: #2a2e39;
+        }
+
+        .news-item-time {
+            font-size: 11px;
+            color: #787b86;
+            margin-bottom: 4px;
+        }
+
+        .news-item-headline {
+            font-size: 13px;
+            line-height: 1.4;
+            margin-bottom: 4px;
+        }
+
+        .news-item-source {
+            font-size: 11px;
+            color: #787b86;
+        }
+
+        /* Bottom Status Bar */
+        .status-bar {
+            height: 24px;
+            background: #1e222d;
+            border-top: 1px solid #2a2e39;
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+            font-size: 11px;
+            color: #787b86;
+        }
+
+        .status-item {
+            margin-right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #00ff88;
+        }
+
+        .status-dot.error {
+            background: #ff4444;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .left-sidebar {
+                display: none;
+            }
+            
+            .right-panel {
+                display: none;
+            }
+            
+            .header-bar {
+                padding: 0 8px;
+            }
+            
+            .symbol-selector {
+                min-width: 120px;
+            }
+            
+            .chart-tools {
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Bar -->
+    <div class="header-bar">
+        <div class="header-left">
+            <div class="logo-section">
+                <img src="../Logo/Logo With AuraQuant.png" alt="AuraQuant" class="main-logo">
+            </div>
+            
+            <div class="symbol-selector">
+                <span class="symbol-name">AAPL</span>
+                <span class="symbol-change positive">+2.34%</span>
+            </div>
+            
+            <div class="timeframe-selector">
+                <button class="tf-btn">1m</button>
+                <button class="tf-btn">5m</button>
+                <button class="tf-btn">15m</button>
+                <button class="tf-btn">1h</button>
+                <button class="tf-btn active">1D</button>
+                <button class="tf-btn">1W</button>
+                <button class="tf-btn">1M</button>
+            </div>
+            
+            <div class="chart-type-selector">
+                <button class="chart-type-btn active">📊</button>
+                <button class="chart-type-btn">📈</button>
+                <button class="chart-type-btn">🕯️</button>
+            </div>
+        </div>
+        
+        <div class="header-right">
+            <div class="account-info">
+                <span class="balance-display">Balance: <span class="balance-amount">$100,000.00</span></span>
+                <span class="balance-display">P&L: <span class="balance-amount" style="color: #00ff88;">+$2,345.67</span></span>
+            </div>
+            
+            <div class="user-menu">
+                <span>👤</span>
+                <span>Account</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Tab Bar -->
+    <div class="tab-bar">
+        <div class="tab active">
+            <span>Chart 1</span>
+            <span class="tab-close">×</span>
+        </div>
+        <div class="tab">
+            <span>Screener</span>
+            <span class="tab-close">×</span>
+        </div>
+        <div class="tab">
+            <span>Strategy</span>
+            <span class="tab-close">×</span>
+        </div>
+        <div class="add-tab">+</div>
+    </div>
+    
+    <!-- Main Layout -->
+    <div class="main-layout">
+        <!-- Left Sidebar -->
+        <div class="left-sidebar">
+            <div class="sidebar-btn active">
+                <span>📊</span>
+                <div class="sidebar-tooltip">Charts</div>
+            </div>
+            <div class="sidebar-btn" id="menuToggle">
+                <span>☰</span>
+                <div class="sidebar-tooltip">Menu</div>
+                
+                <!-- Expandable Menu -->
+                <div class="expanded-menu">
+                    <!-- Core Pages -->
+                    <div class="menu-section">
+                        <div class="menu-title">Core Trading</div>
+                        <a class="menu-item" data-workspace-page="main-trading-dashboard">Main Dashboard</a>
+                        <a class="menu-item" data-workspace-page="auraquant">Price Chart</a>
+                        <a class="menu-item" data-workspace-page="market-depth-demo">Market Depth</a>
+                        <a class="menu-item" data-workspace-page="pnl-dashboard">P&L Dashboard</a>
+                    </div>
+                    
+                    <!-- Trading Features -->
+                    <div class="menu-section">
+                        <div class="menu-title">Trading Features</div>
+                        <a class="menu-item" data-workspace-page="asx-paper-trading-launcher">ASX Paper Trading</a>
+                        <a class="menu-item" data-workspace-page="balance-control">Balance Controller</a>
+                        <a class="menu-item" data-workspace-page="manual-trade">Manual Trade</a>
+                        <a class="menu-item" data-workspace-page="growth-selector">Growth Selector (V1→V∞)</a>
+                    </div>
+                    
+                    <!-- Markets & Data -->
+                    <div class="menu-section">
+                        <div class="menu-title">Markets & Data</div>
+                        <a class="menu-item" data-workspace-page="all-markets">All Markets</a>
+                        <a class="menu-item" data-workspace-page="screeners">Screeners & Calendars</a>
+                        <a class="menu-item" data-workspace-page="heatmaps">Heatmaps</a>
+                        <a class="menu-item" data-workspace-page="exchange-rates">Exchange Rates</a>
+                    </div>
+                    
+                    <!-- Integration & APIs -->
+                    <div class="menu-section">
+                        <div class="menu-title">Integration</div>
+                        <a class="menu-item" data-workspace-page="brokers-banks">Brokers & Banks</a>
+                        <a class="menu-item" data-workspace-page="manual-api-loader">Manual API Loader</a>
+                        <a class="menu-item" data-workspace-page="ai-workers-panel">AI Workers Panel</a>
+                    </div>
+                    
+                    <!-- Analytics -->
+                    <div class="menu-section">
+                        <div class="menu-title">Analytics</div>
+                        <a class="menu-item" data-workspace-page="tax-calculator">Tax Calculator</a>
+                        <a class="menu-item" data-workspace-page="fees-display">Fees Display</a>
+                        <a class="menu-item" data-workspace-page="libraries">Strategy Libraries</a>
+                    </div>
+                    
+                    <!-- Admin Only -->
+                    <div class="menu-section">
+                        <div class="menu-title">Admin Panel</div>
+                        <a class="menu-item admin" data-workspace-page="bot-status" data-requires-admin="true">Bot Status</a>
+                        <a class="menu-item admin" data-workspace-page="deployment-verification" data-requires-admin="true">Deployment Verify</a>
+                        <a class="menu-item admin" data-workspace-page="performance-monitor" data-requires-admin="true">Performance Monitor</a>
+                        <a class="menu-item admin" data-workspace-page="unified-dashboard" data-requires-admin="true">Unified Dashboard</a>
+                    </div>
+                    
+                    <!-- Support -->
+                    <div class="menu-section">
+                        <div class="menu-title">Support</div>
+                        <a class="menu-item" data-workspace-page="help-centre">Help Centre</a>
+                        <a class="menu-item" data-workspace-page="community">Community</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="sidebar-btn">
+                <span>📈</span>
+                <div class="sidebar-tooltip">Trading</div>
+            </div>
+            <div class="sidebar-btn">
+                <span>🔍</span>
+                <div class="sidebar-tooltip">Screener</div>
+            </div>
+            <div class="sidebar-btn">
+                <span>🤖</span>
+                <div class="sidebar-tooltip">AI Workers</div>
+            </div>
+            <div class="sidebar-btn">
+                <span>🔑</span>
+                <div class="sidebar-tooltip">Strategies</div>
+            </div>
+            <div class="sidebar-btn">
+                <span>⚙️</span>
+                <div class="sidebar-tooltip">Settings</div>
+            </div>
+            <div class="sidebar-btn">
+                <span>❓</span>
+                <div class="sidebar-tooltip">Help</div>
+            </div>
+        </div>
+        
+        <!-- Chart Area -->
+        <div class="chart-area">
+            <!-- Chart Tools -->
+            <div class="chart-tools">
+                <div class="drawing-tools">
+                    <button class="tool-btn">🔍</button>
+                    <button class="tool-btn">✏️</button>
+                    <button class="tool-btn">📏</button>
+                    <button class="tool-btn">⭕</button>
+                    <button class="tool-btn">🔐</button>
+                </div>
+                <div class="tool-separator"></div>
+                <div class="drawing-tools">
+                    <button class="tool-btn">🔍➕</button>
+                    <button class="tool-btn">🔍➖</button>
+                    <button class="tool-btn">↻</button>
+                    <button class="tool-btn">📷</button>
+                </div>
+            </div>
+            
+            <!-- Main Chart -->
+            <div class="chart-main">
+                <div id="tradingview_chart"></div>
+                <!-- AuraQuant overlay to cover TradingView logo -->
+                <div class="auraquant-overlay">
+                    <img src="../Logo/Logo With AuraQuant.png" alt="AuraQuant">
+                </div>
+                
+                <!-- News Button (Bottom right corner with logo-button.png) -->
+                <div class="news-button" onclick="toggleNews()">
+                    <img src="../assets/img/logo-button.png" alt="News" />
+                </div>
+                
+                <!-- News Popup -->
+                <div class="news-popup" id="newsPopup">
+                    <div class="news-header">
+                        <span class="news-title">Latest News & Calendar</span>
+                        <span class="news-close" onclick="toggleNews()">×</span>
+                    </div>
+                    <div class="news-content">
+                        <div class="news-item">
+                            <div class="news-item-time">10:30 AM</div>
+                            <div class="news-item-headline">Fed Chair Powell Speaks on Economic Outlook</div>
+                            <div class="news-item-source">Reuters</div>
+                        </div>
+                        <div class="news-item">
+                            <div class="news-item-time">9:45 AM</div>
+                            <div class="news-item-headline">Apple Reports Q4 Earnings Beat Expectations</div>
+                            <div class="news-item-source">Bloomberg</div>
+                        </div>
+                        <div class="news-item">
+                            <div class="news-item-time">9:00 AM</div>
+                            <div class="news-item-headline">US GDP Growth Accelerates to 3.2%</div>
+                            <div class="news-item-source">CNBC</div>
+                        </div>
+                        <div class="news-item">
+                            <div class="news-item-time">8:30 AM</div>
+                            <div class="news-item-headline">Crypto Market Cap Surpasses $2 Trillion</div>
+                            <div class="news-item-source">CoinDesk</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right Panel -->
+        <div class="right-panel" id="rightPanel">
+            <div class="resize-handle" id="resizeHandle"></div>
+            <div class="panel-toggle" id="panelToggle">◀</div>
+            <div class="panel-tabs">
+                <button class="panel-tab active">Watchlist</button>
+                <button class="panel-tab">Orders</button>
+                <button class="panel-tab">Positions</button>
+                <button class="panel-tab">History</button>
+            </div>
+            
+            <div class="panel-content">
+                <!-- Watchlist Content -->
+                <div class="watchlist-item">
+                    <div>
+                        <div class="watchlist-symbol">AAPL</div>
+                        <div class="watchlist-change symbol-change positive">+2.34%</div>
+                    </div>
+                    <div class="watchlist-price">
+                        <div>$178.45</div>
+                    </div>
+                </div>
+                
+                <div class="watchlist-item">
+                    <div>
+                        <div class="watchlist-symbol">TSLA</div>
+                        <div class="watchlist-change symbol-change negative">-1.23%</div>
+                    </div>
+                    <div class="watchlist-price">
+                        <div>$245.67</div>
+                    </div>
+                </div>
+                
+                <div class="watchlist-item">
+                    <div>
+                        <div class="watchlist-symbol">GOOGL</div>
+                        <div class="watchlist-change symbol-change positive">+0.87%</div>
+                    </div>
+                    <div class="watchlist-price">
+                        <div>$142.34</div>
+                    </div>
+                </div>
+                
+                <div class="watchlist-item">
+                    <div>
+                        <div class="watchlist-symbol">MSFT</div>
+                        <div class="watchlist-change symbol-change positive">+1.45%</div>
+                    </div>
+                    <div class="watchlist-price">
+                        <div>$398.21</div>
+                    </div>
+                </div>
+                
+                <div class="watchlist-item">
+                    <div>
+                        <div class="watchlist-symbol">NVDA</div>
+                        <div class="watchlist-change symbol-change positive">+3.67%</div>
+                    </div>
+                    <div class="watchlist-price">
+                        <div>$878.90</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Status Bar -->
+    <div class="status-bar">
+        <div class="status-item">
+            <span class="status-dot"></span>
+            <span>Connected</span>
+        </div>
+        <div class="status-item">
+            <span>Market: Open</span>
+        </div>
+        <div class="status-item">
+            <span>Quantum Core: Active</span>
+        </div>
+        <div class="status-item">
+            <span>AI Agents: 7/7</span>
+        </div>
+    </div>
+    
+    <script>
+        // Initialize TradingView Widget with watermark removal and real-time data
+        function initTradingViewChart() {
+            new TradingView.widget({
+                "autosize": true,
+                "symbol": "NASDAQ:AAPL",
+                "interval": "1",  // Force 1-minute for real-time
+                "timezone": "exchange",  // Use exchange timezone for real-time
+                "theme": "dark",
+                "style": "1",
+                "locale": "en",
+                "toolbar_bg": "#1e222d",
+                "enable_publishing": false,
+                "allow_symbol_change": true,
+                "container_id": "tradingview_chart",
+                "hide_top_toolbar": false,
+                "hide_legend": false,
+                "hide_side_toolbar": false,
+                "hide_volume": false,
+                "withdateranges": true,
+                "hideideas": true,
+                "hide_market_status": true,
+                "hide_symbol_logo": true,
+                "studies": [
+                    "RSI@tv-basicstudies",
+                    "MACD@tv-basicstudies"
+                ],
+                "show_popup_button": false,
+                "save_image": false,
+                "details": false,
+                "hotlist": false,
+                "calendar": false,
+                "hideideasbutton": true,
+                "height": "100%",
+                "width": "100%",
+                "studies_overrides": {
+                    "rsi@tv-basicstudies.showLegend": true,
+                    "macd@tv-basicstudies.showLegend": true
+                },
+                "overrides": {
+                    "mainSeriesProperties.statusViewStyle.showExchange": false,
+                    "mainSeriesProperties.statusViewStyle.showInterval": false,
+                    "paneProperties.background": "#131722",
+                    "paneProperties.vertGridProperties.color": "#2a2e39",
+                    "paneProperties.horzGridProperties.color": "#2a2e39",
+                    "scalesProperties.showSeriesLastValue": true,
+                    "scalesProperties.showStudyLastValue": true
+                }
+            });
+        }
+        
+        // Initialize on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            initTradingViewChart();
+            
+            // Inject CSS to hide TradingView watermarks
+            const style = document.createElement('style');
+            style.textContent = `
+                .tradingview-widget-copyright,
+                .tv-watermark,
+                .tv-header__link,
+                .tv-header__link--logo,
+                a[href*="tradingview.com"],
+                div[data-name="legend-source-item"],
+                .chart-markup-table .study .icon-TradingView-Logo,
+                .chart-markup-table .pane-legend-icon-container {
+                    display: none !important;
+                }
+            `;
+            document.head.appendChild(style);
+            
+            // Try to hide TradingView branding in iframe after load and add MACD logo
+            setTimeout(() => {
+                const iframe = document.querySelector('#tradingview_chart iframe');
+                if (iframe) {
+                    try {
+                        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                        const iframeStyle = iframeDoc.createElement('style');
+                        iframeStyle.textContent = `
+                            .tv-header__link { display: none !important; }
+                            .tv-header__link--logo { display: none !important; }
+                            a[href*="tradingview.com"] { display: none !important; }
+                            .tv-logo { display: none !important; }
+                            .tv-watermark { display: none !important; }
+                            .tradingview-widget-copyright { display: none !important; }
+                            div[class*="watermark"] { display: none !important; }
+                            div[class*="logo-wrapper"] { display: none !important; }
+                        `;
+                        iframeDoc.head.appendChild(iframeStyle);
+                    } catch (e) {
+                        // Cross-origin restriction, use overlay method
+                        console.log('Using overlay method for watermark removal');
+                    }
+                }
+                
+                // Logo overlay removed - TradingView logo is embedded in iframe
+            }, 2000);
+            
+            // MutationObserver to continuously remove watermarks
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.addedNodes.length) {
+                        mutation.addedNodes.forEach((node) => {
+                            if (node.nodeType === 1) { // Element node
+                                // Check for watermark elements
+                                const watermarks = node.querySelectorAll('.tv-watermark, .tradingview-widget-copyright, [class*="watermark"], [class*="logo"]');
+                                watermarks.forEach(el => el.remove());
+                                
+                                // Check if the node itself is a watermark
+                                if (node.classList && (
+                                    node.classList.contains('tv-watermark') ||
+                                    node.classList.contains('tradingview-widget-copyright') ||
+                                    Array.from(node.classList).some(c => c.includes('watermark') || c.includes('logo'))
+                                )) {
+                                    node.remove();
+                                }
+                            }
+                        });
+                    }
+                });
+            });
+            
+            // Start observing the chart container
+            const chartContainer = document.getElementById('tradingview_chart');
+            if (chartContainer) {
+                observer.observe(chartContainer, {
+                    childList: true,
+                    subtree: true
+                });
+            }
+        });
+        
+        // Toggle News Popup
+        function toggleNews() {
+            const popup = document.getElementById('newsPopup');
+            popup.classList.toggle('show');
+        }
+        
+        // Resizable Panel Functionality
+        const rightPanel = document.getElementById('rightPanel');
+        const resizeHandle = document.getElementById('resizeHandle');
+        const panelToggle = document.getElementById('panelToggle');
+        let isResizing = false;
+        let startX = 0;
+        let startWidth = 0;
+        
+        // Resize functionality
+        resizeHandle.addEventListener('mousedown', (e) => {
+            isResizing = true;
+            startX = e.clientX;
+            startWidth = rightPanel.offsetWidth;
+            resizeHandle.classList.add('dragging');
+            document.body.style.cursor = 'ew-resize';
+            document.body.style.userSelect = 'none';
+            e.preventDefault();
+        });
+        
+        document.addEventListener('mousemove', (e) => {
+            if (!isResizing) return;
+            const deltaX = startX - e.clientX;
+            const newWidth = Math.min(600, Math.max(200, startWidth + deltaX));
+            rightPanel.style.width = newWidth + 'px';
+        });
+        
+        document.addEventListener('mouseup', () => {
+            if (isResizing) {
+                isResizing = false;
+                resizeHandle.classList.remove('dragging');
+                document.body.style.cursor = 'default';
+                document.body.style.userSelect = '';
+            }
+        });
+        
+        // Toggle panel visibility
+        panelToggle.addEventListener('click', () => {
+            rightPanel.classList.toggle('collapsed');
+            panelToggle.classList.toggle('collapsed');
+            panelToggle.textContent = rightPanel.classList.contains('collapsed') ? '▶' : '◀';
+        });
+        
+        // Tab functionality with actions
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function(e) {
+                if (e.target.classList.contains('tab-close')) {
+                    // Close tab functionality
+                    this.remove();
+                    return;
+                }
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Handle tab content switching
+                const tabName = this.querySelector('span').textContent;
+                console.log('Switched to tab:', tabName);
+            });
+        });
+        
+        // Add new tab functionality
+        document.querySelector('.add-tab').addEventListener('click', () => {
+            const tabBar = document.querySelector('.tab-bar');
+            const newTab = document.createElement('div');
+            newTab.className = 'tab';
+            newTab.innerHTML = `
+                <span>New Tab</span>
+                <span class="tab-close">×</span>
+            `;
+            tabBar.insertBefore(newTab, document.querySelector('.add-tab'));
+            
+            // Add click handler to new tab
+            newTab.addEventListener('click', function(e) {
+                if (e.target.classList.contains('tab-close')) {
+                    this.remove();
+                    return;
+                }
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+        
+        // Timeframe buttons with chart updates
+        document.querySelectorAll('.tf-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                const timeframe = this.textContent;
+                console.log('Timeframe changed to:', timeframe);
+                // Here you would update the TradingView chart timeframe
+            });
+        });
+        
+        // Sidebar buttons with navigation
+        const sidebarActions = {
+            '📊': () => console.log('Charts view'),
+            '📈': () => window.location.href = 'trading-panel.html',
+            '🔍': () => window.location.href = 'screener.html',
+            '🤖': () => window.location.href = 'ai-workers-panel.html',
+            '🔑': () => window.location.href = 'strategy-builder.html',
+            '⚙️': () => window.location.href = 'settings.html',
+            '❓': () => window.location.href = 'help-centre.html'
+        };
+        
+        document.querySelectorAll('.sidebar-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                const icon = this.querySelector('span').textContent;
+                if (sidebarActions[icon]) {
+                    sidebarActions[icon]();
+                }
+            });
+        });
+        
+        // Panel tabs with content switching
+        const panelContents = {
+            'Watchlist': 'watchlist-content',
+            'Orders': 'orders-content',
+            'Positions': 'positions-content',
+            'History': 'history-content'
+        };
+        
+        document.querySelectorAll('.panel-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.panel-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                
+                const tabName = this.textContent;
+                console.log('Panel switched to:', tabName);
+                // Here you would show/hide different content panels
+            });
+        });
+        
+        // Drawing tools functionality
+        document.querySelectorAll('.tool-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                this.classList.toggle('active');
+                const tool = this.textContent;
+                console.log('Drawing tool selected:', tool);
+                // Here you would activate drawing tools on the chart
+            });
+        });
+        
+        // Search functionality
+        document.getElementById('symbolSearch').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const symbol = e.target.value.toUpperCase();
+                console.log('Searching for symbol:', symbol);
+                // Here you would update the chart with the new symbol
+                e.target.value = '';
+            }
+        });
+        
+        // User menu dropdown
+        document.querySelector('.user-menu').addEventListener('click', function() {
+            console.log('User menu clicked');
+            // Here you would show user menu dropdown
+        });
+        
+        // Watchlist item clicks
+        document.querySelectorAll('.watchlist-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const symbol = this.querySelector('.watchlist-symbol').textContent;
+                console.log('Loading chart for:', symbol);
+                // Here you would update the chart with the selected symbol
+            });
+        });
+        
+        // Initialize tooltips
+        document.querySelectorAll('.sidebar-btn').forEach(btn => {
+            btn.addEventListener('mouseenter', function() {
+                const tooltip = this.querySelector('.sidebar-tooltip');
+                if (tooltip) tooltip.style.opacity = '1';
+            });
+            btn.addEventListener('mouseleave', function() {
+                const tooltip = this.querySelector('.sidebar-tooltip');
+                if (tooltip) tooltip.style.opacity = '0';
+            });
+        });
+    </script>
+    
+    <!-- Multi-screen Workspace Container -->
+    <div id="workspace-container" class="workspace"></div>
+    
+    <!-- Workspace Manager Scripts -->
+    <script src="../assets/js/workspace-manager.js"></script>
+    <script src="../assets/js/menu-registry.js"></script>
+</body>
+</html>

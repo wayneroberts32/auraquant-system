@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tax Calculator - AuraQuant</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/tradingview-custom.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0033 50%, #000510 100%);
+            color: #ffffff;
+        }
+        .logo {
+            width: 50px;
+            height: 50px;
+            animation: rotate 10s linear infinite;
+        }
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .title {
+            font-size: 28px;
+            font-weight: bold;
+            background: linear-gradient(90deg, #00ff88, #00ffff, #ff00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .card {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+        }
+        .card-header {
+            background: rgba(0, 0, 0, 0.8);
+            border-bottom: 2px solid rgba(0, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid p-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="title"><i class="fas fa-calculator"></i> Tax Calculator</h2>
+            <img src="../assets/img/logo-full.png" alt="AuraQuant" class="logo">
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Trading Tax Calculator</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="tax-calculator-form">
+                            <div class="mb-3">
+                                <label class="form-label">Country</label>
+                                <select class="form-control" id="country" onchange="updateTaxRules()">
+                                    <option value="AU">Australia</option>
+                                    <option value="US">United States</option>
+                                    <option value="UK">United Kingdom</option>
+                                    <option value="EU">European Union</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Tax Year</label>
+                                <select class="form-control" id="tax-year">
+                                    <option value="2024">2024</option>
+                                    <option value="2023">2023</option>
+                                    <option value="2022">2022</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Total Trading Profit</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" class="form-control" id="profit" step="0.01" required>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Total Trading Loss</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" class="form-control" id="loss" step="0.01">
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Holding Period</label>
+                                <select class="form-control" id="holding-period">
+                                    <option value="short">Short-term (< 1 year)</option>
+                                    <option value="long">Long-term (≥ 1 year)</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Annual Income</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" class="form-control" id="income" step="1000" required>
+                                </div>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="fas fa-calculator"></i> Calculate Tax
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h5>Tax Calculation Results</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="tax-results">
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle"></i> Enter your trading details to calculate tax obligations
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Tax Rules Summary</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="tax-rules">
+                            <h6>Australia (AU)</h6>
+                            <ul>
+                                <li>Capital Gains Tax applies to trading profits</li>
+                                <li>50% CGT discount for assets held > 12 months</li>
+                                <li>Losses can offset gains</li>
+                                <li>Tax rate based on marginal income tax rate</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Tax Report</h5>
+                    </div>
+                    <div class="card-body">
+                        <button class="btn btn-outline-primary me-2" onclick="generateReport('summary')">
+                            <i class="fas fa-file-pdf"></i> Generate Summary
+                        </button>
+                        <button class="btn btn-outline-primary me-2" onclick="generateReport('detailed')">
+                            <i class="fas fa-file-excel"></i> Detailed Report
+                        </button>
+                        <button class="btn btn-outline-primary" onclick="exportTaxData()">
+                            <i class="fas fa-download"></i> Export for Tax Software
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateTaxRules() {
+            const country = document.getElementById('country').value;
+            const rulesDiv = document.getElementById('tax-rules');
+            
+            const rules = {
+                'AU': `
+                    <h6>Australia (AU)</h6>
+                    <ul>
+                        <li>Capital Gains Tax applies to trading profits</li>
+                        <li>50% CGT discount for assets held > 12 months</li>
+                        <li>Losses can offset gains</li>
+                        <li>Tax rate based on marginal income tax rate</li>
+                    </ul>
+                `,
+                'US': `
+                    <h6>United States (US)</h6>
+                    <ul>
+                        <li>Short-term gains taxed as ordinary income</li>
+                        <li>Long-term gains have preferential rates (0%, 15%, 20%)</li>
+                        <li>Wash sale rule applies</li>
+                        <li>State taxes may apply</li>
+                    </ul>
+                `,
+                'UK': `
+                    <h6>United Kingdom (UK)</h6>
+                    <ul>
+                        <li>Capital Gains Tax with annual allowance</li>
+                        <li>Stamp duty on share purchases</li>
+                        <li>Spread betting may be tax-free</li>
+                        <li>ISA accounts offer tax advantages</li>
+                    </ul>
+                `,
+                'EU': `
+                    <h6>European Union (EU)</h6>
+                    <ul>
+                        <li>Varies by member state</li>
+                        <li>Generally capital gains tax applies</li>
+                        <li>Some countries have wealth taxes</li>
+                        <li>Financial transaction taxes in some states</li>
+                    </ul>
+                `
+            };
+            
+            rulesDiv.innerHTML = rules[country] || rules['AU'];
+        }
+
+        document.getElementById('tax-calculator-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const profit = parseFloat(document.getElementById('profit').value) || 0;
+            const loss = parseFloat(document.getElementById('loss').value) || 0;
+            const netGain = profit - loss;
+            
+            // Simple calculation for demonstration
+            const taxRate = 0.3; // 30% rate
+            const taxOwed = netGain > 0 ? netGain * taxRate : 0;
+            
+            document.getElementById('tax-results').innerHTML = `
+                <div class="row">
+                    <div class="col-6">
+                        <small class="text-muted">Net Capital Gain</small>
+                        <h4 class="${netGain >= 0 ? 'text-success' : 'text-danger'}">
+                            $${Math.abs(netGain).toFixed(2)}
+                        </h4>
+                    </div>
+                    <div class="col-6">
+                        <small class="text-muted">Estimated Tax</small>
+                        <h4 class="text-warning">$${taxOwed.toFixed(2)}</h4>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-6">
+                        <small class="text-muted">Effective Rate</small>
+                        <h5>${(taxRate * 100).toFixed(1)}%</h5>
+                    </div>
+                    <div class="col-6">
+                        <small class="text-muted">After-Tax Profit</small>
+                        <h5>$${(netGain - taxOwed).toFixed(2)}</h5>
+                    </div>
+                </div>
+            `;
+        });
+
+        function generateReport(type) {
+            console.log('Generating', type, 'report...');
+        }
+
+        function exportTaxData() {
+            console.log('Exporting tax data...');
+        }
+    </script>
+</body>
+</html>

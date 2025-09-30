@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>ASX Paper Trading - ACTIVE TUESDAY</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0033 50%, #000510 100%);
+            color: #ffffff;
+            font-family: 'Courier New', monospace;
+            overflow-x: hidden;
+        }
+        
+        .header {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), rgba(0, 255, 255, 0.1));
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            font-weight: bold;
+            background: linear-gradient(90deg, #00ff88, #00ffff, #ff00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 10px 0;
+        }
+        
+        .header h2 {
+            color: #00ff88;
+            font-size: 18px;
+            margin: 5px 0;
+        }
+        
+        .header h3 {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 16px;
+            margin: 5px 0;
+        }
+        
+        .logo {
+            width: 60px;
+            height: 60px;
+            animation: rotate 10s linear infinite;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+        
+        .status-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .status-card {
+            background: rgba(0, 255, 255, 0.1);
+            border: 2px solid #00ffff;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+        }
+        
+        .trades-container {
+            background: rgba(255, 0, 255, 0.05);
+            border: 2px solid #ff00ff;
+            border-radius: 10px;
+            padding: 20px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        
+        .trade-entry {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+            gap: 10px;
+            padding: 10px;
+            margin-bottom: 10px;
+            background: rgba(0, 255, 255, 0.05);
+            border-left: 3px solid #00ff88;
+            transition: all 0.3s;
+        }
+        
+        .trade-entry:hover {
+            background: rgba(0, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+        
+        .profit { color: #00ff88; }
+        .loss { color: #ff0066; }
+        
+        #clock {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            color: #00ffff;
+            text-shadow: 0 0 10px #00ffff;
+        }
+        
+        .blink {
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 50%, 100% { opacity: 1; }
+            25%, 75% { opacity: 0.3; }
+        }
+    </style>
+</head>
+<body>
+    <div id="clock"></div>
+    
+    <div class="header">
+        <img src="../assets/img/logo-full.png" alt="AuraQuant" class="logo">
+        <h1>🇦🇺 ASX PAPER TRADING SYSTEM 🇦🇺</h1>
+        <h2>SYNTHETIC INTELLIGENCE BOT - AURAQUANT</h2>
+        <h3 class="blink" id="dynamic-date">📊 TRADING ACTIVE 📊</h3>
+    </div>
+    
+    <div class="status-container">
+        <div class="status-card">
+            <h3>⏰ Market Status</h3>
+            <div id="market-status">
+                <p>Date: <span id="current-date">Loading...</span></p>
+                <p>Time: <span id="current-time">5:03 AM</span></p>
+                <p>ASX Opens: 10:00 AM Sydney Time</p>
+                <p>Status: <span style="color: #00ff88;">PAPER TRADING ACTIVE</span></p>
+            </div>
+        </div>
+        
+        <div class="status-card">
+            <h3>📈 Trading Statistics</h3>
+            <div id="trading-stats">
+                <p>Total Trades: <span id="trade-count">0</span></p>
+                <p>P&L: <span id="pnl">0.00</span> AUD</p>
+                <p>Avg Profit: <span id="avg-profit">0.00</span> AUD</p>
+                <p>Active Symbols: 24</p>
+            </div>
+        </div>
+        
+        <div class="status-card">
+            <h3>🚀 System Status</h3>
+            <div id="system-status">
+                <p>Bot Status: <span style="color: #00ff88;">ONLINE</span></p>
+                <p>WebSocket: <span style="color: #00ff88;">CONNECTED</span></p>
+                <p>Paper Mode: <span style="color: #00ff88;">ENABLED</span></p>
+                <p>Auto-Trade: <span style="color: #00ff88;">ON</span></p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="trades-container">
+        <h3>📊 Recent ASX Paper Trades</h3>
+        <div id="asx-trades-container">
+            <!-- Trades will appear here -->
+        </div>
+    </div>
+    
+    <!-- Load required scripts -->
+    <script src="js/market-hours-checker.js"></script>
+    <script src="js/force-asx-paper-trading.js"></script>
+    
+    <script>
+        // Update clock and date
+        function updateClock() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('en-AU', { 
+                timeZone: 'Australia/Sydney',
+                hour12: true 
+            });
+            
+            // Update clock
+            document.getElementById('clock').textContent = '🕐 Sydney: ' + timeStr;
+            document.getElementById('current-time').textContent = timeStr;
+            
+            // Update date
+            const dateStr = now.toLocaleDateString('en-AU', {
+                timeZone: 'Australia/Sydney',
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            document.getElementById('current-date').textContent = dateStr;
+            
+            // Update dynamic header date
+            const headerDateStr = now.toLocaleDateString('en-AU', {
+                timeZone: 'Australia/Sydney',
+                weekday: 'long',
+                month: 'long',
+                day: 'numeric',
+                year: 'numeric'
+            }).toUpperCase();
+            document.getElementById('dynamic-date').innerHTML = '📊 ' + headerDateStr + ' - TRADING ACTIVE 📊';
+        }
+        
+        setInterval(updateClock, 1000);
+        updateClock();
+        
+        // Update stats
+        setInterval(() => {
+            if (window.asxPaperTrader) {
+                const stats = window.asxPaperTrader.getStats();
+                document.getElementById('trade-count').textContent = stats.tradeCount;
+                document.getElementById('pnl').textContent = stats.profitLoss;
+                document.getElementById('pnl').className = parseFloat(stats.profitLoss) >= 0 ? 'profit' : 'loss';
+                document.getElementById('avg-profit').textContent = stats.avgProfit;
+                document.getElementById('avg-profit').className = parseFloat(stats.avgProfit) >= 0 ? 'profit' : 'loss';
+            }
+        }, 1000);
+        
+        // Auto-start message
+        console.log('🔥 ASX PAPER TRADING LAUNCHER ACTIVATED!');
+        console.log('📅 Tuesday, September 9, 2025 - 5:03 AM');
+        console.log('🇦🇺 Initializing Australian Securities Exchange Paper Trading...');
+        
+        // Ensure trading starts
+        setTimeout(() => {
+            if (window.asxPaperTrader && !window.asxPaperTrader.tradingActive) {
+                console.log('⚡ Force-starting ASX Paper Trading...');
+                window.asxPaperTrader.forceStartASXTrading();
+            }
+        }, 5000);
+        
+        // Display welcome message
+        const welcomeMsg = document.createElement('div');
+        welcomeMsg.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #00ffff 0%, #ff00ff 100%);
+            color: #000;
+            padding: 30px;
+            border-radius: 15px;
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            z-index: 20000;
+            animation: fadeInOut 3s ease-out;
+        `;
+        welcomeMsg.innerHTML = `
+            <div>🚀 ASX PAPER TRADING SYSTEM</div>
+            <div style="font-size: 18px; margin-top: 10px;">TUESDAY MORNING - READY TO TRADE!</div>
+            <div style="font-size: 16px; margin-top: 10px;">Starting in 3 seconds...</div>
+        `;
+        document.body.appendChild(welcomeMsg);
+        
+        setTimeout(() => welcomeMsg.remove(), 3000);
+        
+        // Add fade animation
+        const fadeStyle = document.createElement('style');
+        fadeStyle.textContent = `
+            @keyframes fadeInOut {
+                0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+                50% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+                100% { opacity: 0; transform: translate(-50%, -50%) scale(1.1); }
+            }
+        `;
+        document.head.appendChild(fadeStyle);
+    </script>
+</body>
+</html>

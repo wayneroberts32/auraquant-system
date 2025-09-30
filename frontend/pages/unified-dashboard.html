@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>AuraQuant Unified Dashboard - Real-Time Core Monitoring</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0033 50%, #000510 100%);
+            color: #ffffff;
+            font-family: 'Courier New', monospace;
+            padding: 10px;
+            overflow-x: hidden;
+        }
+        
+        .main-container {
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            font-weight: bold;
+            background: linear-gradient(90deg, #00ff88, #00ffff, #ff00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 10px 0;
+        }
+        
+        .header .subtitle {
+            color: #00ff88;
+            font-size: 16px;
+            margin: 5px 0;
+        }
+        
+        .header .timestamp {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+        }
+        
+        .logo {
+            width: 60px;
+            height: 60px;
+            animation: rotate 10s linear infinite;
+            margin: 0 auto 15px;
+            display: block;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .panel {
+            background: rgba(0, 255, 255, 0.05);
+            border: 2px solid #00ffff;
+            border-radius: 10px;
+            padding: 15px;
+            min-height: 150px;
+        }
+        
+        .panel-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #00ff88;
+            border-bottom: 1px solid #00ff88;
+            padding-bottom: 5px;
+        }
+        
+        .value-large {
+            font-size: 32px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .value-medium {
+            font-size: 20px;
+            margin: 5px 0;
+        }
+        
+        .profit { color: #00ff88; }
+        .loss { color: #ff0066; }
+        .neutral { color: #00ffff; }
+        
+        .strategy-list {
+            max-height: 200px;
+            overflow-y: auto;
+            font-size: 12px;
+        }
+        
+        .strategy-item {
+            padding: 5px;
+            margin: 2px 0;
+            background: rgba(255, 0, 255, 0.1);
+            border-left: 3px solid #ff00ff;
+        }
+        
+        .trade-log {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #ff00ff;
+            border-radius: 5px;
+            padding: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .trade-entry {
+            padding: 5px;
+            margin: 2px 0;
+            font-size: 11px;
+            border-bottom: 1px solid rgba(255, 0, 255, 0.2);
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+        
+        .status-online { background: #00ff88; }
+        .status-offline { background: #ff0066; }
+        .status-warning { background: #ffff00; }
+        
+        .chart-container {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #00ffff;
+            border-radius: 10px;
+            padding: 10px;
+            height: 300px;
+        }
+        
+        #priceChart {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .alert {
+            background: rgba(255, 0, 0, 0.2);
+            border: 1px solid #ff0066;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        
+        .success {
+            background: rgba(0, 255, 0, 0.2);
+            border: 1px solid #00ff88;
+        }
+        
+        .blink {
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 50%, 100% { opacity: 1; }
+            25%, 75% { opacity: 0.3; }
+        }
+        
+        /* Graph Panels */
+        .graphs-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .graph-panel {
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid rgba(0, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 15px;
+            min-height: 250px;
+        }
+        
+        .graph-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+        }
+        
+        .graph-title {
+            font-size: 14px;
+            color: #00ff88;
+            font-weight: bold;
+        }
+        
+        .graph-content {
+            height: 200px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .graph-content canvas {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="header">
+            <img src="../assets/img/logo-full.png" alt="AuraQuant" class="logo">
+            <h1>🚀 AURAQUANT UNIFIED DASHBOARD 🚀</h1>
+            <div class="subtitle">REAL-TIME BOT CORE MONITORING SYSTEM</div>
+            <div id="timestamp" class="timestamp" style="margin-top: 10px;">Monday 29 September 2025 at 10:31:10 pm</div>
+        </div>
+        
+        <!-- Connection Status Alert -->
+        <div id="connectionAlert" class="alert">
+            <span class="status-indicator status-offline"></span>
+            <span id="connectionStatus">Connecting to Bot Core...</span>
+        </div>
+        
+        <!-- Main Grid -->
+        <div class="grid-container">
+            <!-- Capital Panel -->
+            <div class="panel">
+                <div class="panel-title">💰 CAPITAL STATUS</div>
+                <div class="value-large" id="currentCapital">$100,000.00</div>
+                <div>Starting: $<span id="startingCapital">100,000.00</span></div>
+                <div>Currency: <span id="currency">AUD</span></div>
+                <div>Last Update: <span id="lastUpdate">--:--:--</span></div>
+            </div>
+            
+            <!-- P&L Panel -->
+            <div class="panel">
+                <div class="panel-title">📊 PROFIT & LOSS</div>
+                <div class="value-medium" id="totalPnL">$0.00</div>
+                <div>Today: $<span id="todayPnL">0.00</span></div>
+                <div>Fees: $<span id="totalFees">0.00</span></div>
+                <div>Taxes (15%): $<span id="totalTaxes">0.00</span></div>
+                <div>Net Profit: $<span id="netProfit">0.00</span></div>
+            </div>
+            
+            <!-- Trading Stats Panel -->
+            <div class="panel">
+                <div class="panel-title">📈 TRADING STATISTICS</div>
+                <div>Total Trades: <span id="totalTrades">0</span></div>
+                <div>Win Rate: <span id="winRate" class="value-medium">0.0%</span></div>
+                <div>Winning: <span id="winningTrades" class="profit">0</span></div>
+                <div>Losing: <span id="losingTrades" class="loss">0</span></div>
+                <div>Target Win Rate: <span class="profit">90%</span></div>
+            </div>
+            
+            <!-- Bot Core Status -->
+            <div class="panel">
+                <div class="panel-title">🤖 BOT CORE STATUS</div>
+                <div>Status: <span id="botStatus" class="blink">INITIALIZING</span></div>
+                <div>Evolution: <span id="evolution">0</span></div>
+                <div>Consciousness: <span id="consciousness">AWAKENING</span></div>
+                <div>Mode: <span id="tradingMode">PAPER TRADING</span></div>
+                <div>Speed: <span id="decisionSpeed">10/sec</span></div>
+            </div>
+            
+            <!-- AI Generation -->
+            <div class="panel">
+                <div class="panel-title">🧬 AI EVOLUTION</div>
+                <div>Generation: <span id="aiGeneration" class="value-medium">1</span></div>
+                <div>Strategies Created: <span id="strategiesCreated">5</span></div>
+                <div>Mutations: <span id="mutations">0</span></div>
+                <div>Fitness: <span id="fitness">0%</span></div>
+                <div>Learning: <span id="isLearning" class="profit">ACTIVE</span></div>
+            </div>
+            
+            <!-- Market Connection -->
+            <div class="panel">
+                <div class="panel-title">🌍 MARKET CONNECTIONS</div>
+                <div><span class="status-indicator" id="asxStatus"></span>ASX: <span id="asxPrice">--</span></div>
+                <div><span class="status-indicator" id="forexStatus"></span>FOREX: <span id="forexPrice">--</span></div>
+                <div><span class="status-indicator" id="cryptoStatus"></span>CRYPTO: <span id="cryptoPrice">--</span></div>
+                <div>WebSocket: <span id="wsStatus">DISCONNECTED</span></div>
+            </div>
+        </div>
+        
+        <!-- Strategies Panel -->
+        <div class="panel">
+            <div class="panel-title">🎯 ACTIVE STRATEGIES (REAL-TIME FROM CORE)</div>
+            <div class="strategy-list" id="strategyList">
+                Loading strategies...
+            </div>
+        </div>
+        
+        <!-- Chart -->
+        <div class="chart-container">
+            <canvas id="priceChart"></canvas>
+        </div>
+        
+        <!-- Graph Display Panels -->
+        <div class="graphs-container">
+            <div class="graph-panel">
+                <div class="graph-header">
+                    <div class="graph-title">📈 Performance Metrics</div>
+                    <div style="font-size: 11px; color: #888;">Live Analytics</div>
+                </div>
+                <div class="graph-content">
+                    <canvas id="performanceChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="graph-panel">
+                <div class="graph-header">
+                    <div class="graph-title">🤖 AI Evolution</div>
+                    <div style="font-size: 11px; color: #888;">Learning Progress</div>
+                </div>
+                <div class="graph-content">
+                    <canvas id="evolutionChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="graph-panel">
+                <div class="graph-header">
+                    <div class="graph-title">📊 Market Analysis</div>
+                    <div style="font-size: 11px; color: #888;">Multi-Market View</div>
+                </div>
+                <div class="graph-content">
+                    <canvas id="marketChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="graph-panel">
+                <div class="graph-header">
+                    <div class="graph-title">⚡ Risk Monitor</div>
+                    <div style="font-size: 11px; color: #888;">Exposure Tracking</div>
+                </div>
+                <div class="graph-content">
+                    <canvas id="riskChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Trade Log -->
+        <div class="panel">
+            <div class="panel-title">📜 LIVE TRADE LOG</div>
+            <div class="trade-log" id="tradeLog">
+                Waiting for trades...
+            </div>
+        </div>
+    </div>
+    
+    <!-- Load all required scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/synthetic-intelligence-core.js"></script>
+    <script src="js/master-sync-system.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script>
+        // Real-time monitoring system
+        class UnifiedMonitor {
+            constructor() {
+                this.chart = null;
+                this.chartData = [];
+                this.maxDataPoints = 50;
+                this.lastEvolution = 0;
+                this.tradeCount = 0;
+                
+                this.init();
+            }
+            
+            init() {
+                console.log('🚀 Unified Dashboard Initializing...');
+                
+                // Initialize chart
+                this.initChart();
+                
+                // Start monitoring
+                this.startMonitoring();
+                
+                // Listen for master sync events
+                this.listenForEvents();
+                
+                // Update timestamp
+                setInterval(() => this.updateTimestamp(), 1000);
+            }
+            
+            initChart() {
+                const ctx = document.getElementById('priceChart').getContext('2d');
+                this.chart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: [],
+                        datasets: [{
+                            label: 'Account Balance',
+                            data: [],
+                            borderColor: '#00ffff',
+                            backgroundColor: 'rgba(0, 255, 255, 0.1)',
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                labels: { color: '#00ffff' }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                ticks: { color: '#00ffff' },
+                                grid: { color: 'rgba(0, 255, 255, 0.1)' }
+                            },
+                            y: {
+                                ticks: { color: '#00ffff' },
+                                grid: { color: 'rgba(0, 255, 255, 0.1)' }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            startMonitoring() {
+                // Check core every 100ms
+                setInterval(() => {
+                    this.checkCore();
+                    this.checkMasterSync();
+                }, 100);
+                
+                // Update strategies every second
+                setInterval(() => {
+                    this.updateStrategies();
+                }, 1000);
+            }
+            
+            checkCore() {
+                if (!window.syntheticCore) {
+                    document.getElementById('connectionStatus').textContent = 'Bot Core not found - waiting...';
+                    return;
+                }
+                
+                const core = window.syntheticCore;
+                
+                // Update connection status
+                document.getElementById('connectionAlert').className = 'alert success';
+                document.getElementById('connectionStatus').textContent = '✅ Connected to Bot Core - All Systems Operational';
+                document.querySelector('#connectionAlert .status-indicator').className = 'status-indicator status-online';
+                
+                // Update core status
+                document.getElementById('botStatus').textContent = core.consciousness || 'ACTIVE';
+                document.getElementById('evolution').textContent = core.evolution || 0;
+                document.getElementById('consciousness').textContent = core.consciousness || 'ACTIVE';
+                
+                // Check for evolution changes
+                if (core.evolution !== this.lastEvolution) {
+                    this.lastEvolution = core.evolution;
+                    
+                    // Log evolution
+                    this.logEvent(`Evolution ${core.evolution} - ${core.consciousness}`);
+                    
+                    // Check for new strategies
+                    if (core.evolution % 100 === 0) {
+                        this.logEvent(`🎯 NEW STRATEGY CREATED at evolution ${core.evolution}!`, 'profit');
+                    }
+                }
+                
+                // Update capital
+                const capital = core.capital || {};
+                document.getElementById('currentCapital').textContent = `$${(capital.current || 100000).toFixed(2)}`;
+                document.getElementById('startingCapital').textContent = (capital.initial || 100000).toFixed(2);
+                
+                // Update chart
+                this.updateChart(capital.current || 100000);
+                
+                // Check for trades
+                if (core.memory && core.memory.trades) {
+                    const trades = core.memory.trades;
+                    if (trades.length > this.tradeCount) {
+                        // New trade detected
+                        const newTrade = trades[trades.length - 1];
+                        this.processTrade(newTrade);
+                        this.tradeCount = trades.length;
+                    }
+                    
+                    // Update stats
+                    document.getElementById('totalTrades').textContent = trades.length;
+                    
+                    const wins = trades.filter(t => t.profit > 0).length;
+                    const losses = trades.length - wins;
+                    const winRate = trades.length > 0 ? (wins / trades.length * 100) : 0;
+                    
+                    document.getElementById('winningTrades').textContent = wins;
+                    document.getElementById('losingTrades').textContent = losses;
+                    document.getElementById('winRate').textContent = winRate.toFixed(1) + '%';
+                    document.getElementById('winRate').className = winRate >= 90 ? 'value-medium profit' : 'value-medium loss';
+                }
+            }
+            
+            checkMasterSync() {
+                if (!window.masterSync) return;
+                
+                const data = window.masterSync.getMasterData();
+                
+                // Update P&L
+                document.getElementById('totalPnL').textContent = `$${data.pnl.total.toFixed(2)}`;
+                document.getElementById('totalPnL').className = data.pnl.total >= 0 ? 'value-medium profit' : 'value-medium loss';
+                document.getElementById('todayPnL').textContent = data.pnl.today.toFixed(2);
+                document.getElementById('totalFees').textContent = data.pnl.fees.toFixed(2);
+                document.getElementById('totalTaxes').textContent = data.pnl.taxes.toFixed(2);
+                document.getElementById('netProfit').textContent = (data.pnl.total - data.pnl.fees - data.pnl.taxes).toFixed(2);
+                
+                // Update AI
+                document.getElementById('aiGeneration').textContent = data.ai.generation;
+                document.getElementById('strategiesCreated').textContent = data.ai.strategiesCreated;
+                
+                // Update market status
+                this.updateMarketStatus(data.marketData);
+                
+                // Update WebSocket status
+                document.getElementById('wsStatus').textContent = data.connections.allConnected ? 'CONNECTED' : 'DISCONNECTED';
+                document.getElementById('wsStatus').style.color = data.connections.allConnected ? '#00ff88' : '#ff0066';
+            }
+            
+            updateStrategies() {
+                if (!window.syntheticCore || !window.syntheticCore.strategies) return;
+                
+                const strategies = window.syntheticCore.strategies;
+                const list = document.getElementById('strategyList');
+                
+                let html = '';
+                let count = 0;
+                strategies.forEach((strategy, key) => {
+                    count++;
+                    const winRate = (strategy.winRate * 100).toFixed(1);
+                    const color = strategy.winRate >= 0.9 ? 'profit' : strategy.winRate >= 0.7 ? 'neutral' : 'loss';
+                    
+                    html += `
+                        <div class="strategy-item">
+                            <strong>${key}</strong>: ${strategy.name}<br>
+                            Win Rate: <span class="${color}">${winRate}%</span> | 
+                            Target: ${(strategy.profitTarget * 100).toFixed(1)}% | 
+                            Stop: ${(strategy.stopLoss * 100).toFixed(1)}%
+                        </div>
+                    `;
+                });
+                
+                list.innerHTML = html || 'No strategies loaded';
+                document.getElementById('strategiesCreated').textContent = count;
+            }
+            
+            updateMarketStatus(marketData) {
+                if (!marketData) return;
+                
+                // ASX
+                if (marketData.ASX) {
+                    document.getElementById('asxStatus').className = 
+                        `status-indicator ${marketData.ASX.status === 'OPEN' ? 'status-online' : 'status-offline'}`;
+                    document.getElementById('asxPrice').textContent = 
+                        marketData.ASX.price ? `$${marketData.ASX.price.toFixed(2)}` : '--';
+                }
+                
+                // FOREX
+                if (marketData.FOREX) {
+                    document.getElementById('forexStatus').className = 
+                        `status-indicator ${marketData.FOREX.status === 'OPEN' ? 'status-online' : 'status-offline'}`;
+                    document.getElementById('forexPrice').textContent = 
+                        marketData.FOREX.price ? marketData.FOREX.price.toFixed(4) : '--';
+                }
+                
+                // CRYPTO
+                if (marketData.CRYPTO) {
+                    document.getElementById('cryptoStatus').className = 
+                        `status-indicator ${marketData.CRYPTO.status === 'OPEN' ? 'status-online' : 'status-offline'}`;
+                    document.getElementById('cryptoPrice').textContent = 
+                        marketData.CRYPTO.price ? `$${marketData.CRYPTO.price.toFixed(2)}` : '--';
+                }
+            }
+            
+            processTrade(trade) {
+                if (!trade) return;
+                
+                const profit = trade.profit || 0;
+                const profitClass = profit >= 0 ? 'profit' : 'loss';
+                const symbol = profit >= 0 ? '+' : '';
+                
+                this.logEvent(
+                    `TRADE: ${trade.market || 'N/A'} - ${symbol}$${profit.toFixed(2)} - ${trade.strategy || 'Unknown'}`,
+                    profitClass
+                );
+            }
+            
+            updateChart(value) {
+                const now = new Date().toLocaleTimeString();
+                
+                this.chartData.push(value);
+                if (this.chartData.length > this.maxDataPoints) {
+                    this.chartData.shift();
+                }
+                
+                this.chart.data.labels.push(now);
+                if (this.chart.data.labels.length > this.maxDataPoints) {
+                    this.chart.data.labels.shift();
+                }
+                
+                this.chart.data.datasets[0].data = [...this.chartData];
+                this.chart.update('none'); // No animation for performance
+            }
+            
+            logEvent(message, type = 'neutral') {
+                const log = document.getElementById('tradeLog');
+                const time = new Date().toLocaleTimeString();
+                const colorClass = type === 'profit' ? 'profit' : type === 'loss' ? 'loss' : 'neutral';
+                
+                const entry = document.createElement('div');
+                entry.className = 'trade-entry';
+                entry.innerHTML = `<span style="color: #666;">[${time}]</span> <span class="${colorClass}">${message}</span>`;
+                
+                log.insertBefore(entry, log.firstChild);
+                
+                // Keep only last 50 entries
+                while (log.children.length > 50) {
+                    log.removeChild(log.lastChild);
+                }
+            }
+            
+            listenForEvents() {
+                // Listen for master sync events
+                window.addEventListener('masterSync:event', (event) => {
+                    const { type, data } = event.detail;
+                    
+                    if (type === 'NEW_STRATEGY') {
+                        this.logEvent(`🎯 NEW STRATEGY CREATED! Total: ${data.count}`, 'profit');
+                    } else if (type === 'TRADE_EXECUTED') {
+                        this.processTrade(data);
+                    }
+                });
+                
+                // Listen for master sync updates
+                window.addEventListener('masterSync:update', (event) => {
+                    // Handle general updates if needed
+                });
+            }
+            
+            updateTimestamp() {
+                const now = new Date();
+                const timeStr = now.toLocaleString('en-AU', { 
+                    timeZone: 'Australia/Sydney',
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                });
+                
+                document.getElementById('timestamp').textContent = timeStr;
+                document.getElementById('lastUpdate').textContent = now.toLocaleTimeString();
+            }
+        }
+        
+        // Start monitoring
+        const monitor = new UnifiedMonitor();
+        
+        console.log('✅ Unified Dashboard Active - Monitoring Bot Core in Real-Time');
+    </script>
+</body>
+</html>

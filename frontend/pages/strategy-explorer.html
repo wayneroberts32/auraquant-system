@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AuraQuant - Strategy Explorer</title>
+    <link rel="icon" type="image/png" href="../assets/img/logo-button.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #131722;
+            color: #d1d4dc;
+            overflow: hidden;
+        }
+        
+        .container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            height: 52px;
+            background: #1e222d;
+            border-bottom: 1px solid #2a2e39;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            justify-content: space-between;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .logo-spin {
+            height: 35px;
+            width: auto;
+            animation: rotate 10s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .page-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #d1d4dc;
+        }
+        
+        .content {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+            padding: 20px;
+            overflow: hidden;
+        }
+        
+        .sidebar {
+            background: #1e222d;
+            border-radius: 8px;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .main-area {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            overflow-y: auto;
+        }
+        
+        .panel {
+            background: #1e222d;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        
+        .panel-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #d1d4dc;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #2a2e39;
+        }
+        
+        .tab {
+            padding: 10px 16px;
+            background: transparent;
+            color: #787b86;
+            border: none;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .tab.active {
+            color: #00ff88;
+            border-bottom-color: #00ff88;
+        }
+        
+        .tab:hover {
+            color: #d1d4dc;
+        }
+        
+        .accordion {
+            margin-bottom: 10px;
+        }
+        
+        .accordion-header {
+            padding: 12px;
+            background: #131722;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.2s;
+        }
+        
+        .accordion-header:hover {
+            background: #2a2e39;
+        }
+        
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s;
+        }
+        
+        .accordion.active .accordion-content {
+            max-height: 500px;
+            padding: 10px 0;
+        }
+        
+        .item-list {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .item {
+            padding: 8px 12px;
+            background: #131722;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .item:hover {
+            background: #2a2e39;
+            transform: translateX(5px);
+        }
+        
+        .item.selected {
+            background: rgba(0, 255, 136, 0.1);
+            border-left: 3px solid #00ff88;
+        }
+        
+        .badge {
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        
+        .badge.trend { background: rgba(0, 255, 136, 0.2); color: #00ff88; }
+        .badge.momentum { background: rgba(255, 165, 0, 0.2); color: #ffa500; }
+        .badge.volatility { background: rgba(255, 68, 68, 0.2); color: #ff4444; }
+        .badge.volume { background: rgba(100, 149, 237, 0.2); color: #6495ed; }
+        .badge.experimental { background: rgba(255, 255, 0, 0.2); color: #ffff00; }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #787b86;
+            font-size: 14px;
+        }
+        
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 8px;
+            background: #131722;
+            border: 1px solid #2a2e39;
+            border-radius: 4px;
+            color: #d1d4dc;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #00ff88;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            background: #00ff88;
+            color: #131722;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: opacity 0.2s;
+        }
+        
+        .btn:hover {
+            opacity: 0.9;
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .btn-secondary {
+            background: #787b86;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .metric-card {
+            background: #131722;
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+        }
+        
+        .metric-label {
+            color: #787b86;
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+        
+        .metric-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #00ff88;
+        }
+        
+        .metric-value.negative {
+            color: #ff4444;
+        }
+        
+        .chart-container {
+            background: #131722;
+            border-radius: 6px;
+            padding: 20px;
+            min-height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #787b86;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #2a2e39;
+            border-top-color: #00ff88;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .status-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: #131722;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+        
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #00ff88;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(0, 255, 136, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-left">
+                <img src="../assets/img/logo-button.png" alt="AuraQuant" class="logo-spin">
+                <div class="page-title">Strategy Explorer</div>
+            </div>
+            <div>
+                <span style="color: #787b86; margin-right: 10px;">Auto-Discovery: <span style="color: #00ff88;">ACTIVE</span></span>
+                <button class="btn" onclick="refreshAll()">↻ Refresh</button>
+            </div>
+        </div>
+        
+        <div class="content">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <div class="tabs">
+                    <button class="tab active" onclick="switchTab('strategies')">Strategies</button>
+                    <button class="tab" onclick="switchTab('indicators')">Indicators</button>
+                    <button class="tab" onclick="switchTab('metrics')">Metrics</button>
+                </div>
+                
+                <div id="strategies-panel">
+                    <div class="accordion active">
+                        <div class="accordion-header" onclick="toggleAccordion(this)">
+                            <span>Trend Following</span>
+                            <span id="trend-count">0</span>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="item-list" id="trend-strategies"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion">
+                        <div class="accordion-header" onclick="toggleAccordion(this)">
+                            <span>Momentum</span>
+                            <span id="momentum-count">0</span>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="item-list" id="momentum-strategies"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion">
+                        <div class="accordion-header" onclick="toggleAccordion(this)">
+                            <span>Mean Reversion</span>
+                            <span id="mean-count">0</span>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="item-list" id="mean-strategies"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion">
+                        <div class="accordion-header" onclick="toggleAccordion(this)">
+                            <span>Other</span>
+                            <span id="other-count">0</span>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="item-list" id="other-strategies"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="indicators-panel" style="display: none;">
+                    <div class="item-list" id="indicators-list"></div>
+                </div>
+                
+                <div id="metrics-panel" style="display: none;">
+                    <div class="item-list" id="metrics-list"></div>
+                </div>
+            </div>
+            
+            <!-- Main Area -->
+            <div class="main-area">
+                <!-- Configuration Panel -->
+                <div class="panel">
+                    <div class="panel-title">
+                        <span>Backtest Configuration</span>
+                        <span id="selected-strategy">No strategy selected</span>
+                    </div>
+                    
+                    <div class="status-bar">
+                        <div class="status-indicator"></div>
+                        <span>Ready for backtesting</span>
+                    </div>
+                    
+                    <form id="backtest-form">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div class="form-group">
+                                <label>Symbol</label>
+                                <input type="text" id="symbol" value="BTC/USDT" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Timeframe</label>
+                                <select id="timeframe">
+                                    <option value="1m">1 Minute</option>
+                                    <option value="5m">5 Minutes</option>
+                                    <option value="15m">15 Minutes</option>
+                                    <option value="1h" selected>1 Hour</option>
+                                    <option value="4h">4 Hours</option>
+                                    <option value="1d">1 Day</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Initial Capital</label>
+                                <input type="number" id="capital" value="10000" min="100" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Data Period (days)</label>
+                                <input type="number" id="period" value="30" min="7" max="365" required>
+                            </div>
+                        </div>
+                        
+                        <div id="strategy-params" style="margin-top: 15px;">
+                            <!-- Dynamic parameters will be inserted here -->
+                        </div>
+                        
+                        <div style="display: flex; gap: 10px; margin-top: 20px;">
+                            <button type="submit" class="btn" id="run-backtest">Run Backtest</button>
+                            <button type="button" class="btn btn-secondary" onclick="resetForm()">Reset</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Results Panel -->
+                <div class="panel">
+                    <div class="panel-title">Backtest Results</div>
+                    
+                    <div id="results-container">
+                        <div class="metrics-grid" id="metrics-display"></div>
+                        <div class="chart-container" id="chart-display">
+                            <span>Run a backtest to see results</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let selectedStrategy = null;
+        let availableStrategies = [];
+        let availableIndicators = [];
+        let availableMetrics = [];
+        
+        // Load data on page load
+        window.onload = function() {
+            loadStrategies();
+            loadIndicators();
+            loadMetrics();
+        };
+        
+        async function loadStrategies() {
+            try {
+                const response = await fetch('http://localhost:8000/api/strategies/list');
+                const data = await response.json();
+                
+                if (data.success) {
+                    availableStrategies = data.strategies;
+                    displayStrategies(availableStrategies);
+                }
+            } catch (error) {
+                console.error('Error loading strategies:', error);
+            }
+        }
+        
+        async function loadIndicators() {
+            try {
+                const response = await fetch('http://localhost:8000/api/indicators/list');
+                const data = await response.json();
+                
+                if (data.success) {
+                    availableIndicators = data.indicators;
+                    displayIndicators(availableIndicators);
+                }
+            } catch (error) {
+                console.error('Error loading indicators:', error);
+            }
+        }
+        
+        async function loadMetrics() {
+            try {
+                const response = await fetch('http://localhost:8000/api/risk-metrics/list');
+                const data = await response.json();
+                
+                if (data.success) {
+                    availableMetrics = data.metrics;
+                    displayMetrics(availableMetrics);
+                }
+            } catch (error) {
+                console.error('Error loading metrics:', error);
+            }
+        }
+        
+        function displayStrategies(strategies) {
+            const categories = {
+                'trend_following': 'trend-strategies',
+                'momentum': 'momentum-strategies',
+                'mean_reversion': 'mean-strategies'
+            };
+            
+            // Clear all lists
+            Object.values(categories).forEach(id => {
+                document.getElementById(id).innerHTML = '';
+            });
+            document.getElementById('other-strategies').innerHTML = '';
+            
+            // Count by category
+            const counts = {
+                'trend_following': 0,
+                'momentum': 0,
+                'mean_reversion': 0,
+                'other': 0
+            };
+            
+            strategies.forEach(strategy => {
+                const item = document.createElement('div');
+                item.className = 'item';
+                item.onclick = () => selectStrategy(strategy);
+                
+                const statusBadge = strategy.status === 'experimental' ? 
+                    '<span class="badge experimental">EXP</span>' : '';
+                
+                item.innerHTML = `
+                    <span>${strategy.name}</span>
+                    ${statusBadge}
+                `;
+                
+                const containerId = categories[strategy.type] || 'other-strategies';
+                document.getElementById(containerId).appendChild(item);
+                
+                if (categories[strategy.type]) {
+                    counts[strategy.type]++;
+                } else {
+                    counts.other++;
+                }
+            });
+            
+            // Update counts
+            document.getElementById('trend-count').textContent = counts.trend_following;
+            document.getElementById('momentum-count').textContent = counts.momentum;
+            document.getElementById('mean-count').textContent = counts.mean_reversion;
+            document.getElementById('other-count').textContent = counts.other;
+        }
+        
+        function displayIndicators(indicators) {
+            const list = document.getElementById('indicators-list');
+            list.innerHTML = '';
+            
+            indicators.forEach(indicator => {
+                const item = document.createElement('div');
+                item.className = 'item';
+                
+                const badges = {
+                    'trend': 'trend',
+                    'momentum': 'momentum',
+                    'volatility': 'volatility',
+                    'volume': 'volume'
+                };
+                
+                const badgeClass = badges[indicator.category] || 'trend';
+                
+                item.innerHTML = `
+                    <span>${indicator.name}</span>
+                    <span class="badge ${badgeClass}">${indicator.category}</span>
+                `;
+                
+                list.appendChild(item);
+            });
+        }
+        
+        function displayMetrics(metrics) {
+            const list = document.getElementById('metrics-list');
+            list.innerHTML = '';
+            
+            metrics.forEach(metric => {
+                const item = document.createElement('div');
+                item.className = 'item';
+                item.innerHTML = `
+                    <span>${metric.name}</span>
+                    <span style="color: #787b86; font-size: 12px;">${metric.type}</span>
+                `;
+                
+                list.appendChild(item);
+            });
+        }
+        
+        function selectStrategy(strategy) {
+            selectedStrategy = strategy;
+            
+            // Update UI
+            document.getElementById('selected-strategy').textContent = strategy.name;
+            
+            // Clear previous selections
+            document.querySelectorAll('.item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            
+            // Highlight selected
+            event.target.closest('.item').classList.add('selected');
+            
+            // Load strategy-specific parameters
+            loadStrategyParameters(strategy);
+        }
+        
+        function loadStrategyParameters(strategy) {
+            const paramsDiv = document.getElementById('strategy-params');
+            paramsDiv.innerHTML = '<h4 style="margin-bottom: 10px; color: #d1d4dc;">Strategy Parameters</h4>';
+            
+            // Default parameters based on strategy type
+            const defaultParams = {
+                'SMA_Crossover': [
+                    { name: 'fast_period', label: 'Fast Period', type: 'number', value: 10, min: 5, max: 50 },
+                    { name: 'slow_period', label: 'Slow Period', type: 'number', value: 20, min: 10, max: 200 }
+                ],
+                'RSI_Oversold_Overbought': [
+                    { name: 'period', label: 'RSI Period', type: 'number', value: 14, min: 5, max: 30 },
+                    { name: 'oversold', label: 'Oversold Level', type: 'number', value: 30, min: 10, max: 40 },
+                    { name: 'overbought', label: 'Overbought Level', type: 'number', value: 70, min: 60, max: 90 }
+                ],
+                'MACD_Signal': [
+                    { name: 'fast', label: 'Fast EMA', type: 'number', value: 12, min: 5, max: 20 },
+                    { name: 'slow', label: 'Slow EMA', type: 'number', value: 26, min: 20, max: 50 },
+                    { name: 'signal', label: 'Signal Line', type: 'number', value: 9, min: 5, max: 15 }
+                ]
+            };
+            
+            const params = defaultParams[strategy.name] || [];
+            
+            const paramGrid = document.createElement('div');
+            paramGrid.style.display = 'grid';
+            paramGrid.style.gridTemplateColumns = 'repeat(auto-fit, minmax(200px, 1fr))';
+            paramGrid.style.gap = '15px';
+            
+            params.forEach(param => {
+                const group = document.createElement('div');
+                group.className = 'form-group';
+                group.innerHTML = `
+                    <label>${param.label}</label>
+                    <input type="${param.type}" 
+                           name="${param.name}" 
+                           value="${param.value}" 
+                           min="${param.min}" 
+                           max="${param.max}">
+                `;
+                paramGrid.appendChild(group);
+            });
+            
+            paramsDiv.appendChild(paramGrid);
+        }
+        
+        function switchTab(tab) {
+            // Update tab buttons
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Show/hide panels
+            document.getElementById('strategies-panel').style.display = tab === 'strategies' ? 'block' : 'none';
+            document.getElementById('indicators-panel').style.display = tab === 'indicators' ? 'block' : 'none';
+            document.getElementById('metrics-panel').style.display = tab === 'metrics' ? 'block' : 'none';
+        }
+        
+        function toggleAccordion(header) {
+            header.parentElement.classList.toggle('active');
+        }
+        
+        document.getElementById('backtest-form').onsubmit = async function(e) {
+            e.preventDefault();
+            
+            if (!selectedStrategy) {
+                alert('Please select a strategy');
+                return;
+            }
+            
+            const btn = document.getElementById('run-backtest');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loading"></span> Running...';
+            
+            const formData = new FormData(e.target);
+            const params = {};
+            
+            // Get strategy parameters
+            document.querySelectorAll('#strategy-params input').forEach(input => {
+                params[input.name] = input.type === 'number' ? 
+                    parseFloat(input.value) : input.value;
+            });
+            
+            const requestData = {
+                strategy: selectedStrategy.name,
+                symbol: formData.get('symbol'),
+                timeframe: formData.get('timeframe'),
+                initial_capital: parseFloat(formData.get('capital')),
+                period_days: parseInt(formData.get('period')),
+                parameters: params
+            };
+            
+            try {
+                const response = await fetch('http://localhost:8000/api/strategies/backtest', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestData)
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    displayResults(data.results);
+                } else {
+                    alert('Backtest failed: ' + data.error);
+                }
+            } catch (error) {
+                console.error('Error running backtest:', error);
+                alert('Failed to run backtest');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = 'Run Backtest';
+            }
+        };
+        
+        function displayResults(results) {
+            // Display metrics
+            const metricsDiv = document.getElementById('metrics-display');
+            metricsDiv.innerHTML = '';
+            
+            const metrics = [
+                { label: 'Total Return', value: results.total_return, format: '%' },
+                { label: 'Win Rate', value: results.win_rate, format: '%' },
+                { label: 'Sharpe Ratio', value: results.sharpe_ratio, format: '' },
+                { label: 'Max Drawdown', value: results.max_drawdown, format: '%' },
+                { label: 'Total Trades', value: results.total_trades, format: '' },
+                { label: 'Profit Factor', value: results.profit_factor, format: '' }
+            ];
+            
+            metrics.forEach(metric => {
+                const card = document.createElement('div');
+                card.className = 'metric-card';
+                
+                const value = metric.value !== undefined ? metric.value : 0;
+                const formattedValue = typeof value === 'number' ? 
+                    value.toFixed(2) + metric.format : value + metric.format;
+                
+                const valueClass = value < 0 ? 'negative' : '';
+                
+                card.innerHTML = `
+                    <div class="metric-label">${metric.label}</div>
+                    <div class="metric-value ${valueClass}">${formattedValue}</div>
+                `;
+                
+                metricsDiv.appendChild(card);
+            });
+            
+            // Display chart (placeholder)
+            const chartDiv = document.getElementById('chart-display');
+            if (results.chart_url) {
+                chartDiv.innerHTML = `<img src="${results.chart_url}" alt="Equity Curve" style="max-width: 100%;">`;
+            } else {
+                chartDiv.innerHTML = '<span>Chart visualization coming soon</span>';
+            }
+        }
+        
+        function resetForm() {
+            document.getElementById('backtest-form').reset();
+            selectedStrategy = null;
+            document.getElementById('selected-strategy').textContent = 'No strategy selected';
+            document.getElementById('strategy-params').innerHTML = '';
+            document.querySelectorAll('.item').forEach(item => {
+                item.classList.remove('selected');
+            });
+        }
+        
+        function refreshAll() {
+            loadStrategies();
+            loadIndicators();
+            loadMetrics();
+            
+            const btn = event.target;
+            btn.innerHTML = '✓ Refreshed';
+            setTimeout(() => {
+                btn.innerHTML = '↻ Refresh';
+            }, 1000);
+        }
+    </script>
+</body>
+</html>

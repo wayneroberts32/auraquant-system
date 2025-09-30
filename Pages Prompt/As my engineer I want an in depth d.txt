@@ -1,0 +1,103 @@
+As my engineer I want an in depth detailed prompt so I can get warp to scan the pages we have and ensure it is build correctly
+
+1. Login screen -> Already built -> Don't change just wire in if not done already -> MongoDB (Security & Storage) -> Render (Brain -> Backend) -> Cloudflare (Frontend)-> "D:\New AuraQuant\New_Synthetic_System_AuraQuant_Backup_2025\frontend\pages\login.html" -> Opens up the 
+	a. Use Login
+	b. Admin (Pro)
+	c. Recovery
+2. Main-Screen -> This display look the same and work the same as the TraidingView Main-Screen -> 
+	a.📌 TradingView UI Buttons (What They Are + Functions for Warp)
+
+These are called Chart Tabs / Symbol Tabs in TradingView.
+They act like a workspace tab system that allows users to manage multiple charts, layouts, or ideas under one session.
+
+🔹 Buttons in your screenshot
+
+BTCUSD tab
+
+Function: Opens the chart/workspace for the symbol BTCUSD.
+
+Shows real-time price + % change.
+
+Has a close button (×) to remove this tab.
+
+wayneroberts32 — Trading Ideas tab
+
+Function: A user-created workspace/idea tab.
+
+Allows traders to save custom layouts, notes, or published “ideas.”
+
+Also has a close button (×).
+
+“+” (Add New Tab)
+
+Function: Opens a new blank chart or workspace.
+
+User selects a symbol, timeframe, or layout.
+
+Adds it as a new tab in the strip.
+
+🔹 Functions Warp Must Build
+
+For AuraQuant, replicate these as multi-tab workspace buttons:
+
+Symbol Tabs
+
+Show ticker symbol (e.g., BTCUSD, AAPL).
+
+Show price + % change (color-coded: green for up, red for down).
+
+Click → loads that chart/workspace into main panel.
+
+Close (×) → remove tab.
+
+Idea / Custom Tabs
+
+Allow saving layouts, strategies, or journal notes as tabs.
+
+Example: “Wayne’s Scalping Layout” or “Quantum Strategy Test.”
+
+Add New Tab (+)
+
+Open dialog → choose:
+
+Symbol (dropdown/search).
+
+Template (default chart, strategy test, screener, etc.).
+
+Adds a new tab dynamically to the strip.
+
+Right-click menu (optional enhancement)
+
+Rename tab.
+
+Duplicate tab.
+
+Save layout.
+
+🔹 Extra Functions Warp Can Wire
+
+Tabs persist across sessions (save in MongoDB under user profile).
+
+Drag-and-drop reordering of tabs.
+
+Auto-refresh % change live from WebSocket feed.
+
+Role-based: Admin tabs (e.g., “Unified Dashboard”) show only if logged in as admin.
+
+🔧 Implementation Notes for Warp
+
+Tabs must be synced with the workspace manager (so multiple panels under one browser tab).
+
+Symbols + ideas linked to backend routes for live data + saved layouts.
+
+All tabs styled with AuraQuant color scheme:
+
+Active Tab: #131722 with top border #00ff88.
+
+Inactive Tabs: #2a2e39.
+
+Text: #d1d4dc.
+
+Close button styled red (#ff4444) on hover.
+
+✅ With this, AuraQuant will have a TradingView-like tab strip where users can switch between symbols, layouts, and strategies — all under one session, no extra browser windows needed.
