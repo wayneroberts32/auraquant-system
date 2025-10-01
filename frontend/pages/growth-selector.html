@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Growth Selector - AuraQuant</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/tradingview-custom.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0033 50%, #000510 100%);
+            color: #ffffff;
+        }
+        .logo {
+            width: 50px;
+            height: 50px;
+            animation: rotate 10s linear infinite;
+        }
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .title {
+            font-size: 28px;
+            font-weight: bold;
+            background: linear-gradient(90deg, #00ff88, #00ffff, #ff00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .card {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+        }
+        .card-header {
+            background: rgba(0, 0, 0, 0.8);
+            border-bottom: 2px solid rgba(0, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid p-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="title"><i class="fas fa-chart-line"></i> Growth Selector V1→V∞</h2>
+            <img src="../assets/img/logo-full.png" alt="AuraQuant" class="logo">
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Current Profile</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="metric-card text-center">
+                                    <div class="metric-label">Risk Level</div>
+                                    <div class="metric-value" id="current-risk">Moderate</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="metric-card text-center">
+                                    <div class="metric-label">Target Return</div>
+                                    <div class="metric-value" id="target-return">15%</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="metric-card text-center">
+                                    <div class="metric-label">Time Horizon</div>
+                                    <div class="metric-value" id="time-horizon">6 Months</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="metric-card text-center">
+                                    <div class="metric-label">Profile Version</div>
+                                    <div class="metric-value" id="profile-version">V3.2</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Profile Configuration</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="growth-profile-form">
+                            <div class="mb-3">
+                                <label class="form-label">Investment Goal</label>
+                                <select class="form-control" id="investment-goal">
+                                    <option value="growth">Growth</option>
+                                    <option value="income">Income</option>
+                                    <option value="preservation">Capital Preservation</option>
+                                    <option value="aggressive">Aggressive Growth</option>
+                                    <option value="balanced">Balanced</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Risk Tolerance</label>
+                                <input type="range" class="form-range" min="1" max="10" value="5" id="risk-slider">
+                                <div class="d-flex justify-content-between">
+                                    <small>Conservative</small>
+                                    <small>Moderate</small>
+                                    <small>Aggressive</small>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Time Horizon</label>
+                                <select class="form-control" id="time-horizon-select">
+                                    <option value="1m">1 Month</option>
+                                    <option value="3m">3 Months</option>
+                                    <option value="6m">6 Months</option>
+                                    <option value="1y">1 Year</option>
+                                    <option value="5y">5 Years</option>
+                                    <option value="10y">10+ Years</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Asset Allocation</label>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <label>Stocks: <span id="stocks-pct">60</span>%</label>
+                                        <input type="range" class="form-range" min="0" max="100" value="60" id="stocks-slider">
+                                    </div>
+                                    <div class="col-6">
+                                        <label>Bonds: <span id="bonds-pct">30</span>%</label>
+                                        <input type="range" class="form-range" min="0" max="100" value="30" id="bonds-slider">
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-6">
+                                        <label>Crypto: <span id="crypto-pct">10</span>%</label>
+                                        <input type="range" class="form-range" min="0" max="100" value="10" id="crypto-slider">
+                                    </div>
+                                    <div class="col-6">
+                                        <label>Cash: <span id="cash-pct">0</span>%</label>
+                                        <input type="range" class="form-range" min="0" max="100" value="0" id="cash-slider">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Rebalancing Frequency</label>
+                                <select class="form-control" id="rebalance-freq">
+                                    <option value="daily">Daily</option>
+                                    <option value="weekly">Weekly</option>
+                                    <option value="monthly">Monthly</option>
+                                    <option value="quarterly">Quarterly</option>
+                                    <option value="manual">Manual</option>
+                                </select>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="fas fa-save"></i> Save Profile
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h5>Profile Templates</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group">
+                            <button class="list-group-item list-group-item-action" onclick="loadTemplate('conservative')">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <h6>Conservative</h6>
+                                        <small>Low risk, steady returns</small>
+                                    </div>
+                                    <span class="badge bg-success">5-8% Target</span>
+                                </div>
+                            </button>
+                            <button class="list-group-item list-group-item-action" onclick="loadTemplate('balanced')">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <h6>Balanced</h6>
+                                        <small>Moderate risk and returns</small>
+                                    </div>
+                                    <span class="badge bg-info">10-15% Target</span>
+                                </div>
+                            </button>
+                            <button class="list-group-item list-group-item-action" onclick="loadTemplate('growth')">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <h6>Growth</h6>
+                                        <small>Higher risk, higher returns</small>
+                                    </div>
+                                    <span class="badge bg-warning">15-25% Target</span>
+                                </div>
+                            </button>
+                            <button class="list-group-item list-group-item-action" onclick="loadTemplate('aggressive')">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <h6>Aggressive</h6>
+                                        <small>Maximum growth potential</small>
+                                    </div>
+                                    <span class="badge bg-danger">25%+ Target</span>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Performance Projection</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="projection-chart" height="200"></canvas>
+                        <div class="mt-3">
+                            <div class="row text-center">
+                                <div class="col-4">
+                                    <small class="text-muted">Best Case</small>
+                                    <h5 class="text-success">+<span id="best-case">25</span>%</h5>
+                                </div>
+                                <div class="col-4">
+                                    <small class="text-muted">Expected</small>
+                                    <h5 class="text-primary">+<span id="expected">15</span>%</h5>
+                                </div>
+                                <div class="col-4">
+                                    <small class="text-muted">Worst Case</small>
+                                    <h5 class="text-danger">-<span id="worst-case">5</span>%</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Update percentage displays
+        document.querySelectorAll('input[type="range"]').forEach(slider => {
+            slider.addEventListener('input', (e) => {
+                const id = e.target.id.replace('-slider', '-pct');
+                const display = document.getElementById(id);
+                if (display) {
+                    display.textContent = e.target.value;
+                }
+            });
+        });
+
+        function loadTemplate(template) {
+            console.log('Loading template:', template);
+            // Will load template settings
+        }
+
+        document.getElementById('growth-profile-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            console.log('Saving growth profile...');
+            // Will save to backend
+        });
+    </script>
+</body>
+</html>

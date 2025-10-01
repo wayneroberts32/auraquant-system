@@ -1,0 +1,342 @@
+🔎 What those things are called (TradingView vocabulary)
+A) Global Chrome
+
+Symbol Tabs / Chart Tabs (top left): one tab per symbol/layout. Shows ticker, last price, %. × closes, + adds.
+
+Global Search (top center): find symbols, people, ideas.
+
+Global Actions (top right): layout manager, screen/fullscreen, app menu.
+
+B) Dashboard “Widgets / Feature Panels”
+
+Cards on the home/dashboard that act like big buttons with previews:
+
+Supercharts – open advanced chart workspace; “Create new layout”.
+
+Screeners – jump into stock/ETF/crypto/FX screeners; opens a modal first, then the screener.
+
+Calendars – economic & earnings calendars; preview of events; opens full calendar view.
+
+News Flow – real-time headlines feed with right-side article reader.
+
+Heatmaps – market treemap (S&P, Crypto, etc.), color by change %, size by cap.
+
+Options – payoff diagram builder for strategies.
+
+Markets – world indices overview.
+
+Community – social/ideas (in AuraQuant: link to Telegram/Discord).
+
+C) Advanced Chart Workspace (Supercharts)
+
+Top Toolbar
+
+Symbol Search – change instrument, add to chart.
+
+Resolution/Interval Picker – 1m, 5m, 15m, 1H, 1D, 1W, 1M, custom.
+
+Chart Type – candles, bars, line, area, Heikin Ashi.
+
+Compare/Add Symbol – overlay multiple symbols.
+
+Indicators & Strategies – opens library; add/remove studies.
+
+Templates – save/reapply indicator/visual templates.
+
+Alerts – create/edit price & indicator alerts.
+
+Replay / Bar Replay – go back in time and play bars forward.
+
+Layout Split – 1×1, 2×1, 2×2, 3×1, etc. sync symbol/timeframe optional.
+
+Screenshot/Share/Publish Idea – export or publish snapshot.
+
+Settings – chart settings (scales, trading, appearance).
+
+Left Drawing Toolbar
+
+Cursor/Crosshair; Trend line/Ray/Extended; Info line; Horizontal/Vertical/Trend lines; Parallel channel; Fib tools; Brush; Text/Notes; Patterns (Elliott, Head & Shoulders); Long/Short position tool (risk boxes); Icons; Measure; Zoom; Magnet; Lock; Hide drawings; Remove drawings.
+
+Right Sidebar
+
+Watchlist; Alerts Manager; Details / Data Window; Hotlists; Calendar/News; My Ideas; Public/Private Chats; Streams; Help.
+
+Bottom Panel (Terminal)
+
+Trading Panel – broker connections/order entry (panel lists brokers).
+
+Pine Editor – code editor for indicators/strategies.
+
+Strategy Tester – run backtests on the loaded strategy and report metrics.
+
+Chart Overlays & Scales
+
+OHLC & last price labels (green/red), watermark, last trade line, session breaks, extended session shading, separate panes for indicators, price scale modes (regular / log / percent), auto/fit buttons, time scale zoom & drag.
+
+D) Screener (Stocks/ETFs/FX/Crypto)
+
+Preset & Saved screens, Filters (market, exchange, sector, fundamentals: P/E, Beta, EPS growth, div yield; technicals: RSI, ATR, gaps; events: earnings), Columns, Sorting, Save/Share/Export, Alerts on screens.
+
+E) Economic & Earnings Calendar
+
+Tabs: Economic, Earnings, Revenue, Dividends.
+
+Filters: Country/Region, Importance, Category.
+
+Day/week grid with Actual / Forecast / Prior values; subscribe/alerts.
+
+F) News Flow
+
+Filters: Watchlist, Symbol, Market, Crypto, Economics, Provider, Priority, Sentiment.
+
+Left list + right article reader (share buttons, tags, provider).
+
+G) Heatmap
+
+Universe selector (e.g., S&P 500), Group by Sector/Industry, Color by % change (or other metric), Size by market cap, search, zoom, fullscreen/capture.
+
+H) Options (strategy builder)
+
+Select underlying, expiry, strikes, build call/put legs; show payoff curve with max profit/loss, breakevens; Greeks/implied vol sliders in advanced views.
+
+🧩 How Warp should implement each (AuraQuant spec, add-only, branding-locked)
+
+Rules: ADD-ONLY, NO REBUILD, NO RESTYLE. Keep colors (#131722, #1e222d, #00ff88, #ff4444, #d1d4dc, #787b86) and your slow-spinning AuraQuant logo in header/overlay/floating button.
+
+1) Symbol Tabs / Chart Tabs
+
+UI: tab strip; tab shows SYMBOL last %; hover tooltip; × closes; + adds.
+
+State: persist order & active tab per user in MongoDB (UserTabs).
+
+Events:
+
+click tab → workspace.load(symbol/layoutId)
+
++ → new-tab modal (symbol, template, split layout)
+
+right-click → rename / duplicate / save layout / pin
+
+Data: subscribe to price via WebSocket for live last price/%.
+
+2) Dashboard Widgets (Feature Panels)
+
+Cards with preview slots; entire card is clickable.
+
+Draggable/resizable in a CSS grid; layout saved per user (DashboardLayout).
+
+Wire:
+
+Supercharts → main-trading-dashboard.html
+
+Screeners → screeners.html (open “choose type” modal first)
+
+Calendars → news-calendar.html#economic|earnings
+
+News Flow → news.html
+
+Heatmaps → heatmaps.html
+
+Options → options.html
+
+Markets → all-markets.html
+
+Community → community.html (or external comms pane)
+
+WebSocket for preview mini-values; poll fallback.
+
+3) Advanced Chart Workspace
+
+Top toolbar: all buttons enumerated above; each mapped to handler:
+
+onChangeSymbol, onChangeInterval, onChartType, onCompare, onIndicatorsOpen, onTemplateApply, onAlertCreate, onReplayStart, onSplitLayout, onScreenshot, onSettings.
+
+Left toolbar: drawing tool manager with magnet/lock/hide/remove states.
+
+Right sidebar: modules are panels with show/hide and hotkeys.
+
+Bottom: Trading Panel (connect after deployment), Strategy Tester (wired to /api/strategies/backtest), Code Editor (future Pine-like or JSON strategy inputs).
+
+Overlays: ensure no overlap with your top toolbar; bottom floating button positioned right:20px; bottom:60px (so the time axis is visible).
+
+4) Screener
+
+Route: /api/screener/run (POST filters) → JSON rows.
+
+Saved screens: /api/screener/save|list|delete.
+
+Alerts on screens (server cron): /api/alerts/screener.
+
+UI: pill filters, column chooser, pagination, export CSV.
+
+5) Economic/Earnings Calendar
+
+Routes:
+
+/api/calendar/economic?from=...&to=...&country=...
+
+/api/calendar/earnings?from=...&to=...
+
+UI: week header, list with Actual/Forecast/Prior, importance dots, country flags; subscribe/alert buttons.
+
+6) News Flow
+
+Routes: /api/news/feed?filters=..., /api/news/article/:id.
+
+UI: left table, right reader; copy link/share; tags.
+
+Alerts: keyword/watchlist triggers.
+
+7) Heatmaps
+
+Route: /api/heatmap?universe=sp500&metric=change&group=sector
+
+UI: treemap with color scale and size scale; legend; zoom.
+
+8) Options Strategy Builder
+
+Route: /api/options/payoff (legs array → payoff points).
+
+UI: legs editor, payoff plot; show max profit/loss, breakeven, Greeks (later).
+
+9) Strategy / Backtest / Libraries
+
+Endpoints:
+
+/api/strategies/list, /api/indicators/list, /api/risk-metrics/list
+
+/api/strategies/backtest (returns metrics + chart path)
+
+Frontend: strategy-explorer.html pulls lists, lets user set params, runs backtests, shows metrics (Sharpe, MaxDD, PF, WinRate) and chart.
+
+Auto-extension registry in Python libs so new methods appear automatically.
+
+10) Orders / Positions / Portfolio
+
+Pages: orders.html, positions.html, portfolio-dashboard.html.
+
+Polling/WebSocket to update when trading panel is live.
+
+Journal hook: every fill → write TradingJournal.
+
+11) Profile & Journal (per user)
+
+Pages: profile.html, journal.html (export CSV).
+
+Models: UserProfile, TradingJournal (as we spec’d previously).
+
+Growth governor per user: risk prefs influence position sizing.
+
+12) Admin-only
+
+growth-selector.html (V1→V∞ with approval)
+
+performance-monitor.html (latency, RAM/CPU, WS throughput)
+
+deployment-verification.html (routes/WS/DB checks)
+
+unified-dashboard.html (global status)
+
+Admin middleware required.
+
+13) Keep-Alive + Time Sync
+
+Heartbeat service (2–3 min) to avoid cold starts; uptime panel.
+
+Time sync drift guard (UTC + AWST + exchange clocks) with alert if drift >1s.
+
+✅ Warp build prompt (copy-paste)
+
+TASK: Build TradingView-equivalent UX in AuraQuant ADD-ONLY with branding lock, wiring each control to the backend. Do not rebuild or restyle.
+
+Branding lock:
+Colors #131722 #1e222d #00ff88 #ff4444 #d1d4dc #787b86.
+Keep the slow-spinning AuraQuant logo in header/overlay/floating button.
+
+Implement:
+
+Symbol Tabs/Chart Tabs
+
+Add a tab strip with ticker/price/% and +/×.
+
+Persist per user in MongoDB. Subscribe price via WS.
+
+Dashboard Widgets (Supercharts, Screeners, Calendars, News Flow, Heatmaps, Options, Markets, Community)
+
+Draggable/resizable grid; preview via WS; click routes:
+
+Supercharts → main-trading-dashboard.html
+
+Screeners → screeners.html (with “choose type” modal)
+
+Calendars → news-calendar.html
+
+News → news.html
+
+Heatmaps → heatmaps.html
+
+Options → options.html
+
+Markets → all-markets.html
+
+Community → community.html
+
+Advanced Chart Workspace
+
+Top toolbar (symbol, interval, type, compare, indicators, templates, alerts, replay, split, screenshot, settings).
+
+Left drawing tools; right sidebar panels; bottom terminal (Trading Panel placeholder, Strategy Tester wired to /api/strategies/backtest).
+
+Overlay fixes: top tools never overlap title; floating button at right:20px; bottom:60px.
+
+Screeners
+
+Pages & API: /api/screener/run|save|list|delete + alert support.
+
+Filters & columns per TradingView patterns; export CSV.
+
+Calendars
+
+API for economic/earnings; show Actual/Forecast/Prior; filters by region/importance.
+
+News Flow
+
+Feed + right article reader; filters; share; alerts on keywords/watchlist.
+
+Heatmaps
+
+Treemap UI; group by sector/industry; color by change%, size by cap.
+
+Options Builder
+
+Legs editor; /api/options/payoff; show payoff metrics.
+
+Strategy Explorer
+
+Pull /api/*/list registries; run /api/strategies/backtest; render metrics & chart.
+
+Auto-discover new strategies/indicators via backend registries (no rebuild).
+
+Orders/Positions/Portfolio
+
+Live updates via WS; journal hook on fills.
+
+Profile & Journal (per user)
+
+profile.html, journal.html; MongoDB models; export CSV; risk prefs feed governor.
+
+Admin
+
+Growth selector (V1→V∞) with approval; performance monitor; deployment verification; unified dashboard.
+
+Protect with admin middleware.
+
+Keep-Alive & Time Sync
+
+Heartbeat service (no cold starts), uptime panel, drift <1s across UTC/AWST/exchanges.
+
+QA/QC (must pass):
+
+No console errors; tab strip works; widgets open correct pages; charts toolbar/draw tools functional; screeners filter/alert/export; calendar shows values; news reader opens/show tags; heatmap zooms; options payoff OK; strategy explorer lists/backtests; WS updates live; profile/journal CRUD OK; admin gating enforced; overlay/bottom button positions correct; colors + spinning logo intact.
+
+END OF PROMPT

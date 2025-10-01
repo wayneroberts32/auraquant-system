@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AuraQuant - Trading Journal</title>
+    <link rel="icon" type="image/png" href="../assets/img/logo-button.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #131722;
+            color: #d1d4dc;
+            overflow: hidden;
+        }
+        
+        .container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            height: 52px;
+            background: #1e222d;
+            border-bottom: 1px solid #2a2e39;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            justify-content: space-between;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .logo-spin {
+            height: 35px;
+            width: auto;
+            animation: rotate 10s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .page-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #d1d4dc;
+        }
+        
+        .header-right {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            background: #00ff88;
+            color: #131722;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        
+        .btn:hover {
+            background: #00d670;
+            transform: translateY(-1px);
+        }
+        
+        .btn-secondary {
+            background: #2a2e39;
+            color: #d1d4dc;
+        }
+        
+        .btn-secondary:hover {
+            background: #363a45;
+        }
+        
+        .content {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+        
+        .sidebar {
+            width: 320px;
+            background: #1e222d;
+            border-right: 1px solid #2a2e39;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .main-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .stats-bar {
+            background: #1e222d;
+            border-bottom: 1px solid #2a2e39;
+            padding: 15px 20px;
+            display: flex;
+            gap: 30px;
+        }
+        
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #787b86;
+            margin-bottom: 5px;
+        }
+        
+        .stat-value {
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        .stat-value.positive {
+            color: #00ff88;
+        }
+        
+        .stat-value.negative {
+            color: #ff4444;
+        }
+        
+        .journal-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .filter-section {
+            margin-bottom: 20px;
+        }
+        
+        .filter-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #d1d4dc;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #787b86;
+            font-size: 13px;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 8px 12px;
+            background: #131722;
+            border: 1px solid #2a2e39;
+            border-radius: 4px;
+            color: #d1d4dc;
+            font-size: 14px;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #00ff88;
+        }
+        
+        .date-range {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .journal-entry {
+            background: #1e222d;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            border: 1px solid #2a2e39;
+            transition: all 0.2s;
+        }
+        
+        .journal-entry:hover {
+            border-color: #00ff88;
+            transform: translateX(2px);
+        }
+        
+        .entry-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .entry-symbol {
+            font-size: 16px;
+            font-weight: 600;
+            color: #d1d4dc;
+        }
+        
+        .entry-pnl {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .entry-pnl.profit {
+            color: #00ff88;
+        }
+        
+        .entry-pnl.loss {
+            color: #ff4444;
+        }
+        
+        .entry-details {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 10px;
+            font-size: 13px;
+        }
+        
+        .entry-detail {
+            color: #787b86;
+        }
+        
+        .entry-detail span {
+            color: #d1d4dc;
+        }
+        
+        .entry-notes {
+            color: #787b86;
+            font-size: 13px;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #2a2e39;
+        }
+        
+        .entry-tags {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        
+        .tag {
+            padding: 3px 8px;
+            background: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: #1e222d;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #2a2e39;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #d1d4dc;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            color: #787b86;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        .modal-close:hover {
+            color: #d1d4dc;
+        }
+        
+        .modal-body {
+            padding: 20px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .emotion-selector {
+            display: flex;
+            gap: 10px;
+            margin-top: 5px;
+        }
+        
+        .emotion-btn {
+            padding: 6px 12px;
+            background: #131722;
+            border: 1px solid #2a2e39;
+            border-radius: 4px;
+            color: #787b86;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .emotion-btn.selected {
+            border-color: #00ff88;
+            color: #00ff88;
+            background: rgba(0, 255, 136, 0.1);
+        }
+        
+        .chart-container {
+            background: #1e222d;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .chart-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #d1d4dc;
+        }
+        
+        .equity-curve {
+            height: 200px;
+            position: relative;
+        }
+        
+        .loading {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #1e222d;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .loading.active {
+            display: block;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #2a2e39;
+            border-top: 3px solid #00ff88;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #787b86;
+        }
+        
+        .empty-state h3 {
+            color: #d1d4dc;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-left">
+                <img src="../assets/img/logo-button.png" alt="AuraQuant" class="logo-spin">
+                <span class="page-title">Trading Journal</span>
+            </div>
+            <div class="header-right">
+                <button class="btn btn-secondary" onclick="filterJournal()">
+                    <i>🔍</i> Filter
+                </button>
+                <button class="btn btn-secondary" onclick="exportToCSV()">
+                    <i>📥</i> Export CSV
+                </button>
+                <button class="btn" onclick="openAddEntry()">
+                    <i>➕</i> Add Entry
+                </button>
+            </div>
+        </div>
+        
+        <!-- Content -->
+        <div class="content">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <!-- Filter Section -->
+                <div class="filter-section">
+                    <h3 class="filter-title">Filters</h3>
+                    
+                    <div class="form-group">
+                        <label>Date Range</label>
+                        <div class="date-range">
+                            <input type="date" id="startDate">
+                            <input type="date" id="endDate">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Symbol</label>
+                        <input type="text" id="filterSymbol" placeholder="e.g. BTCUSDT">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Strategy</label>
+                        <select id="filterStrategy">
+                            <option value="">All Strategies</option>
+                            <option value="scalping">Scalping</option>
+                            <option value="daytrading">Day Trading</option>
+                            <option value="swing">Swing Trading</option>
+                            <option value="position">Position Trading</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Side</label>
+                        <select id="filterSide">
+                            <option value="">All</option>
+                            <option value="buy">Buy</option>
+                            <option value="sell">Sell</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>P&L Range</label>
+                        <div class="date-range">
+                            <input type="number" id="minPnl" placeholder="Min">
+                            <input type="number" id="maxPnl" placeholder="Max">
+                        </div>
+                    </div>
+                    
+                    <button class="btn" style="width: 100%;" onclick="applyFilters()">
+                        Apply Filters
+                    </button>
+                    <button class="btn btn-secondary" style="width: 100%; margin-top: 10px;" onclick="clearFilters()">
+                        Clear Filters
+                    </button>
+                </div>
+                
+                <!-- Equity Curve Chart -->
+                <div class="chart-container">
+                    <h3 class="chart-title">Equity Curve</h3>
+                    <div class="equity-curve" id="equityCurve">
+                        <canvas id="equityChart"></canvas>
+                    </div>
+                </div>
+                
+                <!-- Performance Stats -->
+                <div class="filter-section">
+                    <h3 class="filter-title">Performance Stats</h3>
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="color: #787b86;">Win Rate:</span>
+                            <span id="winRate" style="color: #00ff88; font-weight: 600;">-</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="color: #787b86;">Avg Win:</span>
+                            <span id="avgWin" style="color: #00ff88; font-weight: 600;">-</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="color: #787b86;">Avg Loss:</span>
+                            <span id="avgLoss" style="color: #ff4444; font-weight: 600;">-</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="color: #787b86;">Profit Factor:</span>
+                            <span id="profitFactor" style="color: #d1d4dc; font-weight: 600;">-</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="color: #787b86;">Sharpe Ratio:</span>
+                            <span id="sharpeRatio" style="color: #d1d4dc; font-weight: 600;">-</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Main Panel -->
+            <div class="main-panel">
+                <!-- Stats Bar -->
+                <div class="stats-bar">
+                    <div class="stat-item">
+                        <span class="stat-label">Total Trades</span>
+                        <span class="stat-value" id="totalTrades">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Total P&L</span>
+                        <span class="stat-value positive" id="totalPnl">$0.00</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Today's P&L</span>
+                        <span class="stat-value positive" id="todayPnl">$0.00</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">This Week</span>
+                        <span class="stat-value positive" id="weekPnl">$0.00</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">This Month</span>
+                        <span class="stat-value positive" id="monthPnl">$0.00</span>
+                    </div>
+                </div>
+                
+                <!-- Journal List -->
+                <div class="journal-list" id="journalList">
+                    <div class="empty-state">
+                        <h3>No Journal Entries</h3>
+                        <p>Start adding your trades to build your trading journal</p>
+                        <button class="btn" style="margin-top: 20px;" onclick="openAddEntry()">
+                            Add Your First Entry
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add/Edit Entry Modal -->
+    <div class="modal" id="entryModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add Journal Entry</h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="entryForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Symbol *</label>
+                            <input type="text" id="entrySymbol" required placeholder="e.g. BTCUSDT">
+                        </div>
+                        <div class="form-group">
+                            <label>Side *</label>
+                            <select id="entrySide" required>
+                                <option value="buy">Buy</option>
+                                <option value="sell">Sell</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Entry Price *</label>
+                            <input type="number" id="entryPrice" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Exit Price</label>
+                            <input type="number" id="exitPrice" step="0.01">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Size *</label>
+                            <input type="number" id="entrySize" step="0.001" required>
+                        </div>
+                        <div class="form-group">
+                            <label>P&L</label>
+                            <input type="number" id="entryPnl" step="0.01" placeholder="Auto-calculated">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Strategy</label>
+                        <select id="entryStrategy">
+                            <option value="">Select Strategy</option>
+                            <option value="scalping">Scalping</option>
+                            <option value="daytrading">Day Trading</option>
+                            <option value="swing">Swing Trading</option>
+                            <option value="position">Position Trading</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Emotions</label>
+                        <div class="emotion-selector">
+                            <button type="button" class="emotion-btn" data-emotion="calm">😌 Calm</button>
+                            <button type="button" class="emotion-btn" data-emotion="confident">💪 Confident</button>
+                            <button type="button" class="emotion-btn" data-emotion="anxious">😰 Anxious</button>
+                            <button type="button" class="emotion-btn" data-emotion="fearful">😨 Fearful</button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Notes</label>
+                        <textarea id="entryNotes" rows="4" placeholder="Trade analysis, market conditions, lessons learned..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Tags (comma separated)</label>
+                        <input type="text" id="entryTags" placeholder="e.g. breakout, trending, news-driven">
+                    </div>
+                    
+                    <div style="display: flex; gap: 10px; margin-top: 20px;">
+                        <button type="submit" class="btn" style="flex: 1;">
+                            Save Entry
+                        </button>
+                        <button type="button" class="btn btn-secondary" style="flex: 1;" onclick="closeModal()">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Loading Indicator -->
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+    </div>
+    
+    <script>
+        // API Configuration
+        const API_BASE_URL = window.location.hostname === 'localhost' ? 
+            'http://localhost:8000' : 'https://auraquant-backend.onrender.com';
+        
+        // Get auth token
+        const getAuthToken = () => localStorage.getItem('auth_token');
+        
+        // State
+        let journalEntries = [];
+        let selectedEmotion = '';
+        let currentEditId = null;
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadJournalEntries();
+            setupEventListeners();
+            setupCharts();
+        });
+        
+        // Setup event listeners
+        function setupEventListeners() {
+            // Form submit
+            document.getElementById('entryForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                saveJournalEntry();
+            });
+            
+            // Emotion buttons
+            document.querySelectorAll('.emotion-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.emotion-btn').forEach(b => b.classList.remove('selected'));
+                    btn.classList.add('selected');
+                    selectedEmotion = btn.dataset.emotion;
+                });
+            });
+            
+            // Auto-calculate P&L
+            ['entryPrice', 'exitPrice', 'entrySize', 'entrySide'].forEach(id => {
+                document.getElementById(id).addEventListener('input', calculatePnl);
+            });
+        }
+        
+        // Load journal entries
+        async function loadJournalEntries() {
+            try {
+                showLoading();
+                const response = await fetch(`${API_BASE_URL}/api/journal/list`, {
+                    headers: {
+                        'Authorization': `Bearer ${getAuthToken()}`
+                    }
+                });
+                
+                if (!response.ok) throw new Error('Failed to load journal entries');
+                
+                const data = await response.json();
+                journalEntries = data.entries || [];
+                
+                renderJournalEntries();
+                updateStats();
+                updateChart();
+            } catch (error) {
+                console.error('Error loading journal:', error);
+                showNotification('Failed to load journal entries', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+        
+        // Render journal entries
+        function renderJournalEntries() {
+            const container = document.getElementById('journalList');
+            
+            if (journalEntries.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h3>No Journal Entries</h3>
+                        <p>Start adding your trades to build your trading journal</p>
+                        <button class="btn" style="margin-top: 20px;" onclick="openAddEntry()">
+                            Add Your First Entry
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = journalEntries.map(entry => `
+                <div class="journal-entry" onclick="viewEntry('${entry._id}')">
+                    <div class="entry-header">
+                        <span class="entry-symbol">${entry.symbol}</span>
+                        <span class="entry-pnl ${entry.pnl >= 0 ? 'profit' : 'loss'}">
+                            ${entry.pnl >= 0 ? '+' : ''}$${Math.abs(entry.pnl).toFixed(2)}
+                        </span>
+                    </div>
+                    <div class="entry-details">
+                        <div class="entry-detail">Side: <span>${entry.side.toUpperCase()}</span></div>
+                        <div class="entry-detail">Entry: <span>$${entry.entry_price}</span></div>
+                        <div class="entry-detail">Exit: <span>${entry.exit_price ? '$' + entry.exit_price : 'Open'}</span></div>
+                        <div class="entry-detail">Size: <span>${entry.size}</span></div>
+                        <div class="entry-detail">Strategy: <span>${entry.strategy || 'N/A'}</span></div>
+                        <div class="entry-detail">Date: <span>${new Date(entry.timestamp).toLocaleDateString()}</span></div>
+                    </div>
+                    ${entry.notes ? `<div class="entry-notes">${entry.notes}</div>` : ''}
+                    ${entry.tags && entry.tags.length > 0 ? `
+                        <div class="entry-tags">
+                            ${entry.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
+        }
+        
+        // Update statistics
+        function updateStats() {
+            const totalTrades = journalEntries.length;
+            const wins = journalEntries.filter(e => e.pnl > 0);
+            const losses = journalEntries.filter(e => e.pnl < 0);
+            
+            const totalPnl = journalEntries.reduce((sum, e) => sum + (e.pnl || 0), 0);
+            
+            // Today's P&L
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const todayEntries = journalEntries.filter(e => new Date(e.timestamp) >= today);
+            const todayPnl = todayEntries.reduce((sum, e) => sum + (e.pnl || 0), 0);
+            
+            // Week P&L
+            const weekAgo = new Date();
+            weekAgo.setDate(weekAgo.getDate() - 7);
+            const weekEntries = journalEntries.filter(e => new Date(e.timestamp) >= weekAgo);
+            const weekPnl = weekEntries.reduce((sum, e) => sum + (e.pnl || 0), 0);
+            
+            // Month P&L
+            const monthAgo = new Date();
+            monthAgo.setMonth(monthAgo.getMonth() - 1);
+            const monthEntries = journalEntries.filter(e => new Date(e.timestamp) >= monthAgo);
+            const monthPnl = monthEntries.reduce((sum, e) => sum + (e.pnl || 0), 0);
+            
+            // Update UI
+            document.getElementById('totalTrades').textContent = totalTrades;
+            updatePnlDisplay('totalPnl', totalPnl);
+            updatePnlDisplay('todayPnl', todayPnl);
+            updatePnlDisplay('weekPnl', weekPnl);
+            updatePnlDisplay('monthPnl', monthPnl);
+            
+            // Performance stats
+            const winRate = totalTrades > 0 ? (wins.length / totalTrades * 100).toFixed(2) : 0;
+            const avgWin = wins.length > 0 ? wins.reduce((sum, e) => sum + e.pnl, 0) / wins.length : 0;
+            const avgLoss = losses.length > 0 ? Math.abs(losses.reduce((sum, e) => sum + e.pnl, 0) / losses.length) : 0;
+            const profitFactor = avgLoss > 0 ? (avgWin * wins.length) / (avgLoss * losses.length) : 0;
+            
+            document.getElementById('winRate').textContent = `${winRate}%`;
+            document.getElementById('avgWin').textContent = `$${avgWin.toFixed(2)}`;
+            document.getElementById('avgLoss').textContent = `-$${avgLoss.toFixed(2)}`;
+            document.getElementById('profitFactor').textContent = profitFactor.toFixed(2);
+        }
+        
+        // Update P&L display
+        function updatePnlDisplay(elementId, value) {
+            const element = document.getElementById(elementId);
+            element.textContent = `${value >= 0 ? '+' : ''}$${Math.abs(value).toFixed(2)}`;
+            element.className = value >= 0 ? 'stat-value positive' : 'stat-value negative';
+        }
+        
+        // Setup charts
+        function setupCharts() {
+            // Placeholder for chart setup
+            // In production, integrate with Chart.js or similar library
+        }
+        
+        // Update chart
+        function updateChart() {
+            // Placeholder for chart update
+            // Calculate equity curve from journal entries
+        }
+        
+        // Open add entry modal
+        function openAddEntry() {
+            currentEditId = null;
+            document.getElementById('entryForm').reset();
+            document.querySelectorAll('.emotion-btn').forEach(b => b.classList.remove('selected'));
+            selectedEmotion = '';
+            document.querySelector('.modal-title').textContent = 'Add Journal Entry';
+            document.getElementById('entryModal').classList.add('active');
+        }
+        
+        // View/Edit entry
+        function viewEntry(entryId) {
+            const entry = journalEntries.find(e => e._id === entryId);
+            if (!entry) return;
+            
+            currentEditId = entryId;
+            document.getElementById('entrySymbol').value = entry.symbol;
+            document.getElementById('entrySide').value = entry.side;
+            document.getElementById('entryPrice').value = entry.entry_price;
+            document.getElementById('exitPrice').value = entry.exit_price || '';
+            document.getElementById('entrySize').value = entry.size;
+            document.getElementById('entryPnl').value = entry.pnl || '';
+            document.getElementById('entryStrategy').value = entry.strategy || '';
+            document.getElementById('entryNotes').value = entry.notes || '';
+            document.getElementById('entryTags').value = entry.tags ? entry.tags.join(', ') : '';
+            
+            // Set emotion
+            if (entry.emotions) {
+                document.querySelectorAll('.emotion-btn').forEach(b => {
+                    if (b.dataset.emotion === entry.emotions) {
+                        b.classList.add('selected');
+                        selectedEmotion = entry.emotions;
+                    }
+                });
+            }
+            
+            document.querySelector('.modal-title').textContent = 'Edit Journal Entry';
+            document.getElementById('entryModal').classList.add('active');
+        }
+        
+        // Close modal
+        function closeModal() {
+            document.getElementById('entryModal').classList.remove('active');
+        }
+        
+        // Calculate P&L
+        function calculatePnl() {
+            const entryPrice = parseFloat(document.getElementById('entryPrice').value) || 0;
+            const exitPrice = parseFloat(document.getElementById('exitPrice').value) || 0;
+            const size = parseFloat(document.getElementById('entrySize').value) || 0;
+            const side = document.getElementById('entrySide').value;
+            
+            if (entryPrice && exitPrice && size) {
+                let pnl;
+                if (side === 'buy') {
+                    pnl = (exitPrice - entryPrice) * size;
+                } else {
+                    pnl = (entryPrice - exitPrice) * size;
+                }
+                document.getElementById('entryPnl').value = pnl.toFixed(2);
+            }
+        }
+        
+        // Save journal entry
+        async function saveJournalEntry() {
+            try {
+                showLoading();
+                
+                const entryData = {
+                    symbol: document.getElementById('entrySymbol').value,
+                    side: document.getElementById('entrySide').value,
+                    entry_price: parseFloat(document.getElementById('entryPrice').value),
+                    exit_price: parseFloat(document.getElementById('exitPrice').value) || null,
+                    size: parseFloat(document.getElementById('entrySize').value),
+                    pnl: parseFloat(document.getElementById('entryPnl').value) || null,
+                    strategy: document.getElementById('entryStrategy').value,
+                    notes: document.getElementById('entryNotes').value,
+                    tags: document.getElementById('entryTags').value.split(',').map(t => t.trim()).filter(t => t),
+                    emotions: selectedEmotion
+                };
+                
+                const url = currentEditId ? 
+                    `${API_BASE_URL}/api/journal/update/${currentEditId}` :
+                    `${API_BASE_URL}/api/journal/add`;
+                
+                const method = currentEditId ? 'PUT' : 'POST';
+                
+                const response = await fetch(url, {
+                    method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${getAuthToken()}`
+                    },
+                    body: JSON.stringify(entryData)
+                });
+                
+                if (!response.ok) throw new Error('Failed to save entry');
+                
+                showNotification('Journal entry saved successfully', 'success');
+                closeModal();
+                loadJournalEntries();
+            } catch (error) {
+                console.error('Error saving entry:', error);
+                showNotification('Failed to save entry', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+        
+        // Apply filters
+        async function applyFilters() {
+            try {
+                showLoading();
+                
+                const filterData = {
+                    start_date: document.getElementById('startDate').value || null,
+                    end_date: document.getElementById('endDate').value || null,
+                    symbol: document.getElementById('filterSymbol').value || null,
+                    strategy: document.getElementById('filterStrategy').value || null,
+                    side: document.getElementById('filterSide').value || null,
+                    min_pnl: parseFloat(document.getElementById('minPnl').value) || null,
+                    max_pnl: parseFloat(document.getElementById('maxPnl').value) || null
+                };
+                
+                const response = await fetch(`${API_BASE_URL}/api/journal/filter`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${getAuthToken()}`
+                    },
+                    body: JSON.stringify(filterData)
+                });
+                
+                if (!response.ok) throw new Error('Failed to filter entries');
+                
+                const data = await response.json();
+                journalEntries = data.entries || [];
+                
+                renderJournalEntries();
+                updateStats();
+                updateChart();
+                showNotification('Filters applied', 'success');
+            } catch (error) {
+                console.error('Error applying filters:', error);
+                showNotification('Failed to apply filters', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+        
+        // Clear filters
+        function clearFilters() {
+            document.getElementById('startDate').value = '';
+            document.getElementById('endDate').value = '';
+            document.getElementById('filterSymbol').value = '';
+            document.getElementById('filterStrategy').value = '';
+            document.getElementById('filterSide').value = '';
+            document.getElementById('minPnl').value = '';
+            document.getElementById('maxPnl').value = '';
+            
+            loadJournalEntries();
+        }
+        
+        // Export to CSV
+        async function exportToCSV() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/journal/export/csv`, {
+                    headers: {
+                        'Authorization': `Bearer ${getAuthToken()}`
+                    }
+                });
+                
+                if (!response.ok) throw new Error('Failed to export CSV');
+                
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `journal_export_${new Date().toISOString().split('T')[0]}.csv`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+                
+                showNotification('Journal exported successfully', 'success');
+            } catch (error) {
+                console.error('Error exporting CSV:', error);
+                showNotification('Failed to export journal', 'error');
+            }
+        }
+        
+        // Show loading
+        function showLoading() {
+            document.getElementById('loading').classList.add('active');
+        }
+        
+        // Hide loading
+        function hideLoading() {
+            document.getElementById('loading').classList.remove('active');
+        }
+        
+        // Show notification
+        function showNotification(message, type = 'info') {
+            console.log(`[${type.toUpperCase()}] ${message}`);
+            // In production, implement proper notification UI
+        }
+    </script>
+</body>
+</html>

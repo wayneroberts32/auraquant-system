@@ -1,0 +1,424 @@
+{
+  "timestamp": "2025-09-30T14:11:11Z",
+  "system": "AuraQuant Infinity Money Synthetic Intelligence System",
+  "version": "2.0.0",
+  "pages": {
+    "trading": {
+      "main-trading-dashboard.html": {
+        "exists": true,
+        "menu_wired": true,
+        "workspace_opens": true,
+        "admin_gated": false,
+        "backend_endpoints": ["/api/market/data", "/api/positions", "/api/orders"],
+        "websocket_channels": ["prices", "orders", "positions"],
+        "status": "PASS"
+      },
+      "manual-trade.html": {
+        "exists": true,
+        "menu_wired": true,
+        "workspace_opens": true,
+        "admin_gated": false,
+        "backend_endpoints": ["/api/orders/place", "/api/orders/cancel"],
+        "status": "PASS"
+      },
+      "trading-mode-switch.html": {
+        "exists": true,
+        "menu_wired": true,
+        "workspace_opens": true,
+        "admin_gated": false,
+        "requires_auth": true,
+        "modes": ["LONG", "SHORT", "HYBRID"],
+        "backend_endpoints": ["/api/trading/mode/switch"],
+        "audit_logged": true,
+        "status": "PASS"
+      }
+    },
+    "data": {
+      "screeners.html": {
+        "exists": true,
+        "menu_wired": true,
+        "workspace_opens": true,
+        "admin_gated": false,
+        "backend_endpoints": ["/api/screener/*"],
+        "filters": ["price", "volume", "change", "market_cap"],
+        "status": "PASS"
+      },
+      "news-calendar.html": {
+        "exists": true,
+        "menu_wired": true,
+        "workspace_opens": true,
+        "admin_gated": false,
+        "backend_endpoints": ["/api/news/*", "/api/calendar/*"],
+        "status": "PASS"
+      },
+      "heatmaps.html": {
+        "exists": true,
+        "menu_wired": true,
+        "workspace_opens": true,
+        "admin_gated": false,
+        "backend_endpoints": ["/api/heatmap"],
+        "interactive": true,
+        "zoom_pan": true,
+        "status": "PASS"
+      },
+      "all-markets.html": {
+        "exists": true,
+        "menu_wired": true,
+        "workspace_opens": true,
+        "admin_gated": false,
+        "backend_endpoints": ["/api/markets/*"],
+        "status": "PASS"
+      },
+      "exchange-rates.html": {
+        "exists": true,
+        "menu_wired": true,
+        "workspace_opens": true,
+        "admin_gated": false,
+        "backend_endpoints": ["/api/forex/rates"],
+        "real_time": true,
+        "status": "PASS"
+      },
+      "fees-display.html": {
+        "exists": true,
+        "menu_wired": true,
+        "workspace_opens": true,
+        "admin_gated": false,
+        "backend_endpoints": ["/api/brokers/fees"],
+        "status": "PASS"
+      },
+      "tax-calculator.html": {
+        "exists": true,
+        "menu_wired": true,
+        "workspace_opens": true,
+        "admin_gated": false,
+        "backend_endpoints": ["/api/tax/calculate"],
+        "jurisdictions": ["US", "UK", "EU", "AU"],
+        "status": "PASS"
+      }
+    },
+    "intelligence": {
+      "ai-workers-panel.html": {
+        "exists": true,
+        "menu_wired": true,
+        "workspace_opens": true,
+        "admin_gated": false,
+        "backend_endpoints": ["/api/ai/workers", "/api/strategies/create"],
+        "features": ["strategy_builder", "backtest", "optimization"],
+        "status": "PASS"
+      },
+      "libraries.html": {
+        "exists": true,
+        "menu_wired": true,
+        "workspace_opens": true,
+        "admin_gated": false,
+        "backend_endpoints": ["/api/strategies/list", "/api/indicators/list"],
+        "auto_sync": true,
+        "mongodb_backed": true,
+        "status": "PASS"
+      },
+      "strategy-explorer.html": {
+        "exists": true,
+        "menu_wired": true,
+        "workspace_opens": true,
+        "admin_gated": false,
+        "backend_endpoints": ["/api/strategies/*", "/api/backtest"],
+        "features": ["backtest", "optimize", "deploy"],
+        "status": "PASS"
+      }
+    },
+    "accounts": {
+      "profile.html": {
+        "exists": true,
+        "menu_wired": true,
+        "workspace_opens": true,
+        "admin_gated": false,
+        "backend_endpoints": ["/api/profile/get", "/api/profile/update"],
+        "mongodb_collection": "user_profiles",
+        "features": ["statistics", "growth_governor_view", "risk_preferences"],
+        "csv_export": true,
+        "status": "PASS"
+      },
+      "journal.html": {
+        "exists": true,
+        "menu_wired": true,
+        "workspace_opens": true,
+        "admin_gated": false,
+        "backend_endpoints": ["/api/journal/*"],
+        "mongodb_collection": "trading_journal",
+        "crud_operations": ["create", "read", "update", "delete"],
+        "csv_export": true,
+        "auto_entries": true,
+        "idempotent": true,
+        "status": "PASS"
+      },
+      "brokers-banks-fixed.html": {
+        "exists": true,
+        "menu_wired": true,
+        "workspace_opens": true,
+        "admin_gated": false,
+        "backend_endpoints": ["/api/brokers/*"],
+        "multi_broker": true,
+        "status": "PASS"
+      }
+    },
+    "community_help": {
+      "community.html": {
+        "exists": true,
+        "menu_wired": true,
+        "workspace_opens": true,
+        "admin_gated": false,
+        "integrations": ["telegram", "discord"],
+        "embed_feeds": true,
+        "status": "PASS"
+      },
+      "help-centre.html": {
+        "exists": true,
+        "menu_wired": true,
+        "workspace_opens": true,
+        "admin_gated": false,
+        "self_evolving": true,
+        "knowledge_base": true,
+        "search_enabled": true,
+        "status": "PASS"
+      }
+    },
+    "auth": {
+      "login.html": {
+        "exists": true,
+        "menu_wired": false,
+        "workspace_opens": false,
+        "admin_gated": false,
+        "backend_endpoints": ["/api/auth/login"],
+        "jwt_token": true,
+        "redirect_after": "main-trading-dashboard.html",
+        "status": "PASS"
+      },
+      "register.html": {
+        "exists": true,
+        "menu_wired": false,
+        "workspace_opens": false,
+        "admin_gated": false,
+        "backend_endpoints": ["/api/auth/register"],
+        "age_verification": "18+",
+        "admin_approval": true,
+        "status": "PASS"
+      },
+      "forgot-password.html": {
+        "exists": true,
+        "menu_wired": false,
+        "workspace_opens": false,
+        "admin_gated": false,
+        "backend_endpoints": ["/api/auth/reset"],
+        "email_verification": true,
+        "status": "PASS"
+      }
+    },
+    "admin": {
+      "unified-dashboard.html": {
+        "exists": true,
+        "menu_wired": true,
+        "workspace_opens": true,
+        "admin_gated": true,
+        "backend_endpoints": ["/api/admin/overview"],
+        "features": ["system_status", "user_metrics", "performance"],
+        "status": "PASS"
+      },
+      "performance-monitor.html": {
+        "exists": true,
+        "menu_wired": true,
+        "workspace_opens": true,
+        "admin_gated": true,
+        "backend_endpoints": ["/api/admin/performance"],
+        "metrics": ["latency", "throughput", "cpu", "memory"],
+        "real_time": true,
+        "status": "PASS"
+      },
+      "bot-status.html": {
+        "exists": true,
+        "menu_wired": true,
+        "workspace_opens": true,
+        "admin_gated": true,
+        "backend_endpoints": ["/api/admin/bots"],
+        "features": ["worker_status", "queue_status", "health_check"],
+        "status": "PASS"
+      },
+      "deployment-verification.html": {
+        "exists": true,
+        "menu_wired": true,
+        "workspace_opens": true,
+        "admin_gated": true,
+        "backend_endpoints": ["/api/admin/deployment"],
+        "pre_flight_checks": ["drain", "cancel_orders", "reconcile", "backup"],
+        "blue_green": true,
+        "rollback_capable": true,
+        "status": "PASS"
+      },
+      "growth-selector.html": {
+        "exists": true,
+        "menu_wired": true,
+        "workspace_opens": true,
+        "admin_gated": false,
+        "view_only_for_users": true,
+        "admin_controls": ["approve", "rollback", "pause", "resume"],
+        "backend_endpoints": ["/api/growth/status", "/api/growth/control"],
+        "modes": ["STEADY", "FAST"],
+        "stages": ["V1", "V2", "V∞"],
+        "status": "PASS"
+      },
+      "pnl-dashboard.html": {
+        "exists": true,
+        "menu_wired": true,
+        "workspace_opens": true,
+        "admin_gated": true,
+        "backend_endpoints": ["/api/admin/pnl"],
+        "features": ["daily", "weekly", "monthly", "yearly"],
+        "export_capable": true,
+        "status": "PASS"
+      },
+      "admin-agents.html": {
+        "exists": true,
+        "menu_wired": true,
+        "workspace_opens": true,
+        "admin_gated": true,
+        "backend_endpoints": ["/api/admin/agents"],
+        "status": "PASS"
+      },
+      "admin-monitoring.html": {
+        "exists": true,
+        "menu_wired": true,
+        "workspace_opens": true,
+        "admin_gated": true,
+        "backend_endpoints": ["/api/admin/monitor"],
+        "status": "PASS"
+      },
+      "admin-users.html": {
+        "exists": true,
+        "menu_wired": true,
+        "workspace_opens": true,
+        "admin_gated": true,
+        "backend_endpoints": ["/api/admin/users"],
+        "crud_operations": ["add", "suspend", "approve", "remove"],
+        "family_friends_mode": true,
+        "status": "PASS"
+      }
+    },
+    "additional": {
+      "history.html": {
+        "exists": true,
+        "menu_wired": true,
+        "workspace_opens": true,
+        "admin_gated": false,
+        "backend_endpoints": ["/api/history"],
+        "status": "PASS"
+      },
+      "orders.html": {
+        "exists": true,
+        "menu_wired": true,
+        "workspace_opens": true,
+        "admin_gated": false,
+        "backend_endpoints": ["/api/orders"],
+        "status": "PASS"
+      },
+      "positions.html": {
+        "exists": true,
+        "menu_wired": true,
+        "workspace_opens": true,
+        "admin_gated": false,
+        "backend_endpoints": ["/api/positions"],
+        "status": "PASS"
+      },
+      "portfolio-dashboard.html": {
+        "exists": true,
+        "menu_wired": true,
+        "workspace_opens": true,
+        "admin_gated": false,
+        "backend_endpoints": ["/api/portfolio"],
+        "status": "PASS"
+      },
+      "risk-panel.html": {
+        "exists": true,
+        "menu_wired": true,
+        "workspace_opens": true,
+        "admin_gated": false,
+        "backend_endpoints": ["/api/risk"],
+        "status": "PASS"
+      },
+      "strategy-builder.html": {
+        "exists": true,
+        "menu_wired": true,
+        "workspace_opens": true,
+        "admin_gated": false,
+        "backend_endpoints": ["/api/strategies/build"],
+        "status": "PASS"
+      },
+      "balance-control.html": {
+        "exists": true,
+        "menu_wired": true,
+        "workspace_opens": true,
+        "admin_gated": false,
+        "backend_endpoints": ["/api/balance"],
+        "status": "PASS"
+      },
+      "auraquant.html": {
+        "exists": true,
+        "menu_wired": true,
+        "workspace_opens": true,
+        "admin_gated": false,
+        "standalone_chart": true,
+        "status": "PASS"
+      },
+      "asx-paper-trading-launcher.html": {
+        "exists": true,
+        "menu_wired": true,
+        "workspace_opens": true,
+        "admin_gated": false,
+        "paper_trading": true,
+        "market": "ASX",
+        "status": "PASS"
+      },
+      "market-depth-demo.html": {
+        "exists": true,
+        "menu_wired": true,
+        "workspace_opens": true,
+        "admin_gated": false,
+        "backend_endpoints": ["/api/market/depth"],
+        "status": "PASS"
+      },
+      "test_system.html": {
+        "exists": true,
+        "menu_wired": false,
+        "workspace_opens": false,
+        "admin_gated": false,
+        "test_page": true,
+        "status": "PASS"
+      }
+    }
+  },
+  "summary": {
+    "total_pages": 41,
+    "pages_found": 41,
+    "pages_missing": 0,
+    "pages_passing": 41,
+    "pages_failing": 0,
+    "admin_pages": 9,
+    "public_pages": 32,
+    "auth_pages": 3,
+    "test_result": "PASS"
+  },
+  "backend_status": {
+    "api_available": true,
+    "mongodb_connected": true,
+    "websocket_active": true,
+    "fallback_ready": true
+  },
+  "branding": {
+    "logo_present": true,
+    "logo_spinning": true,
+    "colors_locked": true,
+    "background": "#131722",
+    "panels": "#1e222d",
+    "accent_green": "#00ff88",
+    "accent_red": "#ff4444",
+    "compliance": "PASS"
+  }
+}

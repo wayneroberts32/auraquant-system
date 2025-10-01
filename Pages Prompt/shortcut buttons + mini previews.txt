@@ -1,0 +1,101 @@
+Here’s the detailed breakdown for Warp:
+
+📌 TradingView Dashboard Buttons (Widgets / Feature Panels)
+
+These panels act like shortcut buttons + mini previews for larger features. Each widget is a clickable gateway that opens a full screen/module.
+
+🔹 Panels in your screenshots
+
+Supercharts
+
+Function: Entry point to the advanced charting workspace.
+
+Options: Create new layout, open saved layouts.
+
+Warp must wire this to open AuraQuant’s main-trading-dashboard.html with layout persistence (MongoDB user profiles).
+
+Screeners
+
+Function: Runs scans for stocks, forex, crypto.
+
+Shows quick results: symbol, price, % change, volume.
+
+Warp must link to frontend/pages/screeners.html, pulling data from backend /api/screeners.
+
+Calendars
+
+Function: Shows economic events (CPI, FOMC, Earnings).
+
+Clicking opens full event calendar with filters (region, event type).
+
+Warp must wire to /api/calendar feed.
+
+News Flow
+
+Function: Latest financial news, headlines, and sentiment.
+
+Previews last headlines, click opens news.html.
+
+Warp must pull from /api/news (aggregator of Reuters, Bloomberg, etc.).
+
+Heatmaps
+
+Function: Visual market performance grid.
+
+Red = negative movers, Green = positive movers.
+
+Warp must wire /api/heatmaps into a draggable/resizable panel.
+
+Options
+
+Function: Build/visualize option strategies.
+
+Graph payoff diagrams, max profit/loss.
+
+Warp must pull backend /api/options simulator.
+
+Markets
+
+Function: Market overview (Dow, Nasdaq, S&P).
+
+Clicking opens global markets dashboard.
+
+Warp must wire /api/markets.
+
+Community
+
+Function: Social/trading ideas, community content.
+
+In AuraQuant → connects to Telegram/Discord integration.
+
+Warp must wire /api/community (placeholder until comms modules go live).
+
+🔹 Warp Functions to Build
+
+Each panel is a modular button-widget.
+
+Hover → shows preview data (mini chart, table).
+
+Click → opens dedicated screen (workspace).
+
+All panels draggable/resizable in dashboard grid.
+
+Auto-refresh every X seconds via WebSocket.
+
+Must respect AuraQuant colors + spinning logo branding.
+
+🎨 Branding / UX Notes
+
+Background: #131722
+
+Panels: #1e222d
+
+Accent Green: #00ff88
+
+Accent Red: #ff4444
+
+Glow hover effect → slight green outline.
+
+Small spinning AuraQuant logo watermark in each panel.
+
+✅ With this, Warp will turn these buttons/panels into AuraQuant’s Feature Gateway — exactly like TradingView, but all wired into your synthetic orchestration system.

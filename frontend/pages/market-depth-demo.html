@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AuraQuant Market Depth Visualizer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0033 50%, #000510 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .main-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            border-radius: 15px;
+            position: relative;
+        }
+        
+        .logo {
+            width: 60px;
+            height: 60px;
+            animation: rotate 10s linear infinite;
+            margin: 0 auto 15px;
+            display: block;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .main-header h1 {
+            font-size: 2.5em;
+            background: linear-gradient(45deg, #00ff88, #00ffff, #ff00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .main-header p {
+            color: #888;
+            font-size: 1.1em;
+        }
+
+        #market-depth-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Custom scrollbar for order book lists */
+        #bids-list::-webkit-scrollbar,
+        #asks-list::-webkit-scrollbar,
+        #trades-list::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #bids-list::-webkit-scrollbar-track,
+        #asks-list::-webkit-scrollbar-track,
+        #trades-list::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+
+        #bids-list::-webkit-scrollbar-thumb,
+        #asks-list::-webkit-scrollbar-thumb,
+        #trades-list::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+        }
+
+        #bids-list::-webkit-scrollbar-thumb:hover,
+        #asks-list::-webkit-scrollbar-thumb:hover,
+        #trades-list::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Button hover effects */
+        .depth-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 255, 136, 0.3);
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(255, 0, 255, 0.2));
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9em;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .nav-btn:hover {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.4), rgba(255, 0, 255, 0.4));
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 255, 136, 0.4);
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 30px auto;
+            max-width: 1400px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.05), rgba(0, 255, 255, 0.05));
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 255, 136, 0.2);
+        }
+
+        .stat-label {
+            color: #888;
+            font-size: 0.85em;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            background: linear-gradient(45deg, #00ff88, #00ffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        /* Graph Panels */
+        .graphs-container {
+            max-width: 1400px;
+            margin: 30px auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 20px;
+        }
+        
+        .graph-panel {
+            background: rgba(0, 0, 0, 0.4);
+            border: 2px solid rgba(0, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 20px;
+            min-height: 350px;
+            position: relative;
+        }
+        
+        .graph-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+        }
+        
+        .graph-title {
+            font-size: 1.2em;
+            color: #00ff88;
+            font-weight: 600;
+        }
+        
+        .graph-controls {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .control-btn {
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            color: #00ff88;
+            padding: 5px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.85em;
+            transition: all 0.3s;
+        }
+        
+        .control-btn:hover {
+            background: rgba(0, 255, 136, 0.2);
+            transform: translateY(-1px);
+        }
+        
+        .graph-content {
+            height: 280px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .chart-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(0, 255, 136, 0.05) 0%, transparent 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            color: rgba(0, 255, 136, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="main-header">
+        <img src="../assets/img/logo-full.png" alt="AuraQuant" class="logo">
+        <h1>🚀 AuraQuant Market Depth Visualizer</h1>
+        <p>Professional Level 2 Market Data with Real-Time Order Flow Analysis</p>
+    </div>
+
+    <div class="stats-row">
+        <div class="stat-card">
+            <div class="stat-label">Market Status</div>
+            <div class="stat-value">LIVE</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Update Rate</div>
+            <div class="stat-value">100ms</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Data Sources</div>
+            <div class="stat-value">Multiple</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Depth Levels</div>
+            <div class="stat-value">20</div>
+        </div>
+    </div>
+
+    <div id="market-depth-container"></div>
+    
+    <!-- Graph Display Panels -->
+    <div class="graphs-container">
+        <div class="graph-panel">
+            <div class="graph-header">
+                <div class="graph-title">📈 Order Flow Imbalance</div>
+                <div class="graph-controls">
+                    <button class="control-btn">1m</button>
+                    <button class="control-btn">5m</button>
+                    <button class="control-btn">15m</button>
+                </div>
+            </div>
+            <div class="graph-content">
+                <canvas id="orderFlowChart" class="chart-placeholder"></canvas>
+            </div>
+        </div>
+        
+        <div class="graph-panel">
+            <div class="graph-header">
+                <div class="graph-title">📊 Volume Profile</div>
+                <div class="graph-controls">
+                    <button class="control-btn">Bid/Ask</button>
+                    <button class="control-btn">Delta</button>
+                </div>
+            </div>
+            <div class="graph-content">
+                <canvas id="volumeProfileChart" class="chart-placeholder"></canvas>
+            </div>
+        </div>
+        
+        <div class="graph-panel">
+            <div class="graph-header">
+                <div class="graph-title">🔥 Heatmap Analysis</div>
+                <div class="graph-controls">
+                    <button class="control-btn">Live</button>
+                    <button class="control-btn">History</button>
+                </div>
+            </div>
+            <div class="graph-content">
+                <canvas id="heatmapChart" class="chart-placeholder"></canvas>
+            </div>
+        </div>
+        
+        <div class="graph-panel">
+            <div class="graph-header">
+                <div class="graph-title">⚡ Trade Velocity</div>
+                <div class="graph-controls">
+                    <button class="control-btn">Speed</button>
+                    <button class="control-btn">Size</button>
+                </div>
+            </div>
+            <div class="graph-content">
+                <canvas id="tradeVelocityChart" class="chart-placeholder"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="navigation">
+        <a href="index.html" class="nav-btn">← Back to Platform</a>
+        <a href="bot-status.html" class="nav-btn">Bot Status</a>
+        <a href="test-connection.html" class="nav-btn">Control Center</a>
+    </div>
+
+    <!-- Load the market depth visualizer -->
+    <script src="js/market-depth-visualizer.js"></script>
+    <script>
+        // The MarketDepthVisualizer auto-initializes when DOM is ready
+        console.log('Market Depth Visualizer loaded');
+
+        // Optional: Add keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === '1') {
+                if (window.marketDepth) {
+                    window.marketDepth.changeSymbol('BTCUSDT');
+                }
+            } else if (e.key === '2') {
+                if (window.marketDepth) {
+                    window.marketDepth.changeSymbol('ETHUSDT');
+                }
+            } else if (e.key === 'h') {
+                if (window.marketDepth) {
+                    window.marketDepth.toggleHeatmap();
+                }
+            }
+        });
+
+        // Add fullscreen toggle
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'f' || e.key === 'F') {
+                const container = document.getElementById('market-depth-container');
+                if (container) {
+                    if (!document.fullscreenElement) {
+                        container.requestFullscreen();
+                    } else {
+                        document.exitFullscreen();
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

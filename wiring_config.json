@@ -1,0 +1,27 @@
+{
+  "frontend": {
+    "path": "D:\\New AuraQuant\\New_Synthetic_System_AuraQuant_Backup_2025\\frontend",
+    "index": "D:\\New AuraQuant\\New_Synthetic_System_AuraQuant_Backup_2025\\frontend\\index.html",
+    "api_endpoint": "http://localhost:8000/api",
+    "websocket_endpoint": "ws://localhost:8000/ws"
+  },
+  "backend": {
+    "path": "D:\\New AuraQuant\\New_Synthetic_System_AuraQuant_Backup_2025\\backend",
+    "api_main": "D:\\New AuraQuant\\New_Synthetic_System_AuraQuant_Backup_2025\\backend\\api\\main.py",
+    "api_port": 8000,
+    "mongodb_configured": true
+  },
+  "mongodb": {
+    "type": "MongoDB Atlas",
+    "database": "auraquant",
+    "collections": [
+      "brain_memories",
+      "evolution_states",
+      "quantum_states",
+      "trading_decisions",
+      "learned_patterns",
+      "neural_weights",
+      "performance_metrics"
+    ]
+  }
+}

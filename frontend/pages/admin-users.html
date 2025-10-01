@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AuraQuant - User Management (Admin)</title>
+    <link rel="icon" type="image/png" href="../assets/img/logo-button.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #131722;
+            color: #d1d4dc;
+            overflow: hidden;
+        }
+        
+        .container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            height: 52px;
+            background: #1e222d;
+            border-bottom: 1px solid #2a2e39;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            justify-content: space-between;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .logo-spin {
+            height: 35px;
+            width: auto;
+            animation: rotate 10s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .page-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #d1d4dc;
+        }
+        
+        .admin-badge {
+            background: #ff4444;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .panel {
+            background: #1e222d;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .panel-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #d1d4dc;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            background: #00ff88;
+            color: #131722;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: opacity 0.2s;
+        }
+        
+        .btn:hover {
+            opacity: 0.9;
+        }
+        
+        .btn-danger {
+            background: #ff4444;
+        }
+        
+        .btn-warning {
+            background: #ffa500;
+        }
+        
+        .btn-secondary {
+            background: #787b86;
+        }
+        
+        .btn-small {
+            padding: 4px 8px;
+            font-size: 12px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: #131722;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #2a2e39;
+        }
+        
+        .stat-label {
+            color: #787b86;
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #00ff88;
+        }
+        
+        .users-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .users-table th {
+            text-align: left;
+            padding: 12px;
+            background: #131722;
+            color: #787b86;
+            font-size: 12px;
+            font-weight: 600;
+            border-bottom: 2px solid #2a2e39;
+        }
+        
+        .users-table td {
+            padding: 12px;
+            border-bottom: 1px solid #2a2e39;
+        }
+        
+        .users-table tr:hover {
+            background: rgba(0, 255, 136, 0.05);
+        }
+        
+        .role-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+        }
+        
+        .role-admin { background: #ff4444; }
+        .role-trader { background: #00ff88; color: #131722; }
+        .role-viewer { background: #787b86; }
+        .role-demo { background: #ffa500; color: #131722; }
+        .role-suspended { background: #333; }
+        
+        .status-active { color: #00ff88; }
+        .status-inactive { color: #ff4444; }
+        
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #1e222d;
+            border-radius: 8px;
+            padding: 30px;
+            min-width: 400px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #787b86;
+            font-size: 14px;
+        }
+        
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 8px;
+            background: #131722;
+            border: 1px solid #2a2e39;
+            border-radius: 4px;
+            color: #d1d4dc;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #00ff88;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-left">
+                <img src="../assets/img/logo-button.png" alt="AuraQuant" class="logo-spin">
+                <div class="page-title">User Management</div>
+                <div class="admin-badge">ADMIN ONLY</div>
+            </div>
+            <div>
+                <button class="btn" onclick="showAddUserModal()">+ Add User</button>
+            </div>
+        </div>
+        
+        <div class="content">
+            <!-- Statistics -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Total Users</div>
+                    <div class="stat-value" id="totalUsers">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Active Users</div>
+                    <div class="stat-value" id="activeUsers">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Suspended</div>
+                    <div class="stat-value" id="suspendedUsers" style="color: #ff4444;">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Admins</div>
+                    <div class="stat-value" id="adminUsers" style="color: #ffa500;">0</div>
+                </div>
+            </div>
+            
+            <!-- Users Table -->
+            <div class="panel">
+                <div class="panel-title">
+                    All Users
+                    <button class="btn btn-small" onclick="refreshUsers()">Refresh</button>
+                </div>
+                <table class="users-table">
+                    <thead>
+                        <tr>
+                            <th>Email</th>
+                            <th>Username</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th>Created</th>
+                            <th>Last Login</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                        <!-- Users will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add User Modal -->
+    <div id="addUserModal" class="modal">
+        <div class="modal-content">
+            <h2 style="margin-bottom: 20px;">Add New User</h2>
+            <form id="addUserForm">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" name="password" required>
+                </div>
+                <div class="form-group">
+                    <label>Role</label>
+                    <select name="role">
+                        <option value="trader">Trader</option>
+                        <option value="viewer">Viewer</option>
+                        <option value="demo">Demo</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Max Daily Trades</label>
+                    <input type="number" name="maxTrades" value="100">
+                </div>
+                <div class="form-group">
+                    <label>Max Position Size</label>
+                    <input type="number" name="maxPosition" value="10000">
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button type="submit" class="btn">Create User</button>
+                    <button type="button" class="btn btn-secondary" onclick="hideAddUserModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        // Check admin authentication
+        const token = localStorage.getItem('auraquant_token');
+        const user = JSON.parse(localStorage.getItem('auraquant_user') || '{}');
+        
+        if (!token || user.role !== 'admin') {
+            alert('Admin access required');
+            window.location.href = 'login.html';
+        }
+        
+        // Load users on page load
+        window.onload = function() {
+            loadUsers();
+            loadStatistics();
+        };
+        
+        async function loadUsers() {
+            try {
+                const response = await fetch('http://localhost:8000/api/admin/users', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    displayUsers(data.users);
+                }
+            } catch (error) {
+                console.error('Error loading users:', error);
+            }
+        }
+        
+        async function loadStatistics() {
+            try {
+                const response = await fetch('http://localhost:8000/api/admin/stats', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('totalUsers').textContent = data.statistics.users.total;
+                    document.getElementById('activeUsers').textContent = data.statistics.users.active;
+                    document.getElementById('suspendedUsers').textContent = data.statistics.users.suspended;
+                    document.getElementById('adminUsers').textContent = data.statistics.users.admins;
+                }
+            } catch (error) {
+                console.error('Error loading statistics:', error);
+            }
+        }
+        
+        function displayUsers(users) {
+            const tbody = document.getElementById('usersTableBody');
+            tbody.innerHTML = '';
+            
+            users.forEach(user => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${user.email}</td>
+                    <td>${user.username}</td>
+                    <td><span class="role-badge role-${user.role}">${user.role.toUpperCase()}</span></td>
+                    <td><span class="status-${user.is_active ? 'active' : 'inactive'}">${user.is_active ? 'Active' : 'Inactive'}</span></td>
+                    <td>${new Date(user.created_at).toLocaleDateString()}</td>
+                    <td>${user.last_login ? new Date(user.last_login).toLocaleDateString() : 'Never'}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn btn-small" onclick="editUser('${user._id}')">Edit</button>
+                            ${user.is_active ? 
+                                `<button class="btn btn-small btn-warning" onclick="suspendUser('${user._id}')">Suspend</button>` :
+                                `<button class="btn btn-small btn" onclick="activateUser('${user._id}')">Activate</button>`
+                            }
+                            <button class="btn btn-small btn-danger" onclick="deleteUser('${user._id}')">Delete</button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+        
+        function showAddUserModal() {
+            document.getElementById('addUserModal').style.display = 'block';
+        }
+        
+        function hideAddUserModal() {
+            document.getElementById('addUserModal').style.display = 'none';
+        }
+        
+        document.getElementById('addUserForm').onsubmit = async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const userData = {
+                email: formData.get('email'),
+                username: formData.get('username'),
+                password: formData.get('password'),
+                role: formData.get('role'),
+                trading_limits: {
+                    max_daily_trades: parseInt(formData.get('maxTrades')),
+                    max_position_size: parseInt(formData.get('maxPosition'))
+                }
+            };
+            
+            try {
+                const response = await fetch('http://localhost:8000/api/admin/users', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(userData)
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('User created successfully');
+                    hideAddUserModal();
+                    loadUsers();
+                    loadStatistics();
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            } catch (error) {
+                console.error('Error creating user:', error);
+                alert('Failed to create user');
+            }
+        };
+        
+        async function suspendUser(userId) {
+            if (!confirm('Are you sure you want to suspend this user?')) return;
+            
+            try {
+                const response = await fetch(`http://localhost:8000/api/admin/users/${userId}/suspend`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('User suspended');
+                    loadUsers();
+                    loadStatistics();
+                }
+            } catch (error) {
+                console.error('Error suspending user:', error);
+            }
+        }
+        
+        async function deleteUser(userId) {
+            if (!confirm('Are you sure you want to delete this user? This cannot be undone.')) return;
+            
+            try {
+                const response = await fetch(`http://localhost:8000/api/admin/users/${userId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('User deleted');
+                    loadUsers();
+                    loadStatistics();
+                }
+            } catch (error) {
+                console.error('Error deleting user:', error);
+            }
+        }
+        
+        function refreshUsers() {
+            loadUsers();
+            loadStatistics();
+        }
+    </script>
+</body>
+</html>

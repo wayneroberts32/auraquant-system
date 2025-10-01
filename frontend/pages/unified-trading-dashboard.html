@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AuraQuant - Unified Trading Dashboard</title>
+    <link rel="stylesheet" href="../static/css/main.css">
+    <style>
+        /* AuraQuant Unified Dashboard Styles */
+        :root {
+            --auraquant-primary: #1a1a2e;
+            --auraquant-secondary: #0f3460;
+            --auraquant-accent: #00d4ff;
+            --auraquant-success: #00ff88;
+            --auraquant-danger: #ff3366;
+            --auraquant-warning: #ffaa00;
+            --auraquant-text: #ffffff;
+            --auraquant-muted: #8892a0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--auraquant-primary) 0%, var(--auraquant-secondary) 100%);
+            color: var(--auraquant-text);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Main Container */
+        .dashboard-container {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 280px;
+            background: rgba(15, 52, 96, 0.4);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(0, 212, 255, 0.2);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            padding: 30px 20px;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .auraquant-logo {
+            width: 60px;
+            height: 60px;
+            animation: spin 30s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .brand-name {
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(90deg, var(--auraquant-accent), var(--auraquant-success));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .brand-tagline {
+            font-size: 11px;
+            color: var(--auraquant-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Navigation Menu */
+        .nav-menu {
+            flex: 1;
+            padding: 20px 0;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-item:hover {
+            background: rgba(0, 212, 255, 0.1);
+            border-left-color: var(--auraquant-accent);
+        }
+
+        .nav-item.active {
+            background: rgba(0, 212, 255, 0.15);
+            border-left-color: var(--auraquant-success);
+        }
+
+        .nav-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 15px;
+            color: var(--auraquant-accent);
+        }
+
+        .nav-label {
+            flex: 1;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .nav-badge {
+            background: var(--auraquant-success);
+            color: var(--auraquant-primary);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            background: rgba(26, 26, 46, 0.6);
+            backdrop-filter: blur(10px);
+            padding: 20px 30px;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .top-bar-actions {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .system-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 20px;
+            font-size: 13px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--auraquant-success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Dashboard Content */
+        .dashboard-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        /* Strategy Cards Grid */
+        .strategy-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .strategy-card {
+            background: rgba(26, 26, 46, 0.7);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 16px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .strategy-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--auraquant-accent), var(--auraquant-success));
+        }
+
+        .strategy-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(0, 212, 255, 0.2);
+        }
+
+        .strategy-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .strategy-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .strategy-toggle {
+            position: relative;
+            width: 60px;
+            height: 28px;
+            background: rgba(136, 146, 160, 0.3);
+            border-radius: 34px;
+            cursor: pointer;
+            transition: 0.4s;
+        }
+
+        .strategy-toggle.active {
+            background: rgba(0, 255, 136, 0.3);
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 3px;
+            left: 3px;
+            width: 22px;
+            height: 22px;
+            background: white;
+            border-radius: 50%;
+            transition: 0.4s;
+        }
+
+        .strategy-toggle.active .toggle-slider {
+            transform: translateX(32px);
+            background: var(--auraquant-success);
+        }
+
+        .strategy-metrics {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .metric-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .metric-label {
+            font-size: 12px;
+            color: var(--auraquant-muted);
+            margin-bottom: 5px;
+        }
+
+        .metric-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--auraquant-accent);
+        }
+
+        .strategy-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .btn-configure {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid var(--auraquant-accent);
+            color: var(--auraquant-accent);
+            flex: 1;
+        }
+
+        .btn-configure:hover {
+            background: rgba(0, 212, 255, 0.2);
+        }
+
+        .btn-details {
+            background: linear-gradient(90deg, var(--auraquant-accent), var(--auraquant-success));
+            color: var(--auraquant-primary);
+            flex: 1;
+        }
+
+        .btn-details:hover {
+            transform: scale(1.05);
+        }
+
+        /* Performance Overview */
+        .performance-overview {
+            background: rgba(26, 26, 46, 0.7);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .overview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .overview-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .time-selector {
+            display: flex;
+            gap: 10px;
+        }
+
+        .time-option {
+            padding: 8px 16px;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s ease;
+        }
+
+        .time-option.active {
+            border-color: var(--auraquant-accent);
+            background: rgba(0, 212, 255, 0.2);
+        }
+
+        .overview-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 20px;
+            background: rgba(15, 52, 96, 0.3);
+            border-radius: 12px;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(90deg, var(--auraquant-accent), var(--auraquant-success));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: var(--auraquant-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-change {
+            margin-top: 8px;
+            font-size: 14px;
+        }
+
+        .positive {
+            color: var(--auraquant-success);
+        }
+
+        .negative {
+            color: var(--auraquant-danger);
+        }
+
+        /* Chart Container */
+        .chart-container {
+            background: rgba(26, 26, 46, 0.7);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 16px;
+            padding: 25px;
+            height: 400px;
+            position: relative;
+        }
+
+        .chart-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--auraquant-muted);
+            font-size: 14px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .sidebar {
+                width: 240px;
+            }
+            
+            .strategy-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+            }
+            
+            .overview-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-container">
+                    <img src="../static/images/auraquant-logo.png" alt="AuraQuant" class="auraquant-logo">
+                    <div>
+                        <div class="brand-name">AuraQuant</div>
+                        <div class="brand-tagline">Infinity Money System</div>
+                    </div>
+                </div>
+            </div>
+            
+            <nav class="nav-menu">
+                <div class="nav-item active">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-label">Dashboard</span>
+                </div>
+                <div class="nav-item" onclick="window.location.href='hft-trading-panel.html'">
+                    <span class="nav-icon">⚡</span>
+                    <span class="nav-label">HFT Trading</span>
+                    <span class="nav-badge">LIVE</span>
+                </div>
+                <div class="nav-item" onclick="window.location.href='arbitrage-panel.html'">
+                    <span class="nav-icon">🔄</span>
+                    <span class="nav-label">Arbitrage</span>
+                </div>
+                <div class="nav-item" onclick="window.location.href='event-trading-panel.html'">
+                    <span class="nav-icon">📰</span>
+                    <span class="nav-label">Event Trading</span>
+                </div>
+                <div class="nav-item">
+                    <span class="nav-icon">📈</span>
+                    <span class="nav-label">Analytics</span>
+                </div>
+                <div class="nav-item">
+                    <span class="nav-icon">⚠️</span>
+                    <span class="nav-label">Risk Monitor</span>
+                </div>
+                <div class="nav-item">
+                    <span class="nav-icon">📝</span>
+                    <span class="nav-label">Trade Journal</span>
+                </div>
+                <div class="nav-item">
+                    <span class="nav-icon">⚙️</span>
+                    <span class="nav-label">Settings</span>
+                </div>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <h1 class="page-title">Trading Dashboard</h1>
+                <div class="top-bar-actions">
+                    <div class="system-status">
+                        <div class="status-dot"></div>
+                        <span>All Systems Operational</span>
+                    </div>
+                    <span id="current-time"></span>
+                    <button class="btn btn-details" onclick="emergencyStop()">Emergency Stop</button>
+                </div>
+            </div>
+
+            <!-- Dashboard Content -->
+            <div class="dashboard-content">
+                <!-- Performance Overview -->
+                <div class="performance-overview">
+                    <div class="overview-header">
+                        <h2 class="overview-title">Portfolio Performance</h2>
+                        <div class="time-selector">
+                            <div class="time-option active">Today</div>
+                            <div class="time-option">Week</div>
+                            <div class="time-option">Month</div>
+                            <div class="time-option">Year</div>
+                        </div>
+                    </div>
+                    <div class="overview-stats">
+                        <div class="stat-card">
+                            <div class="stat-value">$247,853</div>
+                            <div class="stat-label">Total P&L</div>
+                            <div class="stat-change positive">↑ 18.4%</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">3,847</div>
+                            <div class="stat-label">Total Trades</div>
+                            <div class="stat-change positive">↑ 125 today</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">87.3%</div>
+                            <div class="stat-label">Win Rate</div>
+                            <div class="stat-change positive">↑ 2.1%</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">2.47</div>
+                            <div class="stat-label">Sharpe Ratio</div>
+                            <div class="stat-change positive">↑ 0.15</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Strategy Cards -->
+                <div class="strategy-grid">
+                    <!-- HFT Strategy Card -->
+                    <div class="strategy-card">
+                        <div class="strategy-header">
+                            <h3 class="strategy-title">High-Frequency Trading</h3>
+                            <div class="strategy-toggle active" onclick="toggleStrategy('HFT')">
+                                <div class="toggle-slider"></div>
+                            </div>
+                        </div>
+                        <div class="strategy-metrics">
+                            <div class="metric-item">
+                                <span class="metric-label">Latency</span>
+                                <span class="metric-value" id="hft-latency">12.5ms</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-label">Orders/Min</span>
+                                <span class="metric-value" id="hft-orders">847</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-label">Daily P&L</span>
+                                <span class="metric-value" id="hft-pnl">+$47,235</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-label">Success Rate</span>
+                                <span class="metric-value" id="hft-success">94.7%</span>
+                            </div>
+                        </div>
+                        <div class="strategy-actions">
+                            <button class="btn btn-configure" onclick="configureStrategy('HFT')">Configure</button>
+                            <button class="btn btn-details" onclick="viewStrategy('HFT')">View Details</button>
+                        </div>
+                    </div>
+
+                    <!-- Arbitrage Strategy Card -->
+                    <div class="strategy-card">
+                        <div class="strategy-header">
+                            <h3 class="strategy-title">Arbitrage Trading</h3>
+                            <div class="strategy-toggle active" onclick="toggleStrategy('ARBITRAGE')">
+                                <div class="toggle-slider"></div>
+                            </div>
+                        </div>
+                        <div class="strategy-metrics">
+                            <div class="metric-item">
+                                <span class="metric-label">Opportunities</span>
+                                <span class="metric-value" id="arb-opportunities">23</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-label">Avg Spread</span>
+                                <span class="metric-value" id="arb-spread">1.8%</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-label">Daily P&L</span>
+                                <span class="metric-value" id="arb-pnl">+$68,420</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-label">Execution Rate</span>
+                                <span class="metric-value" id="arb-execution">78.3%</span>
+                            </div>
+                        </div>
+                        <div class="strategy-actions">
+                            <button class="btn btn-configure" onclick="configureStrategy('ARBITRAGE')">Configure</button>
+                            <button class="btn btn-details" onclick="viewStrategy('ARBITRAGE')">View Details</button>
+                        </div>
+                    </div>
+
+                    <!-- Event Trading Strategy Card -->
+                    <div class="strategy-card">
+                        <div class="strategy-header">
+                            <h3 class="strategy-title">Event-Driven Trading</h3>
+                            <div class="strategy-toggle active" onclick="toggleStrategy('EVENT')">
+                                <div class="toggle-slider"></div>
+                            </div>
+                        </div>
+                        <div class="strategy-metrics">
+                            <div class="metric-item">
+                                <span class="metric-label">News Processed</span>
+                                <span class="metric-value" id="event-news">142</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-label">Avg Confidence</span>
+                                <span class="metric-value" id="event-confidence">82.5%</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-label">Daily P&L</span>
+                                <span class="metric-value" id="event-pnl">+$35,198</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-label">Active Trades</span>
+                                <span class="metric-value" id="event-active">7</span>
+                            </div>
+                        </div>
+                        <div class="strategy-actions">
+                            <button class="btn btn-configure" onclick="configureStrategy('EVENT')">Configure</button>
+                            <button class="btn btn-details" onclick="viewStrategy('EVENT')">View Details</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- P&L Chart -->
+                <div class="chart-container">
+                    <h3 style="margin-bottom: 20px;">Cumulative P&L Chart</h3>
+                    <div class="chart-placeholder">
+                        <canvas id="pnl-chart"></canvas>
+                        <!-- Chart will be rendered here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // AuraQuant Unified Dashboard JavaScript
+        
+        let strategies = {
+            HFT: { enabled: true, allocation: 30 },
+            ARBITRAGE: { enabled: true, allocation: 40 },
+            EVENT: { enabled: true, allocation: 30 }
+        };
+
+        let ws = null;
+        let dashboardMetrics = {
+            totalPnl: 247853,
+            totalTrades: 3847,
+            winRate: 87.3,
+            sharpeRatio: 2.47
+        };
+
+        // Toggle strategy on/off
+        function toggleStrategy(strategyName) {
+            strategies[strategyName].enabled = !strategies[strategyName].enabled;
+            const toggle = event.currentTarget;
+            toggle.classList.toggle('active');
+            
+            // Send update to backend
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({
+                    command: 'toggle_strategy',
+                    strategy: strategyName,
+                    enabled: strategies[strategyName].enabled
+                }));
+            }
+            
+            console.log(`${strategyName} is now ${strategies[strategyName].enabled ? 'enabled' : 'disabled'}`);
+        }
+
+        // Configure strategy
+        function configureStrategy(strategyName) {
+            // Open configuration modal or navigate to configuration page
+            console.log(`Opening configuration for ${strategyName}`);
+        }
+
+        // View strategy details
+        function viewStrategy(strategyName) {
+            const urls = {
+                HFT: 'hft-trading-panel.html',
+                ARBITRAGE: 'arbitrage-panel.html',
+                EVENT: 'event-trading-panel.html'
+            };
+            window.location.href = urls[strategyName];
+        }
+
+        // Emergency stop all trading
+        function emergencyStop() {
+            if (confirm('Are you sure you want to stop all trading activities?')) {
+                // Stop all strategies
+                Object.keys(strategies).forEach(strategy => {
+                    strategies[strategy].enabled = false;
+                });
+                
+                // Update UI
+                document.querySelectorAll('.strategy-toggle').forEach(toggle => {
+                    toggle.classList.remove('active');
+                });
+                
+                // Send emergency stop command
+                if (ws && ws.readyState === WebSocket.OPEN) {
+                    ws.send(JSON.stringify({
+                        command: 'emergency_stop'
+                    }));
+                }
+                
+                alert('All trading activities have been stopped');
+            }
+        }
+
+        // Initialize WebSocket connection
+        function initWebSocket() {
+            const wsUrl = 'wss://your-render-backend.onrender.com/ws/dashboard';
+            ws = new WebSocket(wsUrl);
+
+            ws.onopen = () => {
+                console.log('Connected to AuraQuant Dashboard');
+                updateSystemStatus('Connected');
+            };
+
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                handleDashboardUpdate(data);
+            };
+
+            ws.onerror = (error) => {
+                console.error('WebSocket error:', error);
+                updateSystemStatus('Error');
+            };
+
+            ws.onclose = () => {
+                console.log('Disconnected from Dashboard');
+                updateSystemStatus('Disconnected');
+                // Attempt to reconnect after 5 seconds
+                setTimeout(initWebSocket, 5000);
+            };
+        }
+
+        // Handle dashboard updates
+        function handleDashboardUpdate(data) {
+            switch(data.type) {
+                case 'metrics':
+                    updateMetrics(data.metrics);
+                    break;
+                case 'strategy_update':
+                    updateStrategyCard(data.strategy, data.data);
+                    break;
+                case 'alert':
+                    showAlert(data.message, data.severity);
+                    break;
+            }
+        }
+
+        // Update metrics displays
+        function updateMetrics(metrics) {
+            // Update overview stats
+            if (metrics.totalPnl !== undefined) {
+                document.querySelector('.stat-value').textContent = `$${metrics.totalPnl.toLocaleString()}`;
+            }
+            
+            // Update strategy-specific metrics
+            if (metrics.hft) {
+                document.getElementById('hft-latency').textContent = `${metrics.hft.latency}ms`;
+                document.getElementById('hft-orders').textContent = metrics.hft.ordersPerMin;
+                document.getElementById('hft-pnl').textContent = `+$${metrics.hft.pnl.toLocaleString()}`;
+                document.getElementById('hft-success').textContent = `${metrics.hft.successRate}%`;
+            }
+            
+            if (metrics.arbitrage) {
+                document.getElementById('arb-opportunities').textContent = metrics.arbitrage.opportunities;
+                document.getElementById('arb-spread').textContent = `${metrics.arbitrage.avgSpread}%`;
+                document.getElementById('arb-pnl').textContent = `+$${metrics.arbitrage.pnl.toLocaleString()}`;
+                document.getElementById('arb-execution').textContent = `${metrics.arbitrage.executionRate}%`;
+            }
+            
+            if (metrics.event) {
+                document.getElementById('event-news').textContent = metrics.event.newsProcessed;
+                document.getElementById('event-confidence').textContent = `${metrics.event.avgConfidence}%`;
+                document.getElementById('event-pnl').textContent = `+$${metrics.event.pnl.toLocaleString()}`;
+                document.getElementById('event-active').textContent = metrics.event.activeTrades;
+            }
+        }
+
+        // Update system status
+        function updateSystemStatus(status) {
+            const statusText = document.querySelector('.system-status span:last-child');
+            const statusDot = document.querySelector('.status-dot');
+            
+            if (status === 'Connected') {
+                statusText.textContent = 'All Systems Operational';
+                statusDot.style.background = 'var(--auraquant-success)';
+            } else {
+                statusText.textContent = `System Status: ${status}`;
+                statusDot.style.background = status === 'Error' ? 'var(--auraquant-danger)' : 'var(--auraquant-warning)';
+            }
+        }
+
+        // Update time
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('current-time').textContent = now.toLocaleString();
+        }
+
+        // Initialize chart (placeholder)
+        function initChart() {
+            const canvas = document.getElementById('pnl-chart');
+            if (canvas) {
+                // Initialize chart library here (Chart.js, ApexCharts, etc.)
+                console.log('Chart initialized');
+            }
+        }
+
+        // Simulate real-time updates
+        function simulateUpdates() {
+            setInterval(() => {
+                const mockMetrics = {
+                    hft: {
+                        latency: (12 + Math.random() * 5).toFixed(1),
+                        ordersPerMin: Math.floor(800 + Math.random() * 200),
+                        pnl: Math.floor(45000 + Math.random() * 5000),
+                        successRate: (93 + Math.random() * 4).toFixed(1)
+                    },
+                    arbitrage: {
+                        opportunities: Math.floor(20 + Math.random() * 10),
+                        avgSpread: (1.5 + Math.random() * 0.5).toFixed(1),
+                        pnl: Math.floor(65000 + Math.random() * 5000),
+                        executionRate: (75 + Math.random() * 10).toFixed(1)
+                    },
+                    event: {
+                        newsProcessed: Math.floor(140 + Math.random() * 10),
+                        avgConfidence: (80 + Math.random() * 5).toFixed(1),
+                        pnl: Math.floor(33000 + Math.random() * 5000),
+                        activeTrades: Math.floor(5 + Math.random() * 5)
+                    }
+                };
+                updateMetrics(mockMetrics);
+            }, 3000);
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize WebSocket (commented out for demo)
+            // initWebSocket();
+            
+            // Update time
+            setInterval(updateTime, 1000);
+            updateTime();
+            
+            // Initialize chart
+            initChart();
+            
+            // Simulate updates for demo
+            simulateUpdates();
+        });
+    </script>
+</body>
+</html>

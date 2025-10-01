@@ -1,0 +1,75 @@
+==============================================================================
+CLOUDFLARE REDEPLOYMENT - REMOVE OLD BOT & DEPLOY NEW AURAQUANT
+==============================================================================
+
+STEP 1: DELETE THE OLD BOT PROJECT
+-----------------------------------
+1. Go to Cloudflare Pages dashboard (should be open)
+2. Find your OLD bot project
+3. Click on the project
+4. Go to Settings → Scroll down
+5. Click "Delete project"
+6. Type the project name to confirm deletion
+7. Click Delete
+
+STEP 2: CREATE NEW AURAQUANT PROJECT
+-------------------------------------
+1. Click "Create a project"
+2. Click "Connect to Git"
+3. Select your GitHub account
+4. Choose repository: "auraquant-system"
+5. Click "Begin setup"
+
+STEP 3: CONFIGURE BUILD SETTINGS
+---------------------------------
+COPY AND PASTE THESE EXACT SETTINGS:
+
+Project name: auraquant-frontend
+Production branch: main
+Framework preset: None (select "None")
+
+Build settings:
+- Build command: cd frontend && npm install && npm run build
+- Build output directory: frontend/build
+- Root directory (Path): /
+
+STEP 4: ADD ENVIRONMENT VARIABLE
+---------------------------------
+Click "Environment variables" → Add variable:
+
+Variable name: REACT_APP_API_URL
+Value: https://auraquant-backend.onrender.com
+
+Click "Save"
+
+STEP 5: DEPLOY
+--------------
+1. Click "Save and Deploy"
+2. Wait for build to complete (3-5 minutes)
+
+==============================================================================
+YOUR NEW URLS WILL BE:
+==============================================================================
+Frontend: https://auraquant-frontend.pages.dev
+Login: https://auraquant-frontend.pages.dev/pages/login.html
+
+==============================================================================
+WHAT YOU'RE GETTING:
+==============================================================================
+✅ Professional UI with your logo
+✅ Multi-tab trading interface  
+✅ No overlays or obstructive elements
+✅ Connected to Render backend
+✅ 13 Multi-Agent Swarm ready
+✅ ASX, Crypto, and Meme Coin trading
+
+==============================================================================
+IMPORTANT NOTES:
+==============================================================================
+- Make sure to DELETE the old bot project first
+- Use the NEW GitHub repository (auraquant-system)
+- The build command includes 'cd frontend' to enter the frontend folder
+- Build output must be 'frontend/build'
+- Environment variable connects to your Render backend
+
+==============================================================================

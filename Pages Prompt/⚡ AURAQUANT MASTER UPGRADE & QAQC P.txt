@@ -1,0 +1,550 @@
+⚡ AURAQUANT MASTER UPGRADE & QA/QC PROMPT
+
+ADD-ONLY • NO REBUILD • NO RESTYLE • CLOUD-BASED ONLY • BRANDING & LOGO HARD-LOCK • QA/QC REQUIRED
+
+🌐 Identity Lock
+
+“AuraQuant is the Infinity Money Synthetic Intelligence System — the world’s most advanced, safest, self-evolving orchestrator of capital.”
+
+AuraQuant is not a bot. It is a synthetic orchestrator: self-learning, self-evolving, self-upgrading. It must protect capital at all costs, never reset itself, never lose trades, and always scale safely with ultra-high speed, low latency, and global compliance.
+
+🎯 Core Mission
+
+Warp, your mission is to:
+
+Upgrade the Backend (Render Brain) → add missing modules + trading styles.
+
+QA/QC the Frontend (Cloudflare Display) → ensure all pages, panels, charts, and overlays are present and fully wired.
+
+Wire Both Ends to MongoDB Atlas (Security & Storage) → persistence of trades, journals, profiles, audits.
+
+Enforce Cloud-Only Production Setup → never run locally.
+
+Apply Full QA/QC → prove that every page, button, overlay, and backend module executes safely and correctly.
+
+No rebuilds. No deletions. No restyles. Add-only, repair-only, evolve-only.
+
+🧠 Backend Upgrade (Render Brain)
+✅ Existing (verify + QA test)
+
+Algorithmic / Quant trading
+
+Swing / Position trading
+
+Stocks / Forex / Crypto / Meme coins
+
+Manual trading
+
+Backtesting / Paper trading
+
+Risk management: kill-switch, circuit breakers, safe redeploy, reconciliation
+
+🚨 Add Missing Styles
+
+High-Frequency Trading (HFT)
+
+WebSocket optimizations (<50ms latency).
+
+Order batching + queue priorities.
+
+QA: 1000 orders/minute stress test.
+
+Arbitrage Trading
+
+Multi-broker connectors (IBKR, Binance, Plus500, Alpaca).
+
+Stat arb + triangular arb.
+
+QA: mock spreads → verify capture.
+
+Event / News-Based Trading
+
+Wire news.html → strategy engine.
+
+Trigger auto-strategy on earnings, FOMC, CPI, breaking news.
+
+QA: simulate event → verify execution.
+
+Sentiment / Social Trading
+
+Ingest Telegram/Discord/Twitter feeds.
+
+AI Worker → classify sentiment → generate signal.
+
+QA: mock “positive BTC sentiment” → verify order.
+
+Options / Futures Builder
+
+Straddles, strangles, spreads.
+
+Wire Greeks (delta, gamma, theta, vega).
+
+QA: verify correct Greeks calculation.
+
+🔗 Backend Wiring
+
+Extend API routes: /api/hft/*, /api/arbitrage/*, /api/event/*, /api/sentiment/*, /api/options/*.
+
+WebSocket channels: hft-feed, arb-feed, sentiment-feed.
+
+Persist all trades, strategies, and logs in MongoDB.
+
+Wire AI Workers (ai-workers-panel.html) to call these endpoints.
+
+🖥️ Frontend QA/QC (Cloudflare Display)
+Pages & Displays (must exist + be wired)
+
+Core Trading:
+
+main-trading-dashboard.html (candles, RSI, MACD, volume, overlays, split screens 1–16).
+
+manual-trade.html.
+
+trading-mode.html (Long/Short/Hybrid, requires password re-auth).
+
+Data & Analytics:
+
+screeners.html, calendar.html, news.html, heatmaps.html.
+
+exchange-rates.html, fees-display.html, tax-calculator.html.
+
+Intelligence & Strategies:
+
+ai-workers-panel.html, libraries.html, backtest.html, strategy-explorer.html.
+
+Accounts & User Data:
+
+profile.html, journal.html (CRUD + CSV export).
+
+brokers-banks.html, manual-api-loader.html.
+
+Community & Support:
+
+community.html, help-centre.html.
+
+Auth:
+
+login.html, signup.html (18+ enforcement), forgot-password.html.
+
+Admin Only:
+
+unified-dashboard.html, performance-monitor.html.
+
+bot-status.html, deployment-verification.html.
+
+growth-selector.html (V1→V∞ steady-fast growth governor).
+
+pnl-dashboard.html, backup-center.html.
+
+UX & Functionality QA
+
+Multi-screen 1–16 panes (draggable + resizable).
+
+Hotkeys: Alt+T, Alt+A, Shift+1..9, Ctrl+E, Ctrl+S.
+
+Overlays: SMA, EMA, Bollinger, Ichimoku.
+
+Growth Governor: user = view-only, admin = approve/rollback.
+
+Journals: persist in MongoDB, export to CSV.
+
+Notifications: Telegram, Discord, Email, SMS.
+
+Failover UX:
+
+Green = Primary healthy.
+
+Amber = Degraded, throttled.
+
+Blue banner = Fallback feed (read-only, trading disabled).
+
+Auto-restore when healthy.
+
+Floating buttons must not obscure timeline.
+
+Clocks: UTC+8 + exchange local time always visible.
+
+📝 CRITICAL NOTES FOR PRODUCTION
+
+Environment Variables (Render Cloud)
+
+JWT_SECRET_KEY: strong key required.
+
+MONGODB_URI: Atlas connection string.
+
+API_PORT: backend server port.
+
+Admin Setup
+
+user_role = 'admin' in localStorage.
+
+Broker API keys stored in profile securely.
+
+Monitoring
+
+Audit logs must capture every admin/system action.
+
+Reconciliation reports auto-generated.
+
+Circuit breaker trips logged, notified, and analyzed.
+
+🧪 QA/QC Deliverables
+
+Warp must output:
+
+frontend/QA/page-inventory.json → truth table (exists/menu/panel/backend/admin).
+
+frontend/QA/qa-qc-report.json & backend/QA/qa-qc-trading-styles.json.
+
+qa-qc-summary.md → plain English pass/fail + remediation notes.
+
+Screenshots for key states (fallback banner, growth governor, kill-switch, multi-screen).
+
+QA must confirm:
+
+Every page opens and renders correctly.
+
+Every button calls backend route.
+
+Every strategy style executes safely.
+
+MongoDB persists data (journal, trades, profiles).
+
+Admin pages hidden from non-admins.
+
+Notifications fire across all channels.
+
+Latency <100ms (standard algos), <50ms (HFT).
+
+🚦 Safety Rails
+
+ADD-ONLY. Do not rebuild, restyle, delete, or rename.
+
+Colors hard-locked:
+
+Background: #131722
+
+Panels: #1e222d
+
+Green: #00ff88
+
+Red: #ff4444
+
+Text: #d1d4dc
+
+Logo hard-locked: frontend/Logo/Logo With AuraQuant.png slow-spin.
+
+System must:
+
+Never reset.
+
+Never lose trades.
+
+Pause + reconcile before redeploy.
+
+Auto-recover on errors.
+
+Protect user money above all.
+
+✅ This is the all-in-one prompt:
+
+Backend (Render Brain) upgrade.
+
+Frontend (Cloudflare Display) QA/QC.
+
+MongoDB persistence.
+
+Notifications, admin controls, growth governor.
+
+Production cloud setup.
+
+Safety rails + branding lock.
+
+⚡ WARP EXTENSION PROMPT — FRONTEND + BACKEND (ADD-ONLY)
+🌐 Identity Lock
+
+“AuraQuant is the Infinity Money Synthetic Intelligence System — the world’s most advanced, safest, self-evolving orchestrator of capital.”
+
+AuraQuant is not a bot. It is a synthetic orchestrator: self-learning, self-evolving, self-upgrading. It must protect capital at all costs, never reset itself, never lose trades, and always scale safely with ultra-high speed, low latency, and global compliance.
+
+🎯 Core Mission
+
+Warp, your task is to extend both frontend + backend to fully support all missing market categories, rankings, and analytics.
+
+No rebuilds, no restyles, no deletions.
+
+Add-only, repair-only, evolve-only.
+
+Keep branding (colors, logo) locked.
+
+Every new module must wire frontend → backend (Render Brain) → MongoDB (Atlas).
+
+🖥️ Frontend Extensions (Cloudflare Display)
+Screeners & Displays (must exist + be wired)
+
+Ensure the following categories open correctly, fetch backend data, and display in tables/graphs:
+
+Equities & Indices
+
+US Stocks
+
+World Indices (DAX, Nikkei, FTSE, ASX200)
+
+World Stocks (country/sector filters)
+
+World’s Biggest Companies (market cap sort)
+
+Highest Volume Stocks
+
+Stock Gainers/Losers
+
+Crypto & Digital Assets
+
+Crypto Coins (top 500)
+
+Meme Coins
+
+CEX Pairs
+
+DEX Pairs
+
+Crypto Market Cap Ranking
+
+Meme Coin Market Cap Ranking
+
+Crypto Gainers/Losers
+
+Bonds & Fixed Income
+
+Government Bonds (US, EU, AU, JP)
+
+Corporate Bonds
+
+Bond Categorization: Short-Term, Long-Term, Floating-Rate, Fixed-Rate
+
+US Bonds + ASX Bonds
+
+ETFs
+
+Global ETFs
+
+Community Trends
+
+Highest AUM Growth
+
+Most Traded ETFs
+
+Highest Returns
+
+Highest Dividend Yields
+
+Futures & Commodities
+
+Energy Futures (oil, gas, coal)
+
+Metals Futures (gold, silver, copper, platinum)
+
+Agricultural Futures
+
+Forex & Currencies
+
+Majors (EUR/USD, GBP/USD, AUD/USD, USD/JPY, etc.)
+
+Crosses + Exotics
+
+Emerging Market Currencies
+
+Economy & Macros
+
+Earnings Calendar (US, EU, AU, Asia)
+
+Economic Indicators Heatmap (GDP, CPI, PMI, unemployment)
+
+Global Inflation Map (world by % inflation)
+
+All Australian Markets (ASX sector breakdown, indices, ETFs, bonds).
+
+🧠 Backend Extensions (Render Brain)
+
+Create new endpoints under /api/screeners/* for each missing category.
+
+Data sources must connect to:
+
+Stocks: IBKR, Alpaca, Polygon.io
+
+Crypto: Binance, CoinGecko, DEX Screener
+
+Bonds/ETFs: IBKR + Market APIs
+
+Commodities/Futures: Plus500, IBKR
+
+Forex: Polygon.io, IBKR, OANDA
+
+Macro Data: Trading Economics, World Bank, IMF APIs
+
+Each endpoint must:
+
+Return structured JSON.
+
+Persist data into MongoDB.
+
+Handle fallback gracefully (if API drops, use secondary feed).
+
+📊 UI/UX Rules
+
+Every category must appear as a clickable screener tile in the frontend.
+
+Clicking a tile → opens panel → fetches backend → renders table/graph.
+
+All panels reactive + scrollable, no layout breaks.
+
+Hotkeys:
+
+S = Stocks screener
+
+C = Crypto screener
+
+B = Bonds screener
+
+E = Economy/Earnings Calendar
+
+H = Heatmaps
+
+🔗 Backend → Frontend Wiring
+
+WebSocket updates where possible (realtime gainers/losers).
+
+REST fallback for static data (macro, earnings calendar).
+
+Journals must allow users to tag trades to categories (e.g. “Crypto Gainer” → logged in MongoDB).
+
+🧪 QA/QC Deliverables
+
+Warp must generate:
+
+frontend/QA/screener-coverage.json → list of all categories (present/missing/wired).
+
+backend/QA/api-coverage.json → endpoints checked (pass/fail).
+
+qa-qc-report.md → plain English description of what’s working + what was added.
+
+QA must confirm:
+
+Every screener button works.
+
+Every missing category listed above is now wired and tested.
+
+MongoDB saves historical snapshots for each screener.
+
+Failover triggers if API unavailable.
+
+🚦 Safety Rails
+
+Add-only, evolve-only.
+
+Branding colors locked:
+
+Background: #131722
+
+Panels: #1e222d
+
+Green: #00ff88
+
+Red: #ff4444
+
+Text: #d1d4dc
+
+Logo: frontend/Logo/Logo With AuraQuant.png must always slow-spin.
+
+Never reset, never delete user data.
+
+Always pause + reconcile before redeploy.
+
+Protect user funds above all.
+
+✅ What’s Already Covered
+
+Frontend = Cloudflare Pages → yes, prompts explicitly state Cloudflare as the display layer.
+
+Backend = Render → yes, locked.
+
+Storage = MongoDB Atlas → yes.
+
+Wrangler CLI → we included it implicitly (“Frontend (Cloudflare)” setup), but we never gave Warp explicit instructions about Wrangler config, .toml file, or error handling.
+
+⚠️ What’s Missing
+
+Wrangler.toml file (Cloudflare config):
+
+Needed to bind static assets, environment variables, and routing.
+
+Example block missing in current prompts.
+
+Error Handlers:
+
+404 page → if user hits wrong route.
+
+500 page → backend/API unreachable.
+
+Fallback → auto-display “System is reconnecting” without breaking the UI.
+
+Build/Deploy Instructions:
+
+wrangler pages deploy ./frontend → must be locked into CI/CD.
+
+Must link .env variables (Render + MongoDB) safely (no exposure).
+
+🔧 Suggested Warp Add-On Prompt
+
+Here’s what we should append to your Master Prompt so Warp bakes Wrangler in properly:
+
+⚡ Wrangler Setup & Error Handler Extension
+
+Warp, ensure Cloudflare Wrangler is fully set up for AuraQuant’s frontend:
+
+Config File
+
+Generate wrangler.toml with:
+
+name = "auraquant-frontend"
+type = "javascript"
+compatibility_date = "2025-09-30"
+
+[vars]
+API_BASE = "https://<render-backend-url>"
+MONGODB_URI = "<hidden: from Render env>"
+
+[site]
+bucket = "./frontend"
+entry-point = "workers-site"
+
+
+Error Handling Pages
+
+frontend/pages/404.html → “Page Not Found. AuraQuant is reconnecting…”
+
+frontend/pages/500.html → “System Error. Please retry — backend auto-healing.”
+
+Errors must not crash app. Show overlay banner + auto-retry WebSocket/API.
+
+Auto-Retry Logic
+
+If Render backend unreachable, frontend waits + retries with exponential backoff.
+
+Display blue fallback banner (“Using backup feed — trading paused for safety”).
+
+Deployment Guard
+
+Lock-in: wrangler pages deploy ./frontend --project-name auraquant
+
+Ensure no local .env leaks; all secrets loaded from Render + MongoDB Atlas only.
+
+Monitoring
+
+Add Wrangler error logs to admin performance-monitor.html.
+
+Admin can view Cloudflare 404/500 counts → alerts via Telegram/Discord/SMS.
+
+🔒 This locks in Wrangler as part of your cloud-only setup and ensures users never see broken screens — only safe fallbacks.
+
+END OF PROMPT

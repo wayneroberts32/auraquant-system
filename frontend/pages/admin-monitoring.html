@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AuraQuant - System Monitoring (Admin)</title>
+    <link rel="icon" type="image/png" href="../assets/img/logo-button.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #131722;
+            color: #d1d4dc;
+            overflow: hidden;
+        }
+        
+        .container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            height: 52px;
+            background: #1e222d;
+            border-bottom: 1px solid #2a2e39;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            justify-content: space-between;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .logo-spin {
+            height: 35px;
+            width: auto;
+            animation: rotate 10s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .page-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #d1d4dc;
+        }
+        
+        .admin-badge {
+            background: #ff4444;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .refresh-btn {
+            padding: 8px 16px;
+            background: #00ff88;
+            color: #131722;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: opacity 0.2s;
+        }
+        
+        .refresh-btn:hover {
+            opacity: 0.9;
+        }
+        
+        .content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .panel {
+            background: #1e222d;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        
+        .panel-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #d1d4dc;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .full-width {
+            grid-column: span 2;
+        }
+        
+        /* System Health */
+        .health-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        
+        .health-card {
+            background: #131722;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #2a2e39;
+            text-align: center;
+        }
+        
+        .health-status {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .health-status.healthy {
+            background: rgba(0, 255, 136, 0.2);
+            border: 2px solid #00ff88;
+        }
+        
+        .health-status.warning {
+            background: rgba(255, 165, 0, 0.2);
+            border: 2px solid #ffa500;
+        }
+        
+        .health-status.error {
+            background: rgba(255, 68, 68, 0.2);
+            border: 2px solid #ff4444;
+        }
+        
+        .health-label {
+            font-size: 12px;
+            color: #787b86;
+            margin-bottom: 5px;
+        }
+        
+        .health-value {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        /* Performance Metrics */
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #2a2e39;
+        }
+        
+        .metric-row:last-child {
+            border-bottom: none;
+        }
+        
+        .metric-label {
+            color: #787b86;
+            font-size: 14px;
+        }
+        
+        .metric-value {
+            color: #d1d4dc;
+            font-weight: 600;
+        }
+        
+        .metric-bar {
+            margin-top: 5px;
+            height: 4px;
+            background: #2a2e39;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        
+        .metric-bar-fill {
+            height: 100%;
+            background: #00ff88;
+            transition: width 0.3s ease;
+        }
+        
+        /* Activity Log */
+        .activity-log {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .log-entry {
+            display: flex;
+            gap: 10px;
+            padding: 8px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            background: #131722;
+            font-size: 13px;
+        }
+        
+        .log-time {
+            color: #787b86;
+            white-space: nowrap;
+        }
+        
+        .log-type {
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .log-type.info {
+            background: #2a2e39;
+            color: #d1d4dc;
+        }
+        
+        .log-type.success {
+            background: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+        }
+        
+        .log-type.warning {
+            background: rgba(255, 165, 0, 0.2);
+            color: #ffa500;
+        }
+        
+        .log-type.error {
+            background: rgba(255, 68, 68, 0.2);
+            color: #ff4444;
+        }
+        
+        .log-message {
+            flex: 1;
+            color: #d1d4dc;
+        }
+        
+        /* Alert Stats */
+        .alert-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .alert-stat {
+            background: #131722;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #2a2e39;
+        }
+        
+        .alert-count {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .alert-label {
+            color: #787b86;
+            font-size: 12px;
+        }
+        
+        .alert-stat.critical .alert-count {
+            color: #ff4444;
+        }
+        
+        .alert-stat.high .alert-count {
+            color: #ffa500;
+        }
+        
+        .alert-stat.medium .alert-count {
+            color: #d1d4dc;
+        }
+        
+        .alert-stat.low .alert-count {
+            color: #787b86;
+        }
+        
+        /* Trading Stats */
+        .trading-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .stat-card {
+            background: #131722;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #2a2e39;
+        }
+        
+        .stat-label {
+            color: #787b86;
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+        
+        .stat-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #00ff88;
+        }
+        
+        .stat-change {
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        
+        .stat-change.positive {
+            color: #00ff88;
+        }
+        
+        .stat-change.negative {
+            color: #ff4444;
+        }
+        
+        /* Real-time indicator */
+        .live-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 8px;
+            background: rgba(0, 255, 136, 0.1);
+            border-radius: 4px;
+        }
+        
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: #00ff88;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(0, 255, 136, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(0, 255, 136, 0);
+            }
+        }
+        
+        .live-text {
+            font-size: 11px;
+            color: #00ff88;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-left">
+                <img src="../assets/img/logo-button.png" alt="AuraQuant" class="logo-spin">
+                <div class="page-title">System Monitoring</div>
+                <div class="admin-badge">ADMIN ONLY</div>
+                <div class="live-indicator">
+                    <div class="live-dot"></div>
+                    <div class="live-text">LIVE</div>
+                </div>
+            </div>
+            <div>
+                <button class="refresh-btn" onclick="refreshAllData()">↻ Refresh All</button>
+            </div>
+        </div>
+        
+        <div class="content">
+            <!-- System Health Panel -->
+            <div class="panel">
+                <div class="panel-title">System Health</div>
+                <div class="health-grid">
+                    <div class="health-card">
+                        <div class="health-status healthy">
+                            <span style="color: #00ff88;">✓</span>
+                        </div>
+                        <div class="health-label">Backend API</div>
+                        <div class="health-value" id="apiStatus">Online</div>
+                    </div>
+                    <div class="health-card">
+                        <div class="health-status healthy">
+                            <span style="color: #00ff88;">✓</span>
+                        </div>
+                        <div class="health-label">Database</div>
+                        <div class="health-value" id="dbStatus">Connected</div>
+                    </div>
+                    <div class="health-card">
+                        <div class="health-status healthy">
+                            <span style="color: #00ff88;">✓</span>
+                        </div>
+                        <div class="health-label">WebSocket</div>
+                        <div class="health-value" id="wsStatus">Active</div>
+                    </div>
+                    <div class="health-card">
+                        <div class="health-status healthy">
+                            <span style="color: #00ff88;">✓</span>
+                        </div>
+                        <div class="health-label">AI Engine</div>
+                        <div class="health-value" id="aiStatus">Running</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Performance Metrics -->
+            <div class="panel">
+                <div class="panel-title">Performance Metrics</div>
+                <div>
+                    <div class="metric-row">
+                        <span class="metric-label">CPU Usage</span>
+                        <span class="metric-value" id="cpuUsage">45%</span>
+                    </div>
+                    <div class="metric-bar">
+                        <div class="metric-bar-fill" style="width: 45%;" id="cpuBar"></div>
+                    </div>
+                    
+                    <div class="metric-row" style="margin-top: 15px;">
+                        <span class="metric-label">Memory Usage</span>
+                        <span class="metric-value" id="memUsage">62%</span>
+                    </div>
+                    <div class="metric-bar">
+                        <div class="metric-bar-fill" style="width: 62%;" id="memBar"></div>
+                    </div>
+                    
+                    <div class="metric-row" style="margin-top: 15px;">
+                        <span class="metric-label">Network I/O</span>
+                        <span class="metric-value" id="netUsage">1.2 MB/s</span>
+                    </div>
+                    
+                    <div class="metric-row">
+                        <span class="metric-label">API Response Time</span>
+                        <span class="metric-value" id="apiTime">125ms</span>
+                    </div>
+                    
+                    <div class="metric-row">
+                        <span class="metric-label">Active Connections</span>
+                        <span class="metric-value" id="connections">247</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Trading Statistics -->
+            <div class="panel">
+                <div class="panel-title">Trading Statistics (24h)</div>
+                <div class="trading-stats">
+                    <div class="stat-card">
+                        <div class="stat-label">Total Volume</div>
+                        <div class="stat-value">$2.47M</div>
+                        <div class="stat-change positive">↑ 12.5%</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Total Trades</div>
+                        <div class="stat-value">1,847</div>
+                        <div class="stat-change positive">↑ 8.3%</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Win Rate</div>
+                        <div class="stat-value">68.4%</div>
+                        <div class="stat-change positive">↑ 2.1%</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Total P&L</div>
+                        <div class="stat-value">+$47.8K</div>
+                        <div class="stat-change positive">↑ 15.7%</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Alert Statistics -->
+            <div class="panel">
+                <div class="panel-title">Alert Statistics</div>
+                <div class="alert-grid">
+                    <div class="alert-stat critical">
+                        <div class="alert-count" id="criticalAlerts">0</div>
+                        <div class="alert-label">Critical Alerts</div>
+                    </div>
+                    <div class="alert-stat high">
+                        <div class="alert-count" id="highAlerts">2</div>
+                        <div class="alert-label">High Priority</div>
+                    </div>
+                    <div class="alert-stat medium">
+                        <div class="alert-count" id="mediumAlerts">7</div>
+                        <div class="alert-label">Medium Priority</div>
+                    </div>
+                    <div class="alert-stat low">
+                        <div class="alert-count" id="lowAlerts">14</div>
+                        <div class="alert-label">Low Priority</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- System Activity Log -->
+            <div class="panel full-width">
+                <div class="panel-title">System Activity Log</div>
+                <div class="activity-log" id="activityLog">
+                    <div class="log-entry">
+                        <span class="log-time">06:28:05</span>
+                        <span class="log-type success">SUCCESS</span>
+                        <span class="log-message">AI Agent "Momentum Alpha" executed buy order for BTC/USDT</span>
+                    </div>
+                    <div class="log-entry">
+                        <span class="log-time">06:27:43</span>
+                        <span class="log-type info">INFO</span>
+                        <span class="log-message">Database backup completed successfully</span>
+                    </div>
+                    <div class="log-entry">
+                        <span class="log-time">06:26:12</span>
+                        <span class="log-type warning">WARNING</span>
+                        <span class="log-message">High memory usage detected on trading engine</span>
+                    </div>
+                    <div class="log-entry">
+                        <span class="log-time">06:25:30</span>
+                        <span class="log-type success">SUCCESS</span>
+                        <span class="log-message">New user registration: user@example.com</span>
+                    </div>
+                    <div class="log-entry">
+                        <span class="log-time">06:24:18</span>
+                        <span class="log-type info">INFO</span>
+                        <span class="log-message">System monitoring dashboard accessed by admin</span>
+                    </div>
+                    <div class="log-entry">
+                        <span class="log-time">06:23:45</span>
+                        <span class="log-type success">SUCCESS</span>
+                        <span class="log-message">WebSocket connection established with 15 clients</span>
+                    </div>
+                    <div class="log-entry">
+                        <span class="log-time">06:22:10</span>
+                        <span class="log-type info">INFO</span>
+                        <span class="log-message">Market data feed synchronized</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Check admin authentication
+        const token = localStorage.getItem('auraquant_token');
+        const user = JSON.parse(localStorage.getItem('auraquant_user') || '{}');
+        
+        if (!token || user.role !== 'admin') {
+            alert('Admin access required');
+            window.location.href = 'login.html';
+        }
+        
+        // Load monitoring data on page load
+        window.onload = function() {
+            loadSystemHealth();
+            loadPerformanceMetrics();
+            loadAlertStats();
+            loadActivityLog();
+            
+            // Set up auto-refresh every 5 seconds
+            setInterval(() => {
+                loadSystemHealth();
+                loadPerformanceMetrics();
+                loadAlertStats();
+                loadActivityLog();
+            }, 5000);
+        };
+        
+        async function loadSystemHealth() {
+            try {
+                const response = await fetch('http://localhost:8000/api/admin/system/health', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    // Update health status based on response
+                    updateHealthStatus(data);
+                }
+            } catch (error) {
+                console.error('Error loading system health:', error);
+                // Show offline status if can't connect
+                document.getElementById('apiStatus').textContent = 'Offline';
+            }
+        }
+        
+        async function loadPerformanceMetrics() {
+            try {
+                const response = await fetch('http://localhost:8000/api/admin/system/metrics', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    updatePerformanceMetrics(data);
+                }
+            } catch (error) {
+                console.error('Error loading performance metrics:', error);
+            }
+        }
+        
+        async function loadAlertStats() {
+            try {
+                const response = await fetch('http://localhost:8000/api/admin/alerts/stats', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    updateAlertStats(data);
+                }
+            } catch (error) {
+                console.error('Error loading alert stats:', error);
+            }
+        }
+        
+        async function loadActivityLog() {
+            try {
+                const response = await fetch('http://localhost:8000/api/admin/activity/recent', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    updateActivityLog(data.activities || []);
+                }
+            } catch (error) {
+                console.error('Error loading activity log:', error);
+            }
+        }
+        
+        function updateHealthStatus(data) {
+            // Update individual health statuses
+            if (data.api) {
+                document.getElementById('apiStatus').textContent = data.api.status;
+            }
+            if (data.database) {
+                document.getElementById('dbStatus').textContent = data.database.status;
+            }
+            if (data.websocket) {
+                document.getElementById('wsStatus').textContent = data.websocket.status;
+            }
+            if (data.ai_engine) {
+                document.getElementById('aiStatus').textContent = data.ai_engine.status;
+            }
+        }
+        
+        function updatePerformanceMetrics(data) {
+            if (data.cpu_usage) {
+                document.getElementById('cpuUsage').textContent = `${data.cpu_usage}%`;
+                document.getElementById('cpuBar').style.width = `${data.cpu_usage}%`;
+            }
+            if (data.memory_usage) {
+                document.getElementById('memUsage').textContent = `${data.memory_usage}%`;
+                document.getElementById('memBar').style.width = `${data.memory_usage}%`;
+            }
+            if (data.network_io) {
+                document.getElementById('netUsage').textContent = data.network_io;
+            }
+            if (data.api_response_time) {
+                document.getElementById('apiTime').textContent = `${data.api_response_time}ms`;
+            }
+            if (data.active_connections) {
+                document.getElementById('connections').textContent = data.active_connections;
+            }
+        }
+        
+        function updateAlertStats(data) {
+            if (data.critical !== undefined) {
+                document.getElementById('criticalAlerts').textContent = data.critical;
+            }
+            if (data.high !== undefined) {
+                document.getElementById('highAlerts').textContent = data.high;
+            }
+            if (data.medium !== undefined) {
+                document.getElementById('mediumAlerts').textContent = data.medium;
+            }
+            if (data.low !== undefined) {
+                document.getElementById('lowAlerts').textContent = data.low;
+            }
+        }
+        
+        function updateActivityLog(activities) {
+            const logContainer = document.getElementById('activityLog');
+            
+            // Keep existing logs if no new activities
+            if (activities.length === 0) return;
+            
+            logContainer.innerHTML = '';
+            
+            activities.forEach(activity => {
+                const entry = document.createElement('div');
+                entry.className = 'log-entry';
+                
+                const time = new Date(activity.timestamp).toLocaleTimeString('en-US', { 
+                    hour12: false,
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                });
+                
+                const typeClass = activity.type || 'info';
+                
+                entry.innerHTML = `
+                    <span class="log-time">${time}</span>
+                    <span class="log-type ${typeClass}">${typeClass.toUpperCase()}</span>
+                    <span class="log-message">${activity.message}</span>
+                `;
+                
+                logContainer.appendChild(entry);
+            });
+        }
+        
+        function refreshAllData() {
+            loadSystemHealth();
+            loadPerformanceMetrics();
+            loadAlertStats();
+            loadActivityLog();
+            
+            // Visual feedback
+            const btn = event.target;
+            btn.textContent = '✓ Refreshed';
+            setTimeout(() => {
+                btn.textContent = '↻ Refresh All';
+            }, 1000);
+        }
+        
+        // Simulate real-time updates for demo
+        setInterval(() => {
+            // Simulate CPU fluctuation
+            const cpu = 40 + Math.random() * 20;
+            document.getElementById('cpuUsage').textContent = `${cpu.toFixed(1)}%`;
+            document.getElementById('cpuBar').style.width = `${cpu}%`;
+            
+            // Simulate memory fluctuation
+            const mem = 55 + Math.random() * 15;
+            document.getElementById('memUsage').textContent = `${mem.toFixed(1)}%`;
+            document.getElementById('memBar').style.width = `${mem}%`;
+            
+            // Simulate connection count changes
+            const connections = 240 + Math.floor(Math.random() * 20);
+            document.getElementById('connections').textContent = connections;
+        }, 3000);
+    </script>
+</body>
+</html>

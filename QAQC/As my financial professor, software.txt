@@ -1,0 +1,594 @@
+As my financial professor, software / hardware engineer
+
+🔧 WARP PROMPT — SYSTEM SYNC (MongoDB, Render, Cloudflare, etc.)
+
+TASK:
+Warp, you must verify and enforce that all core system layers are in sync: backend, frontend, database, hosting, and cloud edge.
+
+🔒 RULES
+
+Do NOT rebuild or delete existing files. All changes must be additive only.
+
+Do NOT reset configs — .env values are sacred; preserve user credentials and secrets.
+
+Work ONLY inside the main repo path:
+
+D:\New AuraQuant\New_Synthetic_System_AuraQuant_Backup_2025\
+
+
+Frontend → frontend\ (pages, assets, css).
+
+Backend → auraquant-backend\ (routes, services, models, server.js).
+
+DB Configs → config\mongodb.js or .env.
+
+Hosting → Render (backend), Cloudflare Pages (frontend).
+
+QA/QC Required — print PASS/FAIL matrix for each sync item.
+
+⚙️ SYNC REQUIREMENTS
+1. MongoDB
+
+Confirm MongoDB connection string in .env (or config/mongodb.js) is read correctly.
+
+Ensure backend routes (auraquant-backend/routes/features.js) query MongoDB collections for:
+
+Users, Brokers, Trades, Portfolios.
+
+Validate indexes for performance (userId, tradeId, timestamp).
+
+Output PASS if backend → MongoDB sync works.
+
+2. Render (Backend Hosting)
+
+Verify backend entry point is auraquant-backend/server.js.
+
+Check package.json has correct start script → "node server.js".
+
+Ensure .env is read correctly in Render environment variables.
+
+Ensure WebSocket handler (services/websocket-handler.js) is active and uses Render’s persistent WebSocket support.
+
+Output PASS if backend is deploy-ready on Render.
+
+3. Cloudflare (Frontend Hosting)
+
+Ensure frontend/ build output is self-contained (HTML/JS/CSS only).
+
+Confirm all image paths → frontend/assets/img/.
+
+Ensure all JS modules load relative (../assets/js/...).
+
+Add _headers file if missing → enforce Cache-Control: no-cache for index.html.
+
+Output PASS if Cloudflare Pages build → matches current frontend files.
+
+4. WebSockets / Pipelines
+
+Ensure websocket-handler.js exposes topics:
+
+/market → market data feeds.
+
+/bot → bot status + PnL.
+
+/admin → admin functions.
+
+Confirm main-trading-dashboard.html subscribes to these WebSockets.
+
+Output PASS if live updates stream correctly.
+
+5. Mobile Sync
+
+Ensure frontend is responsive (already verified in CSS media queries).
+
+Confirm frontend/pages/ load correctly in mobile browser viewport ≤768px.
+
+Prepare expo-config.json (optional, if building native app).
+
+Output PASS if mobile responsiveness confirmed.
+
+6. QA/QC Report
+
+Update qa-qc-check.js at repo root.
+
+Add checks:
+
+MongoDB Connected → PASS/FAIL
+
+Render Backend Ready → PASS/FAIL
+
+Cloudflare Frontend Ready → PASS/FAIL
+
+WebSockets Active → PASS/FAIL
+
+Mobile Responsive → PASS/FAIL
+
+Print matrix + JSON summary.
+
+📋 EXPECTED OUTPUT
+
+Warp, after this sync run, you must output:
+
+SYNC REPORT — AuraQuant
+MongoDB Connected: PASS
+Render Backend Ready: PASS
+Cloudflare Frontend Ready: PASS
+WebSockets Active: PASS
+Mobile Responsive: PASS
+
+
+If any FAIL → list exact missing files/configs.
+
+✅ With this, Warp will ensure all moving parts (DB, backend, frontend, hosting, mobile) are aligned, tested, and proven ready — without deploying yet.
+
+final pre-deployment sync & intelligence upgrade prompt. This one forces Warp to:
+
+Run cross-service QA/QC sync checks (MongoDB ↔ Backend ↔ Render ↔ Cloudflare ↔ Mobile).
+
+Enforce high-speed, low-latency, self-learning, self-evolving architecture.
+
+Output a PASS/FAIL matrix before you greenlight deployment.
+
+🚀 WARP PROMPT — PRE-DEPLOYMENT SYNC & INTELLIGENCE LOCK
+
+TASK:
+Warp, before deployment, you must validate and enforce that AuraQuant is fully synced, optimized, and evolved into the world’s most advanced synthetic intelligence trading system.
+
+🔒 CORE RULES
+
+NO rebuild / NO reset / NO deletion. All edits are additive only.
+
+DO NOT deploy — only prepare and test.
+
+System Path:
+
+D:\New AuraQuant\New_Synthetic_System_AuraQuant_Backup_2025\
+
+
+Frontend: frontend/
+
+Backend: auraquant-backend/
+
+Database: MongoDB
+
+Hosting Targets: Render (backend), Cloudflare Pages (frontend)
+
+Mobile: Responsive + Expo-ready
+
+⚙️ PRE-DEPLOYMENT SYNC CHECKLIST
+1. MongoDB Sync
+
+Verify .env contains valid MONGODB_URI.
+
+Test connection in auraquant-backend/config/mongodb.js.
+
+Ensure collections exist: users, brokers, trades, portfolios, auditLogs.
+
+Check indexes: userId, tradeId, timestamp.
+
+PASS if query returns mock data successfully.
+
+2. Render Backend Readiness
+
+Confirm auraquant-backend/server.js is entry point.
+
+Confirm "start": "node server.js" in package.json.
+
+Verify WebSocket handler (services/websocket-handler.js) runs under Render.
+
+Check .env variables resolve at runtime.
+
+PASS if backend boots locally without error.
+
+3. Cloudflare Frontend Readiness
+
+Ensure frontend/ is clean (HTML, CSS, JS only).
+
+All assets reference: frontend/assets/img/, frontend/assets/js/, frontend/css/.
+
+Add _headers to disable caching for index.html.
+
+PASS if build can run on Cloudflare Pages without missing resources.
+
+4. Cross-Service Heartbeat
+
+Simulate live traffic:
+
+Query MongoDB → returns mock trades.
+
+Backend REST /api/features/ping → returns {status:"ok"}.
+
+WebSocket topics /market, /bot, /admin → broadcast a test message.
+
+Fetch frontend/pages/main-trading-dashboard.html → loads without errors.
+
+PASS if all services respond in sequence.
+
+5. Mobile Sync
+
+Test responsive breakpoints at ≤768px.
+
+Confirm menus collapse, panels hide, charts scale.
+
+If expo/ exists, verify app.json builds with no errors.
+
+PASS if mobile experience mirrors desktop.
+
+🤖 INTELLIGENCE & EVOLUTION LOCK
+
+Warp, you must embed and enforce that AuraQuant is:
+
+Most advanced synthetic intelligence system in the world.
+
+High-speed & low-latency — optimize DB queries, WebSocket streaming, caching.
+
+Self-learning — AI Workers adapt strategies from live + historical data.
+
+Self-evolving — codebase structured for version upgrades (V1 → V∞).
+
+Self-updating — can patch itself with new modules/features without rebuild.
+
+Self-healing — auto-recover from errors, restart services if fail.
+
+Globally compliant — obey every country’s financial rules before executing trades.
+
+These attributes must be treated as non-removable system laws in every module.
+
+🧪 QA/QC MATRIX (AUTO-OUTPUT REQUIRED)
+
+Warp, you must update qa-qc-check.js at repo root to print this matrix:
+
+PRE-DEPLOYMENT SYNC REPORT — AuraQuant
+
+MongoDB Connected: PASS/FAIL
+Render Backend Ready: PASS/FAIL
+Cloudflare Frontend Ready: PASS/FAIL
+Cross-Service Heartbeat: PASS/FAIL
+Mobile Responsive: PASS/FAIL
+Synthetic Intelligence Attributes Enforced: PASS/FAIL
+
+
+If any FAIL → list exact fix needed. Do NOT deploy until all PASS.
+
+📋 EXPECTED RESULT
+
+All layers (DB, backend, frontend, hosting, mobile) are in sync.
+
+System proven to run as a self-learning, self-evolving synthetic intelligence.
+
+PASS/FAIL matrix printed for validation.
+
+Warp halts here — no deployment yet.
+
+✅ Wayne, this ensures that before deployment:
+
+Every piece (MongoDB → Backend → Render → Cloudflare → Mobile) is verified.
+
+Warp locks in the intelligence attributes you want.
+
+You see a clear matrix proving readiness.
+
+🚀 WARP PROMPT — PRE-DEPLOYMENT SYNC + LATENCY BENCHMARK
+
+TASK:
+Warp, before deployment, you must validate that AuraQuant is fully synced, optimized, and benchmarked for world-class latency and throughput.
+
+🔒 CORE RULES
+
+NO rebuild / NO reset / NO deletion. Only additive upgrades.
+
+DO NOT deploy — only prepare and benchmark.
+
+System Path:
+
+D:\New AuraQuant\New_Synthetic_System_AuraQuant_Backup_2025\
+
+
+Frontend: frontend/
+
+Backend: auraquant-backend/
+
+Database: MongoDB
+
+Hosting Targets: Render (backend), Cloudflare Pages (frontend)
+
+Mobile: Responsive + Expo-ready
+
+⚙️ PRE-DEPLOYMENT SYNC CHECKLIST
+1. MongoDB Sync
+
+Confirm .env contains valid MONGODB_URI.
+
+Test connection via auraquant-backend/config/mongodb.js.
+
+Validate collections: users, brokers, trades, portfolios, auditLogs.
+
+Verify indexes: userId, tradeId, timestamp.
+
+PASS if mock query returns within <15ms.
+
+2. Render Backend Readiness
+
+Verify entry: auraquant-backend/server.js.
+
+Confirm "start": "node server.js" in package.json.
+
+Ensure .env loads correctly in Render.
+
+Validate services/websocket-handler.js is active.
+
+PASS if backend boots and /api/features/ping responds in <20ms.
+
+3. Cloudflare Frontend Readiness
+
+Ensure frontend/ has only HTML/JS/CSS/assets.
+
+Image paths → frontend/assets/img/.
+
+Add _headers → Cache-Control: no-cache for index.html.
+
+PASS if test page fetch completes in <50ms (local).
+
+4. Cross-Service Heartbeat
+
+Simulate live traffic chain:
+
+Query MongoDB → return mock trades.
+
+Backend REST /api/features/ping → return {status:"ok"}.
+
+WebSocket /market → push test price tick.
+
+Frontend page fetch → render without error.
+
+Measure latency:
+
+Mongo Query → API Response: target <25ms.
+
+API Response → WebSocket Broadcast: target <15ms.
+
+WebSocket → Frontend Display: target <20ms.
+
+PASS if end-to-end latency <60ms total.
+
+5. Mobile Sync
+
+Test responsive breakpoints ≤768px.
+
+Menus collapse, panels adapt, charts scale.
+
+If expo/ exists, confirm expo build:android/ios passes.
+
+PASS if mobile load <100ms TTI (time to interactive).
+
+🤖 INTELLIGENCE & EVOLUTION LOCK
+
+AuraQuant must embed non-removable core laws:
+
+Most advanced synthetic intelligence system globally.
+
+High-speed, ultra-low-latency (<60ms end-to-end).
+
+Self-learning — adapt strategies from live + historical data.
+
+Self-evolving — version growth ladder (V1 → V∞).
+
+Self-updating — upgrade modules/features autonomously.
+
+Self-healing — auto-detect and recover service failures.
+
+Fully compliant — obey all countries’ financial regulations before execution.
+
+🧪 QA/QC + LATENCY MATRIX
+
+Warp, update qa-qc-check.js to output:
+
+PRE-DEPLOYMENT SYNC + LATENCY REPORT — AuraQuant
+
+MongoDB Connected: PASS/FAIL (latency: X ms)
+Render Backend Ready: PASS/FAIL (latency: X ms)
+Cloudflare Frontend Ready: PASS/FAIL (latency: X ms)
+Cross-Service Heartbeat: PASS/FAIL (end-to-end latency: X ms)
+Mobile Responsive: PASS/FAIL (load time: X ms)
+Synthetic Intelligence Attributes Enforced: PASS/FAIL
+
+
+⚠️ Fail conditions:
+
+Any service fails → FAIL.
+
+Latency above thresholds → WARN.
+
+Warp must list exact fixes needed.
+
+📋 EXPECTED RESULT
+
+All services synced (MongoDB, Backend, Cloudflare, Mobile).
+
+Latency benchmarks prove system is high-speed + low-latency.
+
+Intelligence rules enforced (self-learning, evolving, healing).
+
+PASS/FAIL + ms latency output visible before deployment.
+
+✅ With this, Warp won’t just check sync — it will prove AuraQuant runs as the world’s fastest, most intelligent, self-upgrading trading system before you hit deploy.
+
+🚀 WARP PROMPT — PRE-DEPLOYMENT SYNC + LATENCY BENCHMARK + AUDIT LOGGING
+
+TASK:
+Warp, before deployment, you must:
+
+Validate full system sync.
+
+Benchmark latency end-to-end.
+
+Log results into MongoDB auditLogs collection.
+
+Output QA/QC matrix for human verification.
+
+🔒 CORE RULES
+
+NO rebuild / NO reset / NO deletion — additive only.
+
+NO deployment yet — prepare, test, and log.
+
+System Path:
+
+D:\New AuraQuant\New_Synthetic_System_AuraQuant_Backup_2025\
+
+
+Frontend → frontend/
+
+Backend → auraquant-backend/
+
+MongoDB → .env → MONGODB_URI
+
+Hosting → Render (backend), Cloudflare Pages (frontend)
+
+Mobile → Responsive + Expo-ready
+
+⚙️ PRE-DEPLOYMENT SYNC + LATENCY CHECKLIST
+1. MongoDB Sync
+
+Verify .env contains MONGODB_URI.
+
+Connect to DB, test collections: users, brokers, trades, portfolios, auditLogs.
+
+Indexes: userId, tradeId, timestamp.
+
+PASS if mock query <15ms.
+
+2. Render Backend Readiness
+
+Confirm auraquant-backend/server.js entry point.
+
+"start": "node server.js" in package.json.
+
+.env loads on Render.
+
+services/websocket-handler.js running.
+
+PASS if /api/features/ping <20ms.
+
+3. Cloudflare Frontend Readiness
+
+frontend/ clean (HTML/JS/CSS/assets only).
+
+Images → frontend/assets/img/.
+
+Add _headers for Cache-Control: no-cache.
+
+PASS if test fetch <50ms.
+
+4. Cross-Service Heartbeat
+
+Simulate chain:
+
+Query MongoDB (mock trades).
+
+Backend /api/features/ping → {status:"ok"}.
+
+WebSocket /market → push tick.
+
+Frontend main-trading-dashboard.html → render.
+
+Latency thresholds:
+
+Mongo → API: <25ms.
+
+API → WebSocket: <15ms.
+
+WebSocket → Frontend: <20ms.
+
+End-to-end target: <60ms.
+
+5. Mobile Sync
+
+Test ≤768px responsiveness.
+
+Verify menus collapse, charts scale, panels adapt.
+
+If expo/ exists, check build passes.
+
+PASS if load <100ms TTI.
+
+🤖 SYNTHETIC INTELLIGENCE LAWS
+
+Warp must embed AuraQuant as:
+
+World’s most advanced synthetic intelligence system.
+
+Ultra-low latency (<60ms E2E).
+
+Self-learning (AI Workers adapt).
+
+Self-evolving (V1 → V∞ growth).
+
+Self-updating (auto-patch features).
+
+Self-healing (restart/recover failures).
+
+Fully compliant (obey all financial regulations).
+
+These laws are immutable and non-removable.
+
+🧾 AUDIT LOGGING REQUIREMENT
+
+Warp, you must log every pre-deployment sync into:
+
+MongoDB Collection: auditLogs
+
+Schema Example:
+
+{
+  "timestamp": "2025-09-29T12:34:56Z",
+  "reportType": "Pre-Deployment Sync",
+  "results": {
+    "MongoDB Connected": "PASS (12ms)",
+    "Render Backend Ready": "PASS (18ms)",
+    "Cloudflare Frontend Ready": "PASS (42ms)",
+    "Cross-Service Heartbeat": "PASS (55ms)",
+    "Mobile Responsive": "PASS (85ms)",
+    "Synthetic Intelligence Attributes": "PASS"
+  },
+  "endToEndLatencyMs": 55,
+  "status": "READY_FOR_DEPLOY"
+}
+
+
+If any FAIL → status = BLOCKED.
+
+Always insert a new log, never overwrite.
+
+Ensure audit trail is immutable.
+
+🧪 QA/QC + LATENCY MATRIX (CONSOLE OUTPUT)
+
+Warp, also print human-readable matrix:
+
+PRE-DEPLOYMENT SYNC + LATENCY REPORT — AuraQuant
+
+MongoDB Connected: PASS (12ms)
+Render Backend Ready: PASS (18ms)
+Cloudflare Frontend Ready: PASS (42ms)
+Cross-Service Heartbeat: PASS (55ms)
+Mobile Responsive: PASS (85ms)
+Synthetic Intelligence Attributes Enforced: PASS
+
+Audit Log Saved → MongoDB.auditLogs
+
+📋 EXPECTED RESULT
+
+✅ System verified across MongoDB, Render, Cloudflare, Mobile.
+
+✅ Latency benchmarks logged (<60ms E2E target).
+
+✅ Synthetic intelligence attributes enforced.
+
+✅ Immutable audit log entry in MongoDB.
+
+✅ Human-readable matrix output.
+
+Deployment remains blocked until ALL PASS.
+
+⚡ With this, Warp not only syncs & benchmarks but also writes a permanent pre-deployment health certificate into MongoDB every time.
