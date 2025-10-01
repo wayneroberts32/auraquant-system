@@ -21,9 +21,9 @@ class NotificationManager:
     """
     
     def __init__(self):
-        # Telegram Configuration
-        self.telegram_bot_token = os.getenv('TELEGRAM_BOT_TOKEN', '')
-        self.telegram_chat_id = os.getenv('TELEGRAM_CHAT_ID', '')
+        # Telegram Configuration - AuraQuant Trading Bot
+        self.telegram_bot_token = os.getenv('TELEGRAM_BOT_TOKEN', '8186673555:AAEZx3hK7kOYOXPQMqOw3ciZlXG2BW_WJnI')
+        self.telegram_chat_id = os.getenv('TELEGRAM_CHAT_ID', '6995384125')
         
         # Discord Configuration
         self.discord_webhook_url = os.getenv('DISCORD_WEBHOOK_URL', '')
