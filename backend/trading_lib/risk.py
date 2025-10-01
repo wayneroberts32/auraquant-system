@@ -31,8 +31,8 @@ class RiskMetricsRegistry:
                 'auto_registered': True,
                 'created_at': datetime.utcnow()
             }
-            if not cls._db_synced:
-                asyncio.create_task(cls._sync_to_mongodb())
+            # Mark for MongoDB sync but don't do it during import
+            cls._db_synced = False
             return func
         return decorator
     
@@ -68,6 +68,12 @@ class RiskMetricsRegistry:
     @classmethod
     def get_metric(cls, name: str) -> Optional[Callable]:
         return cls._metrics.get(name, {}).get('function')
+    
+    @classmethod
+    async def sync_all(cls):
+        """Sync all risk metrics to MongoDB - call this on app startup"""
+        if not cls._db_synced:
+            await cls._sync_to_mongodb()
 
 # Risk Metrics with auto-registration
 
