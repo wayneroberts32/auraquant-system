@@ -1,0 +1,16 @@
+As my software and hardware engineer I need to remove the old bot from cloudflare and Render -> but don't touch the (Environment Variables) as they are already configured
+
+1. MongoDB -> Storage and Security
+2. Redder -> backend (Brain) -> srv-d2s323ur433s738gnjfg -> https://auraquant-backend.onrender.com -> wayneroberts32 / auraquant-backend
+main -> Paid / Starter Account
+3. Cloudflare -> Frontend -> display / Platform -> 2e471ad68f4782901db1939103c7c074 -> Wayneroberts32@gmail.com's -> auraquant-frontend.pages.dev, ai-auraquant.com
+
+As the engineer I will get you to see below and you will need to remove old bot and deeply new system, wrangler for cloudflare needs permission 
+
+Reminder the system is cloud base and will not sit locally!!!
+
+1. Install Requirements -> pip install -r requirements.txt
+2. Set Environment Variables -> export MONGODB_URI="your_mongodb_atlas_uri", export BINANCE_API_KEY="your_key", export BINANCE_SECRET="your_secret", # Add other exchange credentials -> Done in Render 
+3. Run System -> python backend/system/system_integration.py -> system is cloud bade 
+
+Systems path -> "D:\New AuraQuant\New_Synthetic_System_AuraQuant_Backup_2025"

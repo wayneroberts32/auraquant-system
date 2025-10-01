@@ -34,9 +34,8 @@ class StrategyRegistry:
                 'status': 'active',
                 'created_at': datetime.utcnow()
             }
-            # Sync to MongoDB on registration
-            if not cls._db_synced:
-                asyncio.create_task(cls._sync_to_mongodb())
+            # Mark for MongoDB sync but don't do it during import
+            cls._db_synced = False
             return func
         return decorator
     
@@ -75,6 +74,12 @@ class StrategyRegistry:
     def get_strategy(cls, name: str) -> Optional[Callable]:
         """Get specific strategy function"""
         return cls._strategies.get(name, {}).get('function')
+    
+    @classmethod
+    async def sync_all(cls):
+        """Sync all strategies to MongoDB - call this on app startup"""
+        if not cls._db_synced:
+            await cls._sync_to_mongodb()
 
 # Base Strategy Class
 class BaseStrategy:

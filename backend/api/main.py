@@ -183,6 +183,14 @@ async def startup_event():
         else:
             print("⚠️ IBKR integration not available")
         
+        # Sync strategies to MongoDB
+        try:
+            from trading_lib.strategies import StrategyRegistry
+            await StrategyRegistry.sync_all()
+            print("✅ Trading strategies synced to MongoDB")
+        except Exception as e:
+            print(f"⚠️ Could not sync strategies: {e}")
+        
         print("🎯 System ready for trading!")
         
     except Exception as e:

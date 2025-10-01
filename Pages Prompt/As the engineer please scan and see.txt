@@ -1,0 +1,189 @@
+As the engineer please scan and see what's missing and add in also in sure not to use old or recycle codes - > ensure everything is wired and synced -> bot will only trade ASX, Crypto, and Meme Coins until it meets the other countries policies and rule requirements, the system will never do anything illegal or to cause harm to the use's or their accounts. the system will ensure it always stays on top of these rules it will ensure it always has the updated rules   
+
+Also ensure we have the full trading libraries installed before we deploy 
+
+Ensure everything is wired in and synced and working correctly 
+
+ADD-ONLY • NO REBUILD • NO RESTYLE • CLOUD-BASED ONLY • BRANDING & LOGO HARD-LOCK • QA/QC REQUIRED
+
+🌐 Identity Lock
+
+“AuraQuant is the Infinity Money Synthetic Intelligence System — the world’s most advanced, safest, self-evolving orchestrator of capital.”
+
+AuraQuant is not a bot. It is a synthetic orchestrator: self-learning, self-evolving, self-upgrading. It must protect capital at all costs, never reset itself, never lose trades, and always scale safely with ultra-high speed, low latency, and global compliance.
+
+🎯 Core Mission
+
+Warp, your task is to extend both frontend + backend to fully support all missing market categories, rankings, and analytics.
+
+No rebuilds, no restyles, no deletions.
+
+Add-only, repair-only, evolve-only.
+
+Keep branding (colors, logo) locked.
+
+Every new module must wire frontend → backend (Render Brain) → MongoDB (Atlas).
+
+Part 1: Global Principles & International Standards
+These are overarching concepts that most regulatory bodies around the world adhere to.
+
+Market Abuse & Manipulation:
+
+Insider Trading: Trading based on material, non-public information is illegal everywhere. Your system must not use or act on such information.
+
+Spoofing & Layering: Placing orders with the intent to cancel them before execution to create a false impression of supply or demand. This is a key algorithmic trading risk.
+
+Pump and Dump: Artificially inflating the price of an asset (e.g., with a flurry of buy orders) to sell at a higher price.
+
+Wash Trading: Simultaneously buying and selling the same asset to create misleading, artificial volume.
+
+Know Your Customer (KYC) & Anti-Money Laundering (AML):
+
+Your system/broker must verify the identity of its users.
+
+It must monitor for and report suspicious transactions that could be related to money laundering or terrorist financing.
+
+Best Execution:
+
+A legal obligation to seek the best possible result for the client (or for yourself) when executing orders, considering price, costs, speed, and likelihood of execution.
+
+Transparency & Disclosure:
+
+If managing client funds, you must be transparent about your strategy, fees, and risks.
+
+Part 2: Major Jurisdictions and Their Key Regulators
+Here are some of the most influential financial markets and their regulatory bodies. The rules can differ significantly between them.
+
+1. United States
+Regulators:
+
+Securities and Exchange Commission (SEC): Regulates securities (stocks, bonds).
+
+Commodity Futures Trading Commission (CFTC): Regulates derivatives (futures, options, forex).
+
+Financial Industry Regulatory Authority (FINRA): A self-regulatory organization for broker-dealers.
+
+Key Rules for Automated Systems:
+
+Regulation Systems Compliance and Integrity (Reg SCI): For larger entities, requires robust technology controls, business continuity plans, and reporting of system issues.
+
+Prohibition of Manipulative Trading Practices: Explicit rules against spoofing and layering (as part of the Dodd-Frank Act).
+
+Pattern Day Trader (PDT) Rule: A retail trader with less than $25,000 in their account is limited in the number of day trades they can make in a 5-day period.
+
+2. European Union / United Kingdom
+Regulators:
+
+European Securities and Markets Authority (ESMA): EU-wide regulator.
+
+Financial Conduct Authority (FCA): The UK regulator (post-Brexit).
+
+National Regulators: e.g., BaFin (Germany), AMF (France).
+
+Key Rules for Automated Systems:
+
+Markets in Financial Instruments Directive (MiFID II): A huge piece of legislation. Key points:
+
+Algorithmic Trading Identification: Firms engaged in algorithmic trading must be identified to regulators.
+
+Systems and Controls: Must have effective systems and risk controls (e.g., kill switches) to prevent erroneous orders and system disruptions.
+
+Tick-to-Trade Latency: Rules around the time it takes to process a market data update and send an order.
+
+Transaction Reporting: Extensive reporting of all trades to regulators.
+
+3. Japan
+Regulator:
+
+Financial Services Agency (FSA)
+
+Key Rules:
+
+Has strict regulations on algorithmic trading, including pre-approval of algorithms for certain participants.
+
+Strong focus on market stability and preventing flash crashes.
+
+4. Singapore
+Regulator:
+
+Monetary Authority of Singapore (MAS)
+
+Key Rules:
+
+Securities and Futures Act (SFA): Governs market activities.
+
+MAS has guidelines on risk management for automated trading, including testing, monitoring, and circuit breakers.
+
+5. Australia
+Regulator:
+
+Australian Securities and Investments Commission (ASIC)
+
+Key Rules:
+
+Market Integrity Rules: Specifically have rules for automated order processing, including testing requirements and controls to manage market impact.
+
+Part 3: Broker & Exchange-Specific Rules
+Your system must also comply with the rules of the broker and exchange you are connected to.
+
+API Terms of Service: The agreement you sign with your broker (e.g., Interactive Brokers, OANDA) will have strict rules on how you can use their API.
+
+Rate Limiting: Exchanges and brokers impose strict limits on the number of orders/cancellations per second. Exceeding these will result in disconnection or bans.
+
+Short Selling Restrictions: Some markets have "uptick rules" or outright bans on short selling during volatile periods.
+
+Exchange Mandated Circuit Breakers: Most exchanges have mechanisms that halt all trading if prices move too far, too fast. Your system must be able to handle these halts gracefully.
+
+Part 4: How to Build This Into Your System's "Brain" (A Compliance Framework)
+You cannot hardcode every rule from every country. Instead, build a framework that ensures compliance.
+
+Pre-Trade Risk Checks (The Most Important Layer):
+
+Maximum Order Size: Reject any single order above a set value/volume.
+
+Maximum Position Size: Prevent the system from holding more than a predefined number of shares/contracts.
+
+Maximum Order Rate: Enforce a limit on orders per second/minute to comply with broker/exchange limits.
+
+Price Reasonability Checks: Reject orders that are too far from the current market price (e.g., a market buy order when the spread is abnormally wide).
+
+Self-Trade Prevention: Ensure your system's orders cannot fill against each other.
+
+Behavioral Logic (Preventing Market Abuse):
+
+Order-to-Trade Ratio Monitor: Track the ratio of orders sent vs. orders filled. A very high ratio (e.g., 100:1) is a red flag for spoofing.
+
+"Fill-or-Kill" and "Immediate-or-Cancel" Logic: Use these order types carefully to avoid being flagged for quote stuffing.
+
+Kill Switch: Implement an immediate, hard-coded "kill switch" that stops all trading instantly. This is often a regulatory requirement.
+
+Record Keeping & Logging:
+
+Log every single action: every market data tick received, every order sent, every fill received, every cancellation.
+
+Store these logs securely. Regulators can ask for this data for years after a trade.
+
+Governance and Documentation:
+
+Document Your Strategy: Clearly document how your algorithm works. This is needed for regulatory approval in many jurisdictions.
+
+Change Control: Have a formal process for making changes to the algorithm's code and logic.
+
+Backtesting & Simulation: Thoroughly test your strategy in a simulated environment to ensure it doesn't exhibit manipulative behavior under various market conditions.
+
+Summary Checklist for Your System's Brain:
+Risk Limits: Max order size, max position size, max loss limits.
+
+Rate Limits: Orders/second caps to comply with broker rules.
+
+Price Checks: Logic to avoid erroneous trades.
+
+Order-to-Trade Monitoring: To prevent spoofing-like behavior.
+
+Kill Switch: Instant, reliable shutdown.
+
+Comprehensive Logging: Every action, timestamped and stored.
+
+Legal Consultation: Have a professional review your setup for the specific markets you target.
+
+Final and Most Critical Advice: Start by choosing one primary jurisdiction and one broker. Deeply research their specific, current rules. Do not try to build a system that is globally compliant on day one. The regulatory landscape is a minefield, and navigating it requires expert guidance.
