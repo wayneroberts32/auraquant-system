@@ -3,7 +3,7 @@ AuraQuant Quantum Brain API
 Main FastAPI Application
 """
 
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 import uvicorn
@@ -11,7 +11,7 @@ import os
 import sys
 from pathlib import Path
 from dotenv import load_dotenv
-from typing import List
+from typing import List, Dict, Optional
 import asyncio
 
 # Add parent directory to path to import brain modules
@@ -20,6 +20,18 @@ sys.path.append(str(Path(__file__).parent.parent.parent))  # Add project root fo
 
 # Load environment variables
 load_dotenv()
+
+# Import IBKR integration and WebSocket manager
+try:
+    from brokers.ibkr_integration import get_ibkr_broker, IBKRBroker
+    from api.websocket_manager import ws_manager, websocket_endpoint
+    HAS_IBKR = True
+except ImportError as e:
+    print(f"⚠️ IBKR integration not available: {e}")
+    HAS_IBKR = False
+    get_ibkr_broker = None
+    IBKRBroker = None
+    ws_manager = None
 
 # Import routers
 from api.routes import trading, strategies, market_data, auth, scanner
@@ -31,6 +43,14 @@ except ImportError:
     HAS_PROFILE_JOURNAL = False
     profile = None
     journal = None
+
+try:
+    from api.routes.ibkr_routes import router as ibkr_router
+    HAS_IBKR_ROUTES = True
+except ImportError:
+    print("⚠️ IBKR routes not available")
+    HAS_IBKR_ROUTES = False
+    ibkr_router = None
 
 # Import brain modules with fallbacks
 try:
@@ -88,11 +108,12 @@ quantum_brain = None
 dashboard_scanner = None
 memory_manager = None
 websocket_connections: List[WebSocket] = []
+ibkr_broker: Optional[IBKRBroker] = None
 
 @app.on_event("startup")
 async def startup_event():
     """Initialize the Quantum Brain and related services on startup"""
-    global quantum_brain, dashboard_scanner, memory_manager
+    global quantum_brain, dashboard_scanner, memory_manager, ibkr_broker
     
     print("🚀 Initializing AuraQuant Quantum Brain System...")
     
@@ -128,6 +149,39 @@ async def startup_event():
             print("✅ Dashboard Scanner initialized")
         else:
             print("⚠️ Dashboard Scanner not available")
+        
+        # Initialize IBKR broker
+        if HAS_IBKR:
+            ibkr_broker = get_ibkr_broker()
+            connected = await ibkr_broker.connect()
+            if connected:
+                print("✅ IBKR Broker connected")
+                
+                # Set up IBKR callbacks for WebSocket broadcasting
+                if ws_manager:
+                    async def on_market_data_update(data):
+                        await ws_manager.broadcast_to_subscribers(data['symbol'], data)
+                    
+                    async def on_order_update(trade):
+                        await ws_manager.broadcast_order_update({
+                            'order_id': trade.order.orderId,
+                            'status': trade.orderStatus.status,
+                            'symbol': trade.contract.symbol
+                        })
+                    
+                    async def on_position_update(position):
+                        await ws_manager.broadcast_position_update({
+                            'symbol': position.contract.symbol,
+                            'quantity': position.position,
+                            'avg_cost': position.avgCost
+                        })
+                    
+                    ibkr_broker.register_callback('order_status', on_order_update)
+                    ibkr_broker.register_callback('position', on_position_update)
+            else:
+                print("⚠️ Failed to connect to IBKR")
+        else:
+            print("⚠️ IBKR integration not available")
         
         print("🎯 System ready for trading!")
         
@@ -171,6 +225,7 @@ async def health_check():
         "quantum_brain": quantum_brain is not None,
         "memory_manager": memory_manager is not None,
         "dashboard_scanner": dashboard_scanner is not None,
+        "ibkr_broker": ibkr_broker is not None and ibkr_broker.connected,
         "websocket_connections": len(websocket_connections)
     }
 
@@ -251,6 +306,10 @@ if HAS_PROFILE_JOURNAL:
         app.include_router(profile.router, prefix="/api/profile", tags=["Profile"])
     if journal:
         app.include_router(journal.router, prefix="/api/journal", tags=["Journal"])
+
+# Include IBKR router if available
+if HAS_IBKR_ROUTES and ibkr_router:
+    app.include_router(ibkr_router)
 
 # Error handlers
 @app.exception_handler(404)

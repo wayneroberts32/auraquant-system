@@ -90,7 +90,7 @@ class DatabaseConfig:
         
         # Determine if using cloud based on URI
         if "mongodb+srv" in self.mongodb_uri or "mongodb.net" in self.mongodb_uri:
-            print("🌩️ Using MongoDB Atlas (Cloud)")
+            print("Using MongoDB Atlas (Cloud)")
         else:
             print("🏠 Using Local MongoDB")
         

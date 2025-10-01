@@ -32,9 +32,8 @@ class IndicatorRegistry:
                 'auto_registered': True,
                 'created_at': datetime.utcnow()
             }
-            # Sync to MongoDB on registration
-            if not cls._db_synced:
-                asyncio.create_task(cls._sync_to_mongodb())
+            # Sync to MongoDB will be done lazily when needed
+            # Removed async task creation here to avoid runtime error
             return func
         return decorator
     
