@@ -140,7 +140,7 @@ async def startup_event():
             print("⚠️ Memory Manager not available")
         
         # Initialize dashboard scanner
-        if HAS_SCANNER and quantum_brain:
+        if HAS_SCANNER and quantum_brain is not None:
             dashboard_scanner = DashboardScanner(
                 dashboard_path=dashboard_path,
                 memory_path=memory_path,
@@ -209,7 +209,7 @@ async def shutdown_event():
         await ws.close()
     
     # Save brain state
-    if quantum_brain:
+    if quantum_brain is not None:
         await quantum_brain.save_state()
     
     print("✅ Shutdown complete")
