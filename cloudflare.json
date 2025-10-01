@@ -1,0 +1,15 @@
+{
+  "build": {
+    "command": "",
+    "directory": "frontend"
+  },
+  "deployment": {
+    "production": {
+      "compatibility_date": "2025-01-01",
+      "variables": {
+        "PAPER_BALANCE": "500",
+        "CURRENCY": "AUD"
+      }
+    }
+  }
+}
