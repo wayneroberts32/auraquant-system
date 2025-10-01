@@ -5,12 +5,20 @@
 
 class ApiService {
     constructor() {
-        this.baseUrl = window.location.hostname === 'localhost' 
-            ? 'http://localhost:8000/api' 
-            : '/api';
+        // Use AuraQuant configuration for dynamic backend URL
+        if (window.AuraQuantConfig) {
+            this.baseUrl = window.AuraQuantConfig.getApiUrl();
+        } else {
+            // Fallback to direct Render URL if config not loaded
+            this.baseUrl = window.location.hostname === 'localhost' 
+                ? 'http://localhost:8000/api' 
+                : 'https://auraquant-system.onrender.com/api';
+        }
         
         this.token = localStorage.getItem('auraquant_token');
         this.userId = localStorage.getItem('auraquant_user_id');
+        
+        console.log('🧠 AuraQuant Brain API connected to:', this.baseUrl);
     }
 
     // =====================

@@ -25,9 +25,12 @@ except Exception as e:
 # Configure for cloud deployment
 if __name__ == "__main__":
     try:
-        # Get port from environment or default to 10000
+        # Get port from environment - REQUIRED for Render
         port = int(os.environ.get("PORT", 10000))
         host = "0.0.0.0"  # Required for cloud deployment
+        
+        # Log the actual port being used
+        print(f"Port configuration: {port} (from {'PORT env' if 'PORT' in os.environ else 'default'})")
         
         # AuraQuant Synthetic Intelligence System startup
         print("="*60)

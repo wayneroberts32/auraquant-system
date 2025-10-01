@@ -535,6 +535,9 @@
         </div>
     </div>
 
+    <!-- Load AuraQuant Configuration -->
+    <script src="../js/auraquant-config.js"></script>
+    
     <script>
         // Generate particle background
         function createParticles() {
@@ -595,7 +598,7 @@
             try {
                 // Use real backend authentication if available, otherwise simulate
                 // This follows the security path: Frontend (Cloudflare) → Brain (Render) → MongoDB
-                const useRealBackend = false; // Set to true when backend is ready
+                const useRealBackend = true; // Backend is ready on Render
                 
                 const response = useRealBackend 
                     ? await authenticateWithBackend(username, password, type)
@@ -762,7 +765,9 @@
         
         // Actual API call to Render backend (for production use)
         async function authenticateWithBackend(username, password, type) {
-            const RENDER_API_ENDPOINT = 'https://auraquant-backend.onrender.com/api';
+            const RENDER_API_ENDPOINT = window.AuraQuantConfig 
+                ? window.AuraQuantConfig.getApiUrl() 
+                : 'https://auraquant-system.onrender.com/api';
             
             try {
                 const response = await fetch(`${RENDER_API_ENDPOINT}/auth/login`, {
