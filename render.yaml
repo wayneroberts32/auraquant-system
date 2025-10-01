@@ -1,18 +1,32 @@
 services:
   # Backend service - AuraQuant Trading System
   - type: web
-    name: auraquant-backend
+    name: auraquant-backend-new
     runtime: python
     region: oregon
     plan: starter # Paid starter plan
-    branch: main
-    buildCommand: pip install -r requirements.txt
-    startCommand: python backend/system/system_integration.py
+    branch: render-deploy
+    buildCommand: cd backend && pip install -r requirements.txt
+    startCommand: cd backend && python -m uvicorn main:app --host 0.0.0.0 --port ${PORT:-10000}
     envVars:
       - key: PYTHON_VERSION
         value: "3.10"
       - key: PORT
         value: "10000"
+      - key: MONGODB_URI
+        sync: false
+      - key: IBKR_GATEWAY_HOST
+        sync: false
+      - key: IBKR_GATEWAY_PORT
+        value: "4002"
+      - key: TRADING_MODE
+        value: "PAPER"
+      - key: PAPER_BALANCE
+        value: "500"
+      - key: MIN_BALANCE
+        value: "500"
+      - key: CURRENCY
+        value: "AUD"
       # MongoDB and other env vars are already configured in Render Dashboard
     healthCheckPath: /health
     autoDeploy: true

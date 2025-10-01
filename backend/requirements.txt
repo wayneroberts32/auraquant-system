@@ -38,6 +38,14 @@ pydantic>=1.8.0
 colorama>=0.4.4
 tqdm>=4.62.0
 
+# Interactive Brokers Integration
+ib_insync>=0.9.70
+nest_asyncio>=1.5.5
+
+# Interactive Brokers Integration
+ib_insync>=0.9.70
+nest_asyncio>=1.5.5
+
 # Development & Testing
 pytest>=6.2.0
 pytest-asyncio>=0.16.0
