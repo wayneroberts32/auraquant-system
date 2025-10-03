@@ -34,9 +34,8 @@ class StrategyRegistry:
                 'status': 'active',
                 'created_at': datetime.utcnow()
             }
-            # Sync to MongoDB on registration
-            if not cls._db_synced:
-                asyncio.create_task(cls._sync_to_mongodb())
+            # Sync to MongoDB on registration (deferred to avoid import issues)
+            # Will be synced when sync_all is called from main app
             return func
         return decorator
     

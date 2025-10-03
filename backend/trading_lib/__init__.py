@@ -54,15 +54,8 @@ async def sync_all_to_mongodb():
         await asyncio.gather(*tasks)
         print("✅ Trading library components synced to MongoDB")
 
-# Try to sync on import (non-blocking)
-try:
-    loop = asyncio.get_event_loop()
-    if loop.is_running():
-        asyncio.create_task(sync_all_to_mongodb())
-    else:
-        loop.run_until_complete(sync_all_to_mongodb())
-except:
-    pass
+# Sync will be called from main app startup to avoid async issues
+# sync_all_to_mongodb() should be called from app startup event
 
 __all__ = [
     # Registries

@@ -1,0 +1,16 @@
+{
+  "generation": 0,
+  "fitness": 0.5,
+  "quantum_state": {
+    "superposition": 0.23116351456334758,
+    "entanglement": 0.8286209857643371,
+    "coherence": 0.7762392,
+    "amplitude": 0.9123840403569294,
+    "phase": 2.0222618919456794,
+    "probability": 0.5298922501638423
+  },
+  "timestamp": "2025-09-30T10:33:30.717035",
+  "patterns_count": 0,
+  "strategies_count": 0,
+  "trades_count": 0
+}

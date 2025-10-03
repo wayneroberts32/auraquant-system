@@ -1,0 +1,287 @@
+/**
+ * AuraQuant Standard Color Scheme
+ * TradingView-style Professional Dark Theme
+ * Infinity Money Synthetic Intelligence System
+ */
+
+:root {
+    /* 🌑 Core Backgrounds */
+    --auraquant-bg-primary: #131722;    /* Deep space dark navy (Main UI/Charts/Panels) */
+    --auraquant-bg-secondary: #1e222d;  /* Charcoal black with subtle blue tint (Headers/Sidebars) */
+    --auraquant-bg-tertiary: #2a2e39;   /* Muted steel gray-blue (Hover, highlights) */
+    --auraquant-bg-hover: #363a45;      /* Lighter hover background for interactivity */
+    
+    /* 💚 Accents (Profit / Growth / Active State) */
+    --auraquant-accent-primary: #00ff88;           /* Neon green (glows against dark UI) */
+    --auraquant-accent-hover: rgba(0, 255, 136, 0.3); /* Transparent neon for shadows/borders */
+    --auraquant-accent-glow: rgba(0, 255, 136, 0.5);  /* Stronger glow effect */
+    
+    /* ❤️ Negative (Loss / Risk / Alerts) */
+    --auraquant-negative-primary: #ff4444;           /* Bright danger red */
+    --auraquant-negative-hover: rgba(255, 68, 68, 0.1); /* Subtle red overlay */
+    --auraquant-negative-glow: rgba(255, 68, 68, 0.3);  /* Red glow for alerts */
+    
+    /* 🌟 Neutrals & Typography */
+    --auraquant-text-primary: #d1d4dc;   /* Light silver-gray (high readability) */
+    --auraquant-text-secondary: #787b86; /* Medium gray (for labels, hints) */
+    --auraquant-text-highlight: #ffffff; /* Pure white (Active Tab, Selected) */
+    
+    /* ⚡ Special Branding Colors */
+    --auraquant-brand-yellow: #ffd700;   /* Gold yellow for logo gradient */
+    --auraquant-brand-purple: #9400d3;   /* Deep purple for logo gradient */
+    
+    /* Additional Professional Colors */
+    --auraquant-warning: #ff9800;        /* Warning orange */
+    --auraquant-info: #2196f3;          /* Info blue */
+    --auraquant-border: rgba(255, 255, 255, 0.1); /* Subtle borders */
+    
+    /* Chart-specific Colors */
+    --auraquant-chart-grid: rgba(255, 255, 255, 0.06);
+    --auraquant-chart-crosshair: rgba(255, 255, 255, 0.3);
+    --auraquant-candlestick-up: #00ff88;
+    --auraquant-candlestick-down: #ff4444;
+    --auraquant-volume-bars: rgba(0, 255, 136, 0.3);
+}
+
+/* Override existing styles to use AuraQuant colors */
+body {
+    background-color: var(--auraquant-bg-primary) !important;
+    color: var(--auraquant-text-primary) !important;
+}
+
+/* Headers and Navigation */
+.navbar,
+.header,
+nav {
+    background-color: var(--auraquant-bg-secondary) !important;
+    border-bottom: 1px solid var(--auraquant-border) !important;
+}
+
+/* Sidebars */
+.sidebar {
+    background-color: var(--auraquant-bg-secondary) !important;
+    border-right: 1px solid var(--auraquant-border) !important;
+}
+
+.sidebar .nav-link {
+    color: var(--auraquant-text-secondary) !important;
+    transition: all 0.3s ease;
+}
+
+.sidebar .nav-link:hover {
+    color: var(--auraquant-text-highlight) !important;
+    background-color: var(--auraquant-bg-tertiary) !important;
+    border-left: 3px solid var(--auraquant-accent-primary) !important;
+}
+
+.sidebar .nav-link.active {
+    color: var(--auraquant-accent-primary) !important;
+    background-color: var(--auraquant-bg-hover) !important;
+    border-left: 3px solid var(--auraquant-accent-primary) !important;
+    box-shadow: 0 0 10px var(--auraquant-accent-hover);
+}
+
+/* Cards and Panels */
+.card {
+    background-color: var(--auraquant-bg-secondary) !important;
+    border: 1px solid var(--auraquant-border) !important;
+    color: var(--auraquant-text-primary) !important;
+}
+
+.card-header {
+    background-color: var(--auraquant-bg-tertiary) !important;
+    border-bottom: 1px solid var(--auraquant-border) !important;
+    color: var(--auraquant-text-highlight) !important;
+}
+
+.card:hover {
+    box-shadow: 0 0 20px var(--auraquant-accent-hover) !important;
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: var(--auraquant-accent-primary) !important;
+    border-color: var(--auraquant-accent-primary) !important;
+    color: var(--auraquant-bg-primary) !important;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: var(--auraquant-accent-primary) !important;
+    box-shadow: 0 0 15px var(--auraquant-accent-glow) !important;
+    transform: translateY(-2px);
+}
+
+.btn-danger {
+    background-color: var(--auraquant-negative-primary) !important;
+    border-color: var(--auraquant-negative-primary) !important;
+}
+
+.btn-danger:hover {
+    box-shadow: 0 0 15px var(--auraquant-negative-glow) !important;
+}
+
+/* Tables */
+.table {
+    color: var(--auraquant-text-primary) !important;
+    background-color: var(--auraquant-bg-secondary) !important;
+}
+
+.table thead th {
+    background-color: var(--auraquant-bg-tertiary) !important;
+    color: var(--auraquant-text-highlight) !important;
+    border-color: var(--auraquant-border) !important;
+}
+
+.table tbody tr:hover {
+    background-color: var(--auraquant-bg-hover) !important;
+}
+
+/* Forms */
+.form-control,
+.form-select {
+    background-color: var(--auraquant-bg-tertiary) !important;
+    border: 1px solid var(--auraquant-border) !important;
+    color: var(--auraquant-text-primary) !important;
+}
+
+.form-control:focus,
+.form-select:focus {
+    background-color: var(--auraquant-bg-hover) !important;
+    border-color: var(--auraquant-accent-primary) !important;
+    box-shadow: 0 0 10px var(--auraquant-accent-hover) !important;
+}
+
+/* Profit/Loss Indicators */
+.profit,
+.positive {
+    color: var(--auraquant-accent-primary) !important;
+    text-shadow: 0 0 10px var(--auraquant-accent-glow);
+}
+
+.loss,
+.negative {
+    color: var(--auraquant-negative-primary) !important;
+    text-shadow: 0 0 10px var(--auraquant-negative-glow);
+}
+
+/* Trading Panels */
+.trading-panel {
+    background-color: var(--auraquant-bg-secondary);
+    border: 1px solid var(--auraquant-border);
+    border-radius: 8px;
+}
+
+.chart-container {
+    background-color: var(--auraquant-bg-primary);
+    border: 1px solid var(--auraquant-border);
+}
+
+/* AuraQuant Logo Animation */
+.auraquant-logo {
+    background: linear-gradient(45deg, 
+        var(--auraquant-brand-yellow), 
+        var(--auraquant-brand-purple),
+        var(--auraquant-brand-yellow));
+    background-size: 200% 200%;
+    animation: auraquant-glow 3s ease-in-out infinite, slow-spin 10s linear infinite;
+    filter: drop-shadow(0 0 20px var(--auraquant-accent-glow));
+}
+
+@keyframes auraquant-glow {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+@keyframes slow-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Neon Borders for Special Elements */
+.neon-border {
+    border: 2px solid var(--auraquant-accent-primary);
+    box-shadow: 
+        0 0 10px var(--auraquant-accent-hover),
+        inset 0 0 10px var(--auraquant-accent-hover);
+}
+
+/* Status Indicators */
+.status-online {
+    color: var(--auraquant-accent-primary);
+    position: relative;
+}
+
+.status-online::before {
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background-color: var(--auraquant-accent-primary);
+    border-radius: 50%;
+    left: -12px;
+    top: 50%;
+    transform: translateY(-50%);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        box-shadow: 0 0 0 0 var(--auraquant-accent-glow);
+    }
+    50% {
+        box-shadow: 0 0 0 10px transparent;
+    }
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--auraquant-bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--auraquant-bg-hover);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--auraquant-accent-primary);
+}
+
+/* Modal Overlays */
+.modal-content {
+    background-color: var(--auraquant-bg-secondary) !important;
+    border: 1px solid var(--auraquant-accent-primary) !important;
+    box-shadow: 0 0 30px var(--auraquant-accent-hover) !important;
+}
+
+.modal-header {
+    background-color: var(--auraquant-bg-tertiary) !important;
+    border-bottom: 1px solid var(--auraquant-border) !important;
+}
+
+/* Tooltips */
+.tooltip-inner {
+    background-color: var(--auraquant-bg-tertiary) !important;
+    color: var(--auraquant-text-highlight) !important;
+    border: 1px solid var(--auraquant-accent-primary) !important;
+}
+
+/* Loading Spinner */
+.spinner {
+    border: 3px solid var(--auraquant-bg-tertiary);
+    border-top: 3px solid var(--auraquant-accent-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

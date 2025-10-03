@@ -96,6 +96,13 @@ async def startup_event():
     
     print("🚀 Initializing AuraQuant Quantum Brain System...")
     
+    # Sync trading library to MongoDB
+    try:
+        from trading_lib import sync_all_to_mongodb
+        await sync_all_to_mongodb()
+    except Exception as e:
+        print(f"⚠️ Could not sync trading library: {e}")
+    
     try:
         # Initialize components
         memory_path = os.getenv("MEMORY_PATH", "D:\\New AuraQuant\\New_Synthetic_System_AuraQuant_Backup_2025\\Memory")
