@@ -37,7 +37,7 @@ web3>=6.9.0  # Ethereum interaction (MANDATORY for meme coins)
 eth-account>=0.9.0
 eth-utils>=2.2.1
 uniswap-python>=0.7.0  # DEX trading
-pancakeswap-sdk>=0.1.0  # BSC DEX
+# pancakeswap-sdk>=0.1.0  # BSC DEX - Package doesn't exist, commented for deployment
 
 # Market Data Providers
 polygon-api-client>=1.12.0
@@ -65,7 +65,7 @@ pandas-ta>=0.3.14b0  # Technical indicators
 beautifulsoup4>=4.11.0
 lxml>=4.9.0
 html5lib>=1.1
-# TA-Lib - Install separately on Windows from wheel file
+# ta-lib - Commented for initial deployment, needs system libraries
 
 # Async Support
 aiohttp>=3.8.0

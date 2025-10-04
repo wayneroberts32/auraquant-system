@@ -7,14 +7,14 @@ services:
     plan: starter # Paid starter plan
     branch: main
     buildCommand: |
-      pip install -r requirements.txt
+      pip install -r requirements-production.txt
       if [ -f Scripts/restore_large_files.py ]; then
         python Scripts/restore_large_files.py
       fi
     startCommand: python backend/system/system_integration.py
     envVars:
       - key: PYTHON_VERSION
-        value: "3.10"
+        value: "3.10.14"
       - key: PORT
         value: "10000"
       - key: MONGODB_URI
