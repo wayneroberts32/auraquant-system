@@ -29,7 +29,8 @@ Write-Host "`n✅ Using Backend URL: $BackendURL" -ForegroundColor Green
 $frontendPath = "D:\New AuraQuant\New_Synthetic_System_AuraQuant_Backup_2025\frontend"
 
 # Create _worker.js for Cloudflare Pages to inject environment variables
-$workerContent = @"
+$wsUrl = $BackendURL.Replace('https://', 'wss://').Replace('http://', 'ws://')
+$workerContent = @'
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -42,15 +43,15 @@ export default {
       // Inject API configuration
       const configScript = `<script>
         // AuraQuant Production Configuration
-        window.API_URL = '$BackendURL';
-        window.WS_URL = '${BackendURL.Replace('https://', 'wss://').Replace('http://', 'ws://')}';
+        window.API_URL = '@BackendURL';
+        window.WS_URL = '@WsURL';
         window.TRADING_MODE = 'FULL_SYSTEM';
         window.NODE_ENV = 'production';
         window.ENABLE_PAPER_TRADING = true;
         window.ENABLE_LIVE_TRADING = false;
         window.PAPER_BALANCE = 500;
         window.CURRENCY = 'AUD';
-        console.log('✅ AuraQuant Backend Connected: $BackendURL');
+        console.log('✅ AuraQuant Backend Connected: @BackendURL');
       </script>`;
       
       const modifiedHtml = html.replace('<head>', '<head>' + configScript);
@@ -63,7 +64,11 @@ export default {
     return env.ASSETS.fetch(request);
   }
 };
-"@
+'@
+
+# Replace placeholders
+$workerContent = $workerContent.Replace('@BackendURL', $BackendURL)
+$workerContent = $workerContent.Replace('@WsURL', $wsUrl)
 
 $workerContent | Out-File -FilePath "$frontendPath\_worker.js" -Encoding UTF8
 Write-Host "✅ Created Cloudflare worker configuration" -ForegroundColor Green
