@@ -1,0 +1,10 @@
+﻿{
+  "name": "auraquant-api",
+  "type": "web_service",
+  "repo": "https://github.com/wayneroberts32/auraquant-system.git",
+  "branch": "cloudflare-production",
+  "runtime": "python",
+  "buildCommand": "pip install -r requirements.txt",
+  "startCommand": "python backend/main.py",
+  "healthCheckPath": "/health"
+}
