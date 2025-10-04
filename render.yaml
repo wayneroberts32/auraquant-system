@@ -6,13 +6,29 @@ services:
     region: oregon
     plan: starter # Paid starter plan
     branch: main
-    buildCommand: pip install -r requirements.txt
+    buildCommand: |
+      pip install -r requirements.txt
+      if [ -f Scripts/restore_large_files.py ]; then
+        python Scripts/restore_large_files.py
+      fi
     startCommand: python backend/system/system_integration.py
     envVars:
       - key: PYTHON_VERSION
         value: "3.10"
       - key: PORT
         value: "10000"
+      - key: MONGODB_URI
+        sync: false
+      - key: CLOUDFLARE_API_TOKEN
+        sync: false
+      - key: POLYGON_API_KEY
+        sync: false
+      - key: ALPACA_API_KEY_ID
+        sync: false
+      - key: ALPACA_SECRET_KEY
+        sync: false
+      - key: COHERE_API_KEY
+        sync: false
       # MongoDB and other env vars are already configured in Render Dashboard
     healthCheckPath: /health
     autoDeploy: true
